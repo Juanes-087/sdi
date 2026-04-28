@@ -1,0 +1,31 @@
+🚨 TABLAS QUE REQUIEREN VALIDACIÓN DE HIJAS ANTES DE BORRAR (Futuro):
+Estas funciones NO están implementadas aún. Debes crear versiones que verifiquen si hay registros hijos antes de permitir el soft delete.
+
+Tabla Padre			Tablas Hijas que la referencian
+tab_departamentos		tab_ciudades
+tab_ciudades			tab_empleados, tab_proveedores, tab_clientes, tab_bancos
+tab_tipo_documentos		tab_empleados, tab_proveedores, tab_clientes
+tab_cargos			tab_empleados
+tab_tipo_sangre			tab_empleados
+tab_users			tab_clientes, tab_users_menu
+tab_menu			tab_users_menu
+tab_proveedores			tab_bancos_proveedor, tab_mat_primas_prov
+tab_bancos			tab_bancos_proveedor
+tab_materias_primas		tab_mat_primas_prov
+tab_tipo_especializacion	tab_instrumentos, tab_kits
+tab_kits			tab_instrumentos_kit
+tab_instrumentos		tab_instrumentos_kit
+tab_instrumentos_kit		tab_productos
+tab_productos			tab_detalle_facturas
+tab_clientes			tab_facturas
+tab_facturas			tab_detalle_facturas, tab_dev
+
+2.Vendes kits (compuestos por varios instrumentos).
+
+También vendes instrumentos sueltos (pero en cantidades variables).
+
+❌ Problema actual:
+Tu tab_productos solo apunta a tab_instrumentos_kit (kits), no permite instrumentos sueltos.
+
+✅ Solución rápida:
+Agrega un campo opcional id_instrumento en tab_productos para vender instrumentos sueltos:
