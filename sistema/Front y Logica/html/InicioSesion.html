@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenido.</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="../src/JavaScript/security.js?v=99"></script>
+    <link rel="stylesheet" href="../styles/estilos_inicio_sesion.css?v=1.2">
+</head>
+
+
+<body>
+    <div class="container" id="container">
+        <!-- Registro -->
+        <div class="form-container sign-up-container">
+            <form id="registerForm" action="../src/php/registrar.php" method="POST" autocomplete="off">
+                <h1>Crear Cuenta</h1>
+                <span>Usa tus datos para registrarte</span>
+                <input type="text" name="usuario" placeholder="Usuario *" required maxlength="50" />
+                <input type="email" name="mail_user" placeholder="Correo electrónico *" required />
+                <input type="tel" name="tel_user" placeholder="Teléfono (solo números) *" pattern="[0-9]{10}"
+                    minlength="10" maxlength="10" required />
+
+                <div style="position:relative; width:100%;">
+                    <input type="password" name="password" id="regPassword" placeholder="Contraseña *" minlength="8"
+                        required style="padding-right: 40px;" />
+                    <i class="fa-solid fa-eye" id="togglePassword" tabindex="0"
+                        style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #888; transition: color 0.3s; z-index:10;"></i>
+                </div>
+                <div style="position:relative; width:100%;">
+                    <input type="password" name="confirm_password" id="regConfirmPassword"
+                        placeholder="Confirmar Contraseña *" minlength="8" required style="padding-right: 40px;" />
+                    <i class="fa-solid fa-eye" id="toggleConfirmPassword" tabindex="0"
+                        style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #888; transition: color 0.3s; z-index:10;"></i>
+                </div>
+                <!-- Siempre registrar como CLIENTE -->
+                <input type="hidden" name="tipo_usuario" value="cliente" />
+
+                 <!-- Checkbox de Términos (Layout Inamovible mediante estilo de tabla) -->
+                 <div class="terms-container" style="margin: 15px 0; width: 100%; display: block !important;">
+                     <div style="display: table !important; margin: 0 auto !important; border-spacing: 8px 0 !important; border-collapse: separate !important;">
+                         <div style="display: table-cell !important; vertical-align: middle !important;">
+                             <input type="checkbox" id="termsCheck" name="terms" required style="width: 18px !important; height: 18px !important; margin: 0 !important; cursor: pointer; accent-color: #36498f; display: block !important; border: none !important; background: none !important; transform: none !important; transition: none !important;">
+                         </div>
+                         <div style="display: table-cell !important; vertical-align: middle !important; white-space: nowrap !important; text-align: left !important;">
+                             <span style="font-size: 13px !important; color: #444 !important; line-height: 1 !important; user-select: none !important; display: block !important;">
+                                 Acepto los <a href="terminos.html" target="_blank" style="color: #36498f !important; font-weight: bold !important; text-decoration: underline !important;">términos y condiciones</a> <span style="color: #e74c3c; font-weight: bold;">*</span>.
+                             </span>
+                         </div>
+                     </div>
+                 </div>
+
+                <button type="submit">Registrarse</button>
+            </form>
+        </div>
+
+        <!-- Inicio de Sesión -->
+        <div class="form-container sign-in-container">
+            <form id="loginForm" method="POST" autocomplete="off">
+                <h1>Iniciar Sesión</h1>
+                <input type="text" name="usuario" placeholder="Usuario" required />
+                <div style="position:relative; width:100%;">
+                    <input type="password" name="password" id="loginPassword" placeholder="Contraseña" required
+                        style="padding-right: 40px;" />
+                    <i class="fa-solid fa-eye" id="toggleLoginPassword" tabindex="0"
+                        style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #888; transition: color 0.3s; z-index:10;"></i>
+                </div>
+                <a href="#" id="forgotPasswordLink">¿Olvidaste tu contraseña?</a>
+                <button type="submit">Iniciar Sesión</button>
+            </form>
+
+        </div>
+
+        <div class="overlay-container">
+            <div class="overlay">
+                <div class="overlay-panel overlay-left">
+                    <h1>¡Hola, Amigo!</h1>
+                    <p>Ingresa tus datos personales y comienza tu viaje con nosotros</p>
+                    <button class="ghost" id="signIn">Iniciar Sesión</button>
+                </div>
+                <div class="overlay-panel overlay-right">
+                    <h1>¡Bienvenido de nuevo!</h1>
+                    <br><br>
+                    <button class="ghost" id="signUp">Registrarse</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL RECUPERACIÓN -->
+    <div class="modal-recovery-overlay" id="recoveryModal">
+        <div class="modal-recovery-content">
+            <span class="modal-recovery-close" id="closeRecoveryModal">&times;</span>
+
+            <!-- PASO 1: Ingresar Usuario -->
+            <div class="recovery-step active" id="step1">
+                <h2>Recuperar Contraseña</h2>
+                <p>Ingresa tu nombre de usuario para buscar tu cuenta.</p>
+                <input type="text" id="recupUser" name="usuario" placeholder="Nombre de Usuario" />
+                <button type="button" id="btnSearchUser" style="margin-top: 15px;">Buscar</button>
+            </div>
+
+            <!-- PASO 2: Elegir Método -->
+            <div class="recovery-step" id="step2">
+                <h2>Elige un método</h2>
+                <p>¿Cómo quieres recibir tu código de recuperación?</p>
+                <div class="recovery-options" id="recoveryOptionsContainer">
+                    <!-- Se llenará dinámicamente -->
+                </div>
+                <button type="button" class="ghost" id="btnBackToStep1"
+                    style="color:#666; border-color:#ccc; margin-top:20px; font-size:12px; padding: 8px 20px;">Atrás</button>
+            </div>
+
+            <!-- PASO 3: Validar Código y Cambiar Password -->
+            <div class="recovery-step" id="step3">
+                <h2>Código Enviado</h2>
+                <p>Ingresa el código de 6 dígitos y tu nueva contraseña.</p>
+
+                <input type="text" id="recupCode" placeholder="Código de 6 dígitos" maxlength="6"
+                    style="text-align:center; letter-spacing: 5px; font-size: 18px;" />
+
+                <div style="position:relative; width:100%;">
+                    <input type="password" id="recupNewPass" name="password" placeholder="Nueva Contraseña" />
+                    <i class="fa-solid fa-eye" id="toggleRecupPass" tabindex="0"
+                        style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #888;"></i>
+                </div>
+
+                <div style="position:relative; width:100%;">
+                    <input type="password" id="recupConfirmPass" name="confirm_password"
+                        placeholder="Confirmar Nueva Contraseña" />
+                </div>
+
+                <button type="button" id="btnChangePass" style="margin-top: 15px;">Cambiar Contraseña</button>
+            </div>
+
+            <!-- PASO 4: Éxito -->
+            <div class="recovery-step" id="step4">
+                <i class="fa-solid fa-circle-check" style="font-size: 50px; color: #087d4e; margin-bottom: 20px;"></i>
+                <h2>¡Listo!</h2>
+                <p>Tu contraseña ha sido actualizada.</p>
+                <button type="button" id="btnCloseRecoverySuccess">Iniciar Sesión</button>
+            </div>
+
+        </div>
+    </div>
+
+    <style>
+        /* Ocultar el ojo por defecto de Edge y navegadores basados en Chromium */
+        input::-ms-reveal,
+        input::-ms-clear {
+            display: none !important;
+        }
+
+        /* Ocultar botones de autocompletado que puedan estorbar */
+        input::-webkit-contacts-auto-fill-button,
+        input::-webkit-credentials-auto-fill-button {
+            visibility: hidden;
+            position: absolute;
+            right: 0;
+        }
+    </style>
+
+</body>
+<script src="../src/JavaScript/inicio_sesion.js?v=100"></script>
+<script>
+    // ============================================
+    // SEGURIDAD: Limpiar sesión residual
+    // ============================================
+    (function () {
+        // Limpiar localStorage y sessionStorage al cargar la página de login
+        try {
+            // No limpiar todo, solo el token
+            if (localStorage.getItem('token')) {
+                localStorage.removeItem('token');
+            }
+        } catch (e) {
+            console.error('Error al limpiar storage:', e);
+        }
+
+        // Prevenir navegación hacia atrás si el usuario ya cerró sesión
+        window.history.pushState(null, null, window.location.href);
+        window.onpopstate = function () {
+            window.history.pushState(null, null, window.location.href);
+        };
+
+        // Prevenir que se pueda volver atrás con el botón del navegador
+        window.addEventListener('pageshow', function (event) {
+            if (event.persisted) {
+                // Página cargada desde cache, recargar
+                window.location.reload();
+            }
+        });
+    })();
+</script>
+
+</html>

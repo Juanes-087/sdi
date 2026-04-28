@@ -1,0 +1,97 @@
+2. REQUERIMIENTOS NO FUNCIONALES (RNF-BD)
+Enfocados en: ¿Cómo debe comportarse la base de datos? (Calidad, Rendimiento, Estándares)
+
+Integridad y Calidad de Datos
+La base de datos debe estar normalizada al menos hasta la Tercera Forma Normal (3NF) para evitar redundancia.
+
+Todos los campos de llave primaria (Primary Key) deben ser de tipo numérico entero (INTEGER o BIGINT) para optimizar la indexación.
+
+Los campos monetarios (precios, salarios, totales) deben usar el tipo de dato DECIMAL o NUMERIC con 2 decimales, nunca FLOAT o DOUBLE para evitar errores de redondeo.
+
+Todos los campos de texto obligatorios deben tener la restricción NOT NULL definida en la estructura de la tabla.
+
+Las fechas deben almacenarse utilizando el tipo de dato TIMESTAMP o DATE estándar de PostgreSQL.
+
+Se debe garantizar la integridad referencial mediante el uso estricto de Llaves Foráneas (Foreign Keys) en todas las relaciones.
+
+Los nombres de las tablas deben seguir el estándar tab_nombre_tabla (snake_case).
+
+Los nombres de los atributos deben ser descriptivos y seguir el estándar nom_campo, id_campo, val_campo.
+
+La base de datos debe utilizar el juego de caracteres UTF-8 para soportar tildes y caracteres especiales del español.
+
+Los campos booleanos deben tener un valor por defecto definido (ej. DEFAULT TRUE).
+
+Rendimiento y Eficiencia
+Las consultas de reportes complejos deben utilizar Cursores para manejar la memoria del servidor eficientemente.
+
+Se deben crear índices (INDEX) en las columnas utilizadas frecuentemente en cláusulas WHERE (ej. num_documento, fecha_venta).
+
+Se deben crear índices en las llaves foráneas para optimizar las operaciones de JOIN.
+
+Las funciones almacenadas no deben realizar SELECT *, sino especificar las columnas requeridas explícitamente.
+
+Las transacciones complejas (como Facturación) deben ejecutarse en menos de 2 segundos bajo carga normal.
+
+El uso de Triggers debe limitarse estrictamente a auditoría y control de integridad para no penalizar el rendimiento de inserción.
+
+Las validaciones de negocio deben realizarse al inicio de las funciones (Fail Fast) para evitar procesamiento innecesario.
+
+El sistema debe soportar conexiones concurrentes sin generar bloqueos mortales (Deadlocks) mediante el orden correcto de actualizaciones.
+
+Las secuencias de IDs deben manejarse mediante lógica de MAX(id) + 1 controlada o secuencias nativas según la criticidad de huecos en la numeración.
+
+Los arreglos (Arrays) pasados a funciones no deben exceder un tamaño máximo predefinido (ej. 100 ítems por factura) para evitar desbordamientos.
+
+Seguridad (Nivel DB)
+No se deben otorgar permisos de DELETE físico a los usuarios de la aplicación sobre las tablas maestras.
+
+Las funciones deben utilizar SECURITY DEFINER o INVOKER según corresponda para controlar los privilegios de ejecución.
+
+El acceso directo a las tablas debe estar restringido; la aplicación debe interactuar preferiblemente a través de las Funciones/Procedimientos Almacenados.
+
+Los mensajes de error devueltos por la base de datos (RAISE EXCEPTION) no deben exponer estructura interna o nombres de tablas sensibles en producción.
+
+Se debe evitar la inyección SQL utilizando funciones con parámetros tipados (%TYPE) en lugar de concatenación de cadenas pura.
+
+Los datos sensibles (como contraseñas) no deben ser visibles ni siquiera para el administrador en texto plano dentro de la BD.
+
+La base de datos debe estar configurada para solo aceptar conexiones desde IPs o subredes autorizadas (Servidor de Aplicación).
+
+El usuario de conexión de la aplicación no debe ser postgres (Superusuario), sino un usuario con privilegios limitados.
+
+Las funciones de inserción deben sanear los espacios en blanco (TRIM) antes de guardar cadenas de texto.
+
+Se deben implementar restricciones CHECK en la base de datos para validaciones críticas (ej. Salario >= Mínimo) como última línea de defensa.
+
+Mantenibilidad y Código
+Todo el código PL/pgSQL debe estar indentado correctamente para facilitar su lectura.
+
+Las variables dentro de las funciones deben seguir una convención de nomenclatura (ej. prefijo j o w) para diferenciarlas de las columnas de tabla.
+
+Cada función debe tener comentarios explicativos sobre sus parámetros de entrada y lo que retorna.
+
+El código debe ser modular: separar la lógica de facturación de la lógica de inventario en funciones distintas.
+
+Los scripts de instalación deben ser idempotentes (usar DROP TABLE IF EXISTS, CREATE OR REPLACE FUNCTION).
+
+Los mensajes de notificación (RAISE NOTICE) deben ser estandarizados para facilitar la depuración.
+
+Se debe mantener un script de "Datos Semilla" (Inserts iniciales) separado del script de estructura.
+
+Las modificaciones a la estructura de la base de datos deben realizarse mediante scripts de migración (ALTER TABLE) y no borrando y creando de nuevo en producción.
+
+El manejo de errores debe utilizar códigos de estado SQL estándar (ej. P0001, P0002) para que el Backend pueda interpretarlos.
+
+Las funciones deben estar agrupadas en un esquema o archivo según su módulo funcional.
+
+Disponibilidad y Respaldo
+La base de datos debe ser compatible con las herramientas de backup estándar de PostgreSQL (pg_dump).
+
+La estructura debe permitir la restauración de datos sin romper la integridad referencial (orden correcto de creación de tablas).
+
+El diseño debe permitir la ejecución de ventanas de mantenimiento sin pérdida de datos transaccionales.
+
+El sistema de base de datos debe estar configurado para reiniciar automáticamente en caso de fallo del servicio.
+
+Los datos críticos (Facturas, Kardex) no deben ser modificables arbitrariamente una vez cerrados (Inmutabilidad funcional).

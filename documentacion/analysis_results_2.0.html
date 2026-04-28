@@ -1,0 +1,2106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis Exhaustivo — Specialized Instrumental Dental v2.0</title>
+    <meta name="description" content="Documentación técnica completa del sistema Specialized Instrumental Dental: arquitectura, flujos, diccionarios de funciones SQL, PHP y JavaScript.">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Mermaid -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+
+    <!-- Highlight.js -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/php.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/sql.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/json.min.js"></script>
+
+    <style>
+        /* ===== CSS VARIABLES ===== */
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-tertiary: #1c2333;
+            --bg-card: #21262d;
+            --bg-hover: #292e36;
+            --border-primary: #30363d;
+            --border-accent: #388bfd44;
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --text-muted: #6e7681;
+            --accent-blue: #58a6ff;
+            --accent-purple: #bc8cff;
+            --accent-green: #3fb950;
+            --accent-orange: #d29922;
+            --accent-red: #f85149;
+            --accent-cyan: #39d2c0;
+            --accent-pink: #f778ba;
+            --gradient-primary: linear-gradient(135deg, #58a6ff 0%, #bc8cff 100%);
+            --gradient-header: linear-gradient(135deg, #0d1117 0%, #161b22 50%, #1a1e2e 100%);
+            --shadow-sm: 0 1px 3px rgba(0,0,0,.3);
+            --shadow-md: 0 4px 16px rgba(0,0,0,.4);
+            --shadow-lg: 0 8px 32px rgba(0,0,0,.5);
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 16px;
+            --sidebar-width: 300px;
+            --transition: all .25s cubic-bezier(.4,0,.2,1);
+        }
+
+        /* ===== RESET & BASE ===== */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 90px;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            font-size: 15px;
+            overflow-x: hidden;
+        }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-primary); }
+        ::-webkit-scrollbar-thumb { background: var(--border-primary); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+        /* ===== LAYOUT ===== */
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: var(--sidebar-width);
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-primary);
+            overflow-y: auto;
+            z-index: 100;
+            transition: transform .3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            padding: 24px 20px 16px;
+            border-bottom: 1px solid var(--border-primary);
+            background: var(--gradient-header);
+            flex-shrink: 0;
+        }
+
+        .sidebar-header .logo {
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 4px;
+        }
+
+        .sidebar-header .subtitle {
+            font-size: 11px;
+            color: var(--text-muted);
+            letter-spacing: .5px;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 12px 0;
+            overflow-y: auto;
+        }
+
+        .nav-section-title {
+            padding: 16px 20px 6px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 8px 20px;
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 400;
+            transition: var(--transition);
+            border-left: 3px solid transparent;
+            line-height: 1.4;
+        }
+
+        .nav-link:hover {
+            color: var(--text-primary);
+            background: var(--bg-hover);
+        }
+
+        .nav-link.active {
+            color: var(--accent-blue);
+            background: rgba(56, 139, 253, .08);
+            border-left-color: var(--accent-blue);
+            font-weight: 500;
+        }
+
+        .nav-link .nav-number {
+            color: var(--text-muted);
+            font-size: 11px;
+            font-weight: 600;
+            min-width: 20px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .nav-link .nav-icon {
+            font-size: 14px;
+            min-width: 18px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            min-width: 0;
+        }
+
+        /* ===== TOP BAR ===== */
+        .top-bar {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(13, 17, 23, .85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-primary);
+            padding: 14px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .top-bar h1 {
+            font-size: 16px;
+            font-weight: 600;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        #progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 2px;
+            background: var(--gradient-primary);
+            transition: width .1s linear;
+            border-radius: 0 2px 2px 0;
+        }
+
+        .btn-menu-toggle {
+            display: none;
+            background: none;
+            border: 1px solid var(--border-primary);
+            color: var(--text-primary);
+            font-size: 20px;
+            cursor: pointer;
+            padding: 6px 10px;
+            border-radius: var(--radius-sm);
+            transition: var(--transition);
+        }
+        .btn-menu-toggle:hover { background: var(--bg-hover); }
+
+        /* ===== ARTICLE ===== */
+        .article {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 40px 100px;
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero {
+            text-align: center;
+            padding: 60px 0 50px;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(ellipse, rgba(88,166,255,.08) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero h1 {
+            font-size: 36px;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 12px;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero .version-badge {
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 20px;
+            background: rgba(88,166,255,.12);
+            border: 1px solid rgba(88,166,255,.25);
+            color: var(--accent-blue);
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: .5px;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 16px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* ===== HEADINGS ===== */
+        h2 {
+            font-size: 26px;
+            font-weight: 700;
+            margin: 60px 0 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-primary);
+            position: relative;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 60px;
+            height: 2px;
+            background: var(--gradient-primary);
+            border-radius: 2px;
+        }
+
+        h3 {
+            font-size: 19px;
+            font-weight: 600;
+            margin: 36px 0 14px;
+            color: var(--accent-blue);
+        }
+
+        h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin: 24px 0 10px;
+            color: var(--accent-purple);
+        }
+
+        /* ===== PARAGRAPHS & LISTS ===== */
+        p { margin-bottom: 14px; }
+
+        ul, ol {
+            margin: 10px 0 14px 20px;
+        }
+
+        li { margin-bottom: 4px; }
+
+        strong { color: var(--text-primary); font-weight: 600; }
+
+        /* ===== TABLES ===== */
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 20px 0;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-primary);
+            box-shadow: var(--shadow-sm);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        thead {
+            background: var(--bg-tertiary);
+        }
+
+        th {
+            text-align: left;
+            padding: 12px 16px;
+            font-weight: 600;
+            color: var(--accent-blue);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: .8px;
+            white-space: nowrap;
+            border-bottom: 1px solid var(--border-primary);
+        }
+
+        td {
+            padding: 10px 16px;
+            border-bottom: 1px solid rgba(48, 54, 61, .5);
+            vertical-align: top;
+        }
+
+        tr:last-child td { border-bottom: none; }
+
+        tr:hover td { background: rgba(88,166,255,.03); }
+
+        /* ===== CODE BLOCKS ===== */
+        pre {
+            margin: 16px 0;
+            border-radius: var(--radius-md);
+            overflow-x: auto;
+            border: 1px solid var(--border-primary);
+            position: relative;
+        }
+
+        pre code {
+            display: block;
+            padding: 20px;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            background: var(--bg-tertiary) !important;
+        }
+
+        pre .lang-label {
+            position: absolute;
+            top: 8px;
+            right: 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            background: var(--bg-card);
+            padding: 2px 8px;
+            border-radius: 4px;
+            pointer-events: none;
+        }
+
+        code:not(pre code) {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12.5px;
+            padding: 2px 7px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-primary);
+            border-radius: 4px;
+            color: var(--accent-cyan);
+        }
+
+        /* ===== BLOCKQUOTES / ALERTS ===== */
+        blockquote {
+            margin: 20px 0;
+            padding: 16px 20px;
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        blockquote.alert-important {
+            background: rgba(88,166,255,.06);
+            border-left: 4px solid var(--accent-blue);
+        }
+        blockquote.alert-important .alert-title { color: var(--accent-blue); }
+
+        blockquote.alert-tip {
+            background: rgba(63,185,80,.06);
+            border-left: 4px solid var(--accent-green);
+        }
+        blockquote.alert-tip .alert-title { color: var(--accent-green); }
+
+        blockquote.alert-warning {
+            background: rgba(210,153,34,.06);
+            border-left: 4px solid var(--accent-orange);
+        }
+        blockquote.alert-warning .alert-title { color: var(--accent-orange); }
+
+        .alert-title {
+            font-weight: 700;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* ===== MERMAID ===== */
+        .mermaid-wrapper {
+            margin: 24px 0;
+            padding: 30px 20px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-md);
+            overflow-x: auto;
+            text-align: center;
+        }
+
+        .mermaid-wrapper .mermaid {
+            display: inline-block;
+        }
+
+        .mermaid-wrapper svg {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* ===== DIVIDERS ===== */
+        hr {
+            border: none;
+            height: 1px;
+            background: var(--border-primary);
+            margin: 40px 0;
+        }
+
+        /* ===== FLOW STEPS (numbered pseudo-code blocks) ===== */
+        .flow-block {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            margin: 16px 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            color: var(--text-secondary);
+        }
+
+        /* ===== STAR RATINGS ===== */
+        .stars { color: var(--accent-orange); }
+
+        /* ===== BACK TO TOP ===== */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            border: none;
+            color: #fff;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: var(--shadow-md);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: var(--transition);
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar.open {
+                transform: translateX(0);
+                box-shadow: var(--shadow-lg);
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .btn-menu-toggle {
+                display: block;
+            }
+            .article {
+                padding: 30px 24px 80px;
+            }
+            .hero h1 { font-size: 28px; }
+        }
+
+        @media (max-width: 600px) {
+            .article { padding: 20px 16px 60px; }
+            .hero h1 { font-size: 22px; }
+            h2 { font-size: 20px; }
+            h3 { font-size: 16px; }
+            table { font-size: 12px; }
+            th, td { padding: 8px 10px; }
+            pre code { font-size: 11.5px; padding: 14px; }
+        }
+
+        /* ===== OVERLAY ===== */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.5);
+            z-index: 90;
+        }
+        .sidebar-overlay.active { display: block; }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .article > * {
+            animation: fadeInUp .4s ease backwards;
+        }
+
+        .article > *:nth-child(1) { animation-delay: .05s; }
+        .article > *:nth-child(2) { animation-delay: .1s; }
+        .article > *:nth-child(3) { animation-delay: .15s; }
+    </style>
+</head>
+<body>
+
+<!-- SIDEBAR OVERLAY (mobile) -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <div class="logo">Specialized</div>
+        <div class="subtitle">Análisis Técnico v2.0</div>
+    </div>
+    <nav class="sidebar-nav">
+        <div class="nav-section-title">General</div>
+        <a href="#resumen-ejecutivo" class="nav-link"><span class="nav-number">01</span> Resumen Ejecutivo</a>
+        <a href="#arquitectura-general" class="nav-link"><span class="nav-number">02</span> Arquitectura General</a>
+        <a href="#ciclo-de-vida" class="nav-link"><span class="nav-number">03</span> Ciclo de Vida Completo</a>
+
+        <div class="nav-section-title">Capas del Sistema</div>
+        <a href="#capa-1-sql" class="nav-link"><span class="nav-icon">🗄️</span> CAPA 1 — PostgreSQL</a>
+        <a href="#capa-2-php" class="nav-link"><span class="nav-icon">⚙️</span> CAPA 2 — Backend PHP</a>
+        <a href="#capa-3-js" class="nav-link"><span class="nav-icon">📄</span> CAPA 3 — Frontend JS</a>
+
+        <div class="nav-section-title">Flujos Detallados</div>
+        <a href="#flujo-auxiliares" class="nav-link"><span class="nav-number">07</span> Datos Auxiliares</a>
+        <a href="#flujo-crud-completo" class="nav-link"><span class="nav-number">08</span> CRUD Completo</a>
+        <a href="#flujo-navegacion" class="nav-link"><span class="nav-number">09</span> Navegación SPA</a>
+        <a href="#flujo-autenticacion" class="nav-link"><span class="nav-number">10</span> Autenticación</a>
+        <a href="#flujo-ventas" class="nav-link"><span class="nav-number">11</span> Ventas y Facturación</a>
+
+        <div class="nav-section-title">Referencia</div>
+        <a href="#mapa-eventos" class="nav-link"><span class="nav-number">12</span> Mapa de Eventos</a>
+        <a href="#referencia-back" class="nav-link"><span class="nav-number">13</span> Archivos BACK/</a>
+        <a href="#diccionario-querys" class="nav-link"><span class="nav-number">14</span> Funciones PHP</a>
+        <a href="#diccionario-js" class="nav-link"><span class="nav-number">15</span> Funciones JS</a>
+        <a href="#diccionario-sql" class="nav-link"><span class="nav-number">16</span> Funciones SQL</a>
+        <a href="#orden-carga" class="nav-link"><span class="nav-icon">📦</span> Orden de Carga</a>
+    </nav>
+</aside>
+
+<!-- MAIN -->
+<div class="main-content">
+    <!-- TOP BAR -->
+    <header class="top-bar">
+        <button class="btn-menu-toggle" id="btnMenuToggle" aria-label="Abrir menú">☰</button>
+        <h1>Specialized Instrumental Dental — Documentación Técnica</h1>
+        <div id="progress-bar" style="width: 0%"></div>
+    </header>
+
+    <!-- ARTICLE -->
+    <article class="article">
+
+        <!-- HERO -->
+        <section class="hero">
+            <span class="version-badge">v2.0 — Abril 2026</span>
+            <h1>Análisis Exhaustivo del Sistema</h1>
+            <p>Documentación técnica integral de la arquitectura MVC en 3 capas, flujos de datos, diccionarios de funciones y estructura de eventos del sistema Specialized.</p>
+        </section>
+
+        <!-- =============================================== -->
+        <!-- SECTION 1: RESUMEN EJECUTIVO -->
+        <!-- =============================================== -->
+        <h2 id="resumen-ejecutivo">1. Resumen Ejecutivo</h2>
+
+        <p><strong>Specialized</strong> es un sistema web de gestión de inventario e instrumental dental que sigue una arquitectura <strong>MVC en 3 capas</strong>:</p>
+
+        <div class="table-wrapper">
+            <table>
+                <thead><tr><th>Capa</th><th>Tecnología</th><th>Responsabilidad</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Datos</strong></td><td>PostgreSQL + Funciones Almacenadas</td><td>Toda la lógica CRUD, validaciones de negocio, triggers de auditoría</td></tr>
+                    <tr><td><strong>Backend</strong></td><td>PHP 8 + PDO</td><td>Enrutamiento API, autenticación JWT/Sesión, capa de acceso a datos</td></tr>
+                    <tr><td><strong>Frontend</strong></td><td>JavaScript Vanilla (SPA parcial)</td><td>Renderizado dinámico, formularios, validación, navegación sin recarga</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <blockquote class="alert-important">
+            <div class="alert-title">ℹ️ Importante</div>
+            <strong>Principio fundamental del sistema</strong>: Ningún archivo PHP escribe SQL crudo inline. Todo pasa por <code>querys.php</code> que a su vez llama funciones almacenadas de PostgreSQL (<code>fun_insert_*</code>, <code>fun_update_*</code>, <code>fun_delete_*</code>). Esto centraliza la lógica de datos en un solo punto.
+        </blockquote>
+
+        <hr>
+
+        <!-- =============================================== -->
+        <!-- SECTION 2: ARQUITECTURA GENERAL -->
+        <!-- =============================================== -->
+        <h2 id="arquitectura-general">2. Arquitectura General y Flujo de Capas</h2>
+
+        <div class="mermaid-wrapper">
+            <div class="mermaid">
+graph TB
+    subgraph "USUARIO - Navegador"
+        A["🖱️ Evento del Usuario<br/>(clic, submit, navegación)"]
+    end
+
+    subgraph "CAPA 3: Frontend JavaScript"
+        B["Controller JS<br/>(instrumental_controller.js, etc.)"]
+        C["api_service.js<br/>(fetch centralizado)"]
+        D["logica.js<br/>(formularios genéricos + schemas)"]
+        E["ui_components.js<br/>(alertas, tablas, loading)"]
+        F["navigation.js<br/>(SPA routing)"]
+    end
+
+    subgraph "CAPA 2: Backend PHP"
+        G["api_gestion.php<br/>🔀 ENRUTADOR CENTRAL"]
+        H["Controller PHP<br/>(api_*_controller.php)"]
+        I["querys.php<br/>📦 MODELO DE DATOS"]
+    end
+
+    subgraph "CAPA 1: PostgreSQL"
+        J["Funciones Almacenadas<br/>(fun_insert_*, fun_update_*, etc.)"]
+        K["Triggers Audit Trail<br/>(fun_audit_trail)"]
+        L["Tablas de Datos<br/>(tab_instrumentos, tab_kits, etc.)"]
+    end
+
+    A --> B
+    A --> D
+    B --> C
+    D --> C
+    C -->|"HTTP GET/POST"| G
+    G -->|"delega según tipo"| H
+    H -->|"llama métodos"| I
+    I -->|"SELECT fun_*()"| J
+    J --> L
+    L --> K
+    J -->|"resultado"| I
+    I -->|"array/bool"| H
+    H -->|"json_encode"| G
+    G -->|"JSON Response"| C
+    C -->|"Promise resolve"| B
+    B -->|"renderiza UI"| E
+            </div>
+        </div>
+
+        <h3>Flujo en una frase</h3>
+        <blockquote class="alert-tip">
+            <div class="alert-title">💡 Resumen</div>
+            El usuario hace clic → JavaScript captura el evento → <code>ApiService.fetchApiGestion()</code> envía HTTP POST → <code>api_gestion.php</code> recibe, valida sesión, y delega al controlador PHP correspondiente → el controlador llama un método de <code>querys.php</code> → <code>querys.php</code> ejecuta <code>SELECT fun_xxx(...)</code> en PostgreSQL → PostgreSQL ejecuta la función almacenada y retorna resultado → la respuesta sube por la cadena como JSON → JavaScript lo recibe y actualiza la UI.
+        </blockquote>
+
+        <hr>
+
+        <!-- =============================================== -->
+        <!-- SECTION 3: CICLO DE VIDA -->
+        <!-- =============================================== -->
+        <h2 id="ciclo-de-vida">3. El Ciclo de Vida Completo</h2>
+
+        <div class="mermaid-wrapper">
+            <div class="mermaid">
+sequenceDiagram
+    participant U as 👤 Usuario
+    participant JS as 📄 JavaScript
+    participant API as 🔀 api_gestion.php
+    participant CTRL as 🎮 Controller PHP
+    participant Q as 📦 querys.php
+    participant DB as 🗄️ PostgreSQL
+
+    Note over U,DB: ═══ LECTURA (GET) ═══
+    U->>JS: Clic en "Instrumental" (sidebar)
+    JS->>JS: navigation.js → loadView('instrumental')
+    JS->>JS: instrumental_controller.js → fetchData('instrumentos')
+    JS->>API: GET api_gestion.php?tipo=instrumentos&estado=true
+    API->>API: Verifica sesión PHP ($_SESSION['id_usuario'])
+    API->>CTRL: ApiInstrumentalController::handleGet($db, 'instrumentos', 0)
+    CTRL->>Q: $db->getInstrumentos(true)
+    Q->>DB: SELECT i.*, e.nom_espec FROM tab_instrumentos i LEFT JOIN...
+    DB-->>Q: Array de filas
+    Q-->>CTRL: Array PHP
+    CTRL-->>API: echo json_encode({data: [...], columns: [...]})
+    API-->>JS: JSON Response
+    JS->>JS: renderGrid() → construye HTML de tarjetas
+    JS->>U: Muestra tarjetas con imágenes, stock, botones
+
+    Note over U,DB: ═══ ESCRITURA (POST) ═══
+    U->>JS: Llena formulario + clic "Guardar"
+    JS->>JS: guardarRegistro() → recolecta FormData
+    JS->>API: POST {accion:'create', tipo:'instrumentos', data:{...}}
+    API->>API: Verifica sesión + rol admin (id_menu == 1)
+    API->>API: $conn->beginTransaction()
+    API->>CTRL: ApiInstrumentalController::handleCreate($db, 'instrumentos', $data)
+    CTRL->>CTRL: Resuelve ID de especialización con getIdByName()
+    CTRL->>Q: $db->insertInstrumento($data)
+    Q->>DB: SELECT fun_insert_instrumentos(:espec, :nom, :cant, ...)
+    DB->>DB: fun_insert_instrumentos() valida + INSERT + retorna true
+    DB->>DB: Trigger audit_trail registra la inserción
+    DB-->>Q: {result: true}
+    Q-->>CTRL: Array con resultado
+    CTRL-->>API: return $res
+    API->>API: $conn->commit()
+    API-->>JS: {success: true, message: 'Creado correctamente'}
+    JS->>JS: UIComponents.showSuccess() → SweetAlert2
+    JS->>JS: fetchData('instrumentos') → recarga la tabla
+    JS->>U: Muestra alerta verde + tabla actualizada
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- =============================================== -->
+        <!-- SECTION 4: CAPA 1 SQL -->
+        <!-- =============================================== -->
+        <h2 id="capa-1-sql">4. CAPA 1 — Base de Datos (PostgreSQL)</h2>
+
+        <h3>4.1 Categorías de Funciones SQL</h3>
+
+        <div class="table-wrapper">
+            <table>
+                <thead><tr><th>Categoría</th><th>Prefijo</th><th>Cantidad</th><th>Ejemplo</th><th>Qué hace</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Inserción</strong></td><td><code>fun_insert_*</code></td><td>27</td><td><code>fun_insert_instrumentos(...)</code></td><td>Valida datos + INSERT + retorna boolean</td></tr>
+                    <tr><td><strong>Actualización</strong></td><td><code>fun_update_*</code></td><td>33</td><td><code>fun_update_kits(...)</code></td><td>Valida + UPDATE + retorna boolean</td></tr>
+                    <tr><td><strong>Eliminación</strong></td><td><code>fun_delete_*</code></td><td>34</td><td><code>fun_delete_instrum(:id)</code></td><td>Marca <code>ind_vivo = false</code> (soft delete)</td></tr>
+                    <tr><td><strong>Consulta</strong></td><td><code>fun_obtener_*</code></td><td>5</td><td><code>fun_obtener_auxiliares()</code></td><td>Retorna JSON o tablas de datos</td></tr>
+                    <tr><td><strong>Transaccional</strong></td><td><code>fun_fact*</code>, <code>fun_kardex*</code></td><td>9</td><td><code>fun_fact(...)</code></td><td>Lógica de negocio compleja (facturación, kardex)</td></tr>
+                    <tr><td><strong>Validación</strong></td><td><code>fun_valida_*</code></td><td>4</td><td><code>fun_valida_stock()</code></td><td>Sólo en carpeta BACK/ (validaciones preventivas)</td></tr>
+                    <tr><td><strong>Auditoría</strong></td><td><code>fun_audit_trail</code></td><td>1</td><td><code>fun_audit_trail()</code></td><td>Trigger automático: registra todo cambio</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>4.2 <code>fun_obtener_auxiliares()</code> — La función más importante para formularios</h3>
+
+        <p><strong>¿Qué hace?</strong> Ejecuta 9 subconsultas en paralelo y retorna UN SOLO objeto JSON con todas las listas de referencia del sistema.</p>
+        <p><strong>¿Cuándo se ejecuta?</strong> Cada vez que se abre un formulario de gestión (crear/editar usuario, cliente, empleado, instrumento, etc.).</p>
+        <p><strong>¿Qué retorna?</strong></p>
+
+        <pre><span class="lang-label">JSON</span><code class="language-json">{
+  "ciudades":          [{"id": 1, "label": "Bogotá"}, ...],
+  "documentos":        [{"id": 1, "label": "Cédula"}, ...],
+  "bancos":            [{"id": 1, "label": "Bancolombia"}, ...],
+  "cargos":            [{"id": 1, "label": "Gerente"}, ...],
+  "sangre":            [{"id": 1, "label": "O+"}, ...],
+  "especializaciones": [{"id": 1, "label": "Endodoncia"}, ...],
+  "proveedores":       [{"id": 1, "label": "ProDental S.A."}, ...],
+  "generos":           [{"id": 1, "label": "Masculino"}, ...],
+  "unidades":          [{"id": 1, "label": "Kilogramo"}, ...]
+}</code></pre>
+
+        <p><strong>¿Cómo queda en memoria?</strong> Se guarda en <code>window.auxiliares</code> (variable global JS) y se usa para llenar todos los <code>&lt;select&gt;</code> y <code>&lt;datalist&gt;</code> de los formularios sin hacer más peticiones al servidor.</p>
+
+        <h3>4.3 <code>fun_obtener_stats()</code> — Métricas del Dashboard</h3>
+        <p><strong>¿Qué hace?</strong> Calcula 16 métricas agregadas del sistema en una sola consulta.</p>
+        <p><strong>¿Cuándo se ejecuta?</strong> Al cargar <code>menuPrincipal.php</code> (dashboard del admin).</p>
+        <p><strong>¿Qué retorna?</strong> <code>total_usuarios</code>, <code>usuarios_mes</code>, <code>total_admins</code>, <code>total_clientes</code>, <code>total_productos</code>, <code>total_instrumentos</code>, <code>total_kits</code>, <code>mayor_venta_nombre</code>, <code>mayor_venta_total</code>, <code>menor_stock_nombre</code>, <code>menor_stock_cant</code>, <code>total_ventas</code>, <code>ventas_diarias</code>, <code>total_proveedores</code>, <code>alerta_stock_critico</code>, <code>val_pordesc</code>.</p>
+
+        <h3>4.4 <code>fun_obtener_alertas_detalle()</code> — Stock Bajo</h3>
+        <p><strong>¿Qué hace?</strong> Busca todos los instrumentos, kits y materias primas cuyo <code>cant_disp &lt;= stock_min</code>.</p>
+        <p><strong>¿Cuándo se ejecuta?</strong> Al cargar el dashboard, para mostrar el badge rojo de notificaciones.</p>
+
+        <h3>4.5 Funciones Transaccionales</h3>
+
+        <div class="table-wrapper">
+            <table>
+                <thead><tr><th>Función</th><th>Qué hace</th><th>Complejidad</th></tr></thead>
+                <tbody>
+                    <tr><td><code>fun_fact(...)</code></td><td>Crea factura completa: inserta encabezado en <code>tab_facturas</code>, detalle en <code>tab_detalle_facturas</code>, descuenta stock via Kardex, aplica descuento automático</td><td><span class="stars">⭐⭐⭐⭐⭐</span></td></tr>
+                    <tr><td><code>fun_kardex_productos(...)</code></td><td>Registra entrada/salida de instrumentos o kits. Actualiza <code>cant_disp</code> automáticamente</td><td><span class="stars">⭐⭐⭐</span></td></tr>
+                    <tr><td><code>fun_kardex_materia_prima(...)</code></td><td>Registra entrada/salida de materia prima. Actualiza <code>cant_mat_prima</code> en <code>tab_mat_primas_prov</code></td><td><span class="stars">⭐⭐⭐</span></td></tr>
+                    <tr><td><code>fun_act_precio(...)</code></td><td>Actualiza precio y registra el cambio en <code>tab_historico_mat_prima</code></td><td><span class="stars">⭐⭐</span></td></tr>
+                    <tr><td><code>fun_registrar_devolucion_multiple(...)</code></td><td>Procesa devolución de múltiples items de una factura, reingresa a stock si es reparable</td><td><span class="stars">⭐⭐⭐⭐</span></td></tr>
+                    <tr><td><code>fun_caja_diario(...)</code></td><td>Cierre de caja del día</td><td><span class="stars">⭐⭐</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>4.6 Audit Trail (Triggers Automáticos)</h3>
+
+        <div class="mermaid-wrapper">
+            <div class="mermaid">
+graph LR
+    A["INSERT/UPDATE/DELETE<br/>en cualquier tabla"] --> B["Trigger BEFORE/AFTER"]
+    B --> C["fun_audit_trail()"]
+    C --> D["INSERT en tab_audit_trail<br/>con usuario, tabla, acción,<br/>datos viejos, datos nuevos,<br/>fecha, IP"]
+            </div>
+        </div>
+
+        <p><strong>¿Cómo sabe qué usuario hizo el cambio?</strong> En el constructor de <code>querys.php</code>:</p>
+
+        <pre><span class="lang-label">PHP</span><code class="language-php">$this->conn->exec("SET specialized.app_user = " . $this->conn->quote($user));</code></pre>
+
+        <p>Esto configura una variable de sesión de PostgreSQL que el trigger lee con <code>current_setting('specialized.app_user')</code>.</p>
+
+        <hr>
+
+        <!-- =============================================== -->
+        <!-- SECTION 5: CAPA 2 PHP -->
+        <!-- =============================================== -->
+        <h2 id="capa-2-php">5. CAPA 2 — Backend PHP (API + Modelo)</h2>
+
+        <h3>5.1 <code>api_gestion.php</code> — El Enrutador Central</h3>
+
+        <blockquote class="alert-important">
+            <div class="alert-title">ℹ️ Importante</div>
+            <strong>Este es el ÚNICO punto de entrada para toda la API del admin.</strong> Toda petición JS pasa por aquí.
+        </blockquote>
+
+        <h4>Flujo interno paso a paso:</h4>
+
+        <div class="flow-block">1. Incluir dependencias (security_headers, querys, jwt, controladores)
+2. Header JSON + no-cache
+3. Verificar método HTTP (solo GET y POST)
+4. Verificar sesión PHP → $_SESSION['id_usuario']
+5. Si es POST → verificar rol admin → $_SESSION['id_menu'] == 1
+6. Crear instancia de CQuerys → $db = new CQuerys()
+7. Obtener conexión → $conn = $db->getConn()
+
+═══ SI ES GET ═══
+8. Leer $tipo = $_GET['tipo']
+9. Ejecutar handleGet() de CADA controlador en cadena:
+   → ApiDashboardController::handleGet()    // auxiliares, stats, clientes, empleados, proveedores, usuarios, finanzas...
+   → ApiInstrumentalController::handleGet()  // instrumentos, kits, kit_instruments
+   → ApiMatPrimController::handleGet()       // categorias_materia, materias_x_cat, historico_precios...
+   → ApiProductosController::handleGet()     // productos
+   → ApiHistorialController::handleGet()     // kardex, ventas, facturas...
+10. Si NINGUNO hizo exit → "Tipo no válido"
+
+═══ SI ES POST ═══
+8. Detectar si es FormData o JSON puro
+9. Si hay archivo (img_url) → moverlo a /images/{subFolder}/
+10. $conn->beginTransaction()
+11. Switch por $accion:
+    'create' → delegar a handleCreate() de cada controlador
+    'update' → delegar a handleUpdate() de cada controlador
+    'delete' → ejecutar handleDelete() de cada controlador + deleteGeneric()
+    'restore'→ ejecutar handleRestore() de cada controlador
+12. $conn->commit() o $conn->rollBack() si hay error</div>
+
+        <h4>Patrón de delegación en cadena (Chain of Responsibility)</h4>
+
+        <pre><span class="lang-label">PHP</span><code class="language-php">// Para CREATE:
+$res = ApiHistorialController::handleCreate($db, $tipo, $data);
+if ($res === false) $res = ApiDashboardController::handleCreate($db, $tipo, $data);
+if ($res === false) $res = ApiInstrumentalController::handleCreate($db, $tipo, $data, $parsedInput);
+if ($res === false) $res = ApiMatPrimController::handleCreate($db, $tipo, $data);
+if ($res === false) throw new Exception("Tipo no soportado");</code></pre>
+
+        <p>Cada controlador retorna <code>false</code> si no le corresponde el <code>$tipo</code>, y el router prueba el siguiente.</p>
+
+        <h4>Manejo de archivos (imágenes)</h4>
+        <p>Cuando el formulario incluye un archivo (<code>$_FILES['img_url']</code>):</p>
+        <ol>
+            <li>Determina la subcarpeta según el tipo: <code>instrum/</code>, <code>kit/</code>, <code>prod/</code>, <code>mat_prima/</code></li>
+            <li>Valida extensión (solo JPG/PNG)</li>
+            <li>Genera nombre único con <code>md5(time() . $fileName)</code></li>
+            <li>Mueve el archivo a <code>images/{subFolder}/</code></li>
+            <li>Guarda la ruta relativa en <code>$data['img_url']</code>: <code>'../../images/instrum/abc123.jpg'</code></li>
+        </ol>
+
+        <h3>5.2 Los 5 Controladores PHP</h3>
+        <p>Cada controlador es una clase estática con 4 métodos: <code>handleGet</code>, <code>handleCreate</code>, <code>handleUpdate</code>, <code>handleDelete</code>.</p>
+
+        <h4>ApiDashboardController — Entidades maestras + Dashboard</h4>
+
+        <div class="table-wrapper">
+            <table>
+                <thead><tr><th>Método</th><th>Tipos que maneja</th><th>Qué hace</th></tr></thead>
+                <tbody>
+                    <tr><td><code>handleGet</code></td><td><code>auxiliares</code>, <code>stats</code>, <code>clientes</code>, <code>empleados</code>, <code>proveedores</code>, <code>usuarios</code>, <code>nuevos_mes</code>, <code>finanzas</code></td><td>Retorna datos + definición de columnas para tablas</td></tr>
+                    <tr><td><code>handleCreate</code></td><td><code>usuarios</code>, <code>clientes</code>, <code>empleados</code>, <code>proveedores</code>, <code>productos</code></td><td>Valida, resuelve IDs de nombres (<code>getIdByName</code>), llama a <code>insert*()</code></td></tr>
+                    <tr><td><code>handleUpdate</code></td><td><code>usuarios</code>, <code>clientes</code>, <code>empleados</code>, <code>proveedores</code>, <code>productos</code></td><td>Mapea nombres→IDs, llama a <code>update*()</code> específico</td></tr>
+                    <tr><td><code>handleDelete</code></td><td><code>productos</code>, <code>usuarios</code></td><td>Delega a <code>deleteGeneric()</code></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p><strong>Patrón clave — <code>getIdByName()</code></strong>: Los formularios envían NOMBRES (ej: <code>"Bogotá"</code>) y el controlador los traduce a IDs (ej: <code>5</code>) antes de pasarlos a la BD:</p>
+
+        <pre><span class="lang-label">PHP</span><code class="language-php">$data['id_ciudad'] = $db->getIdByName('tab_ciudades', 'id_ciudad', 'nom_ciudad', $data['nom_ciudad']);</code></pre>
+
+        <h4>ApiInstrumentalController — Instrumentos y Kits</h4>
+
+        <div class="table-wrapper">
+            <table>
+                <thead><tr><th>Método</th><th>Tipos que maneja</th><th>Qué hace</th></tr></thead>
+                <tbody>
+                    <tr><td><code>handleGet</code></td><td><code>instrumentos</code>, <code>kits</code>, <code>kit_instruments</code></td><td>Lista instrumentos/kits, contenido de un kit</td></tr>
+                    <tr><td><code>handleCreate</code></td><td><code>instrumentos</code>, <code>kits</code></td><td>Resuelve especialización, inserta, para kits convierte array <code>instruments[]</code> a formato PG <code>{1,2,3}</code></td></tr>
+                    <tr><td><code>handleUpdate</code></td><td><code>instrumentos</code>, <code>kits</code></td><td>Actualiza + commit + exit propio (no vuelve al router)</td></tr>
+                    <tr><td><code>handleDelete</code></td><td><code>instrumentos</code>, <code>kits</code></td><td><strong>Valida dependencias</strong> antes de permitir borrado</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p><strong>Validaciones de dependencia en delete</strong>:</p>
+        <ul>
+            <li>Instrumento → ¿Está en algún kit (<code>tab_instrumentos_kit</code>)? → Bloquear</li>
+            <li>Instrumento → ¿Está en algún producto (<code>tab_productos</code>)? → Bloquear</li>
+            <li>Kit → ¿Tiene instrumentos asociados? → Bloquear</li>
+            <li>Kit → ¿Está en algún producto? → Bloquear</li>
+        </ul>
+
+        <h4>ApiMatPrimController — Materia Prima y Categorías</h4>
+
+        <div class="table-wrapper">
+            <table>
+                <thead><tr><th>Método</th><th>Tipos que maneja</th></tr></thead>
+                <tbody>
+                    <tr><td><code>handleGet</code></td><td><code>categorias_materia</code>, <code>materias_x_cat</code>, <code>materias_x_proveedor</code>, <code>materias_primas_list</code>, <code>historico_precios</code></td></tr>
+                    <tr><td><code>handleCreate</code></td><td><code>categorias_materia</code>, <code>materias_primas</code></td></tr>
+                    <tr><td><code>handleUpdate</code></td><td><code>categorias_materia</code>, <code>materias_primas</code></td></tr>
+                    <tr><td><code>handleRestore</code></td><td><code>categorias_materia</code>, <code>materias_primas</code></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h4>ApiHistorialController — Kardex, Ventas, Devoluciones</h4>
+
+        <div class="table-wrapper">
+            <table>
+                <thead><tr><th>Método</th><th>Tipos que maneja</th><th>Qué hace</th></tr></thead>
+                <tbody>
+                    <tr><td><code>handleGet</code></td><td><code>listar_historial_kardex</code>, <code>listar_historial_ventas_devoluciones</code>, <code>buscar_facturas_devolucion</code>, <code>detalle_factura</code></td><td>Lee movimientos históricos</td></tr>
+                    <tr><td><code>handleCreate</code></td><td><code>kardex_movimiento</code>, <code>kardex_producto</code>, <code>venta_formal</code>, <code>devolucion_factura</code></td><td>Registra movimientos de inventario y ventas</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h4>ApiProductosController — Productos de Venta</h4>
+        <p>Maneja la entidad <code>tab_productos</code> (vinculada a un instrumento O un kit para convertirlo en producto vendible).</p>
+
+        <h3>5.3 <code>querys.php</code> — La Capa de Datos (1481 líneas)</h3>
+        <p><strong>Es la ÚNICA clase que habla con PostgreSQL.</strong> Estructura interna:</p>
+
+        <div class="table-wrapper">
+            <table>
+                <thead><tr><th>Sección</th><th>Líneas</th><th>Métodos principales</th></tr></thead>
+                <tbody>
+                    <tr><td>Constructor + Audit Trail</td><td>1–57</td><td><code>__construct()</code>, <code>getConn()</code></td></tr>
+                    <tr><td>Datos Auxiliares</td><td>59–92</td><td><code>getAuxiliaresJSON()</code>, <code>getIdByName()</code></td></tr>
+                    <tr><td>Consultas principales</td><td>94–339</td><td><code>getClientes()</code>, <code>getEmpleados()</code>, <code>getProveedores()</code>, <code>getUsuarios()</code>, <code>getInstrumentos()</code>, <code>getKits()</code>, etc.</td></tr>
+                    <tr><td>Estadísticas y búsquedas</td><td>220–300</td><td><code>getStats()</code>, <code>getAlertasDetalle()</code>, <code>buscarProductos()</code>, <code>getProductosAdmin()</code></td></tr>
+                    <tr><td>Inserciones</td><td>386–616</td><td><code>insertUser()</code>, <code>insertCliente()</code>, <code>insertEmpleado()</code>, <code>insertProveedor()</code>, <code>insertInstrumento()</code>, <code>insertKit()</code>, etc.</td></tr>
+                    <tr><td>Eliminación lógica</td><td>618–771</td><td><code>deleteGeneric()</code>, <code>restoreGeneric()</code></td></tr>
+                    <tr><td>Actualizaciones</td><td>773–1035</td><td><code>updateEmpleado()</code>, <code>updateCliente()</code>, <code>updateProveedor()</code>, <code>updateGeneric()</code>, <code>updateKit()</code>, etc.</td></tr>
+                    <tr><td>Kardex</td><td>1037–1273</td><td><code>insertKardexProducto()</code>, <code>registrarMovimientoKardex()</code>, <code>getKardexHistory()</code>, etc.</td></tr>
+                    <tr><td>Facturación</td><td>1157–1246</td><td><code>registrarVentaFormal()</code>, <code>registrarDevolucionMultiple()</code>, <code>getFacturaEncabezado()</code>, etc.</td></tr>
+                    <tr><td>Finanzas</td><td>1340–1479</td><td><code>getFinanzasStats()</code>, <code>getRentabilidadGlobal()</code>, <code>getTicketEspecialidad()</code>, <code>getPrevisionesCompra()</code></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h4>Patrón de cada método INSERT</h4>
+
+        <pre><span class="lang-label">PHP</span><code class="language-php">public function insertInstrumento($d) {
+    // 1. Validar precondiciones (ej: imagen obligatoria)
+    if (empty($d['img_url'])) throw new Exception("...");
+    
+    // 2. Preparar sentencia que llama a la función SQL
+    $sql = "SELECT fun_insert_instrumentos(:id_espec, :nom, ...) as result";
+    $stmt = $this->conn->prepare($sql);
+    
+    // 3. Ejecutar con parámetros sanitizados
+    $stmt->execute([':id_espec' => (int) $d['id_especializacion'], ...]);
+    
+    // 4. Retornar resultado
+    return $stmt->fetch(PDO::FETCH_ASSOC); // → ['result' => true/false]
+}</code></pre>
+
+        <h4>Patrón de <code>deleteGeneric()</code></h4>
+
+        <div class="flow-block">1. Switch por $tipo → determina qué función SQL llamar (fun_delete_instrum, etc.)
+2. Verificar que el registro EXISTE (SELECT ind_vivo FROM tab_X WHERE id = :id)
+3. Verificar que NO fue eliminado previamente (ind_vivo = false → error)
+4. Ejecutar la función SQL de borrado
+5. Retornar resultado</div>
+
+        <h3>5.4 <code>conexion.php</code> — Conexión PDO</h3>
+
+        <div class="flow-block">1. Lee credenciales de .env (DB_HOST, DB_NAME, DB_USER, DB_PASSWORD, DB_PORT)
+2. Verifica que las variables existan
+3. Verifica que PHP tenga extensión pdo_pgsql
+4. Crea conexión PDO con modo ERRMODE_EXCEPTION
+5. Retorna $conn (o null si falla)</div>
+
+        <h3>5.5 <code>validar.php</code> — Login</h3>
+
+        <div class="flow-block">1. Recibe POST con usuario + password
+2. Busca usuario en tab_users JOIN tab_users_menu
+3. Verifica contraseña:
+   - Si es hash moderno → password_verify()
+   - Si es texto plano (legado) → compara + migra automáticamente a bcrypt
+4. Lee ind_idle de tab_parametros (minutos de inactividad)
+5. Genera JWT con payload: {id, usuario, menu, iat, exp}
+6. Retorna {success, token, id_menu}</div>
+
+        <hr>
+
+        <!-- =============================================== -->
+        <!-- SECTION 6: CAPA 3 JS -->
+        <!-- =============================================== -->
+        <h2 id="capa-3-js">6. CAPA 3 — Frontend JavaScript</h2>
+
+        <h3>6.1 <code>api_service.js</code> — El Cliente HTTP Centralizado</h3>
+        <p><strong>3 métodos + 1 método principal:</strong></p>
+
+        <div class="table-wrapper">
+            <table>
+                <thead><tr><th>Método</th><th>Cuándo se usa</th><th>Content-Type</th></tr></thead>
+                <tbody>
+                    <tr><td><code>ApiService.get(url)</code></td><td>Consultas de datos (GET)</td><td>—</td></tr>
+                    <tr><td><code>ApiService.postJson(url, payload)</code></td><td>Crear/editar sin archivo</td><td><code>application/json</code></td></tr>
+                    <tr><td><code>ApiService.postFormData(url, formData)</code></td><td>Crear/editar CON imagen</td><td><code>multipart/form-data</code> (automático)</td></tr>
+                    <tr><td><code>ApiService.fetchApiGestion(accion, tipo, payload, id)</code></td><td><strong>MÉTODO PRINCIPAL</strong> — abstrae los 3 anteriores</td><td>Detecta automáticamente</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h4>¿Cómo funciona <code>fetchApiGestion</code>?</h4>
+
+        <pre><span class="lang-label">JavaScript</span><code class="language-javascript">// Si accion === 'read' → GET
+fetchApiGestion('read', 'instrumentos') 
+  → GET ./api_gestion.php?tipo=instrumentos
+
+// Si payload es FormData → postFormData
+const fd = new FormData(); fd.append('img_url', file);
+fetchApiGestion('create', 'instrumentos', fd)
+  → POST FormData con accion/tipo/data en campos del form
+
+// Si payload es objeto normal → postJson  
+fetchApiGestion('create', 'usuarios', {nom_user: 'juan', ...})
+  → POST JSON {accion: 'create', tipo: 'usuarios', data: {...}}
+
+// Para delete/update con ID
+fetchApiGestion('delete', 'instrumentos', null, 42)
+  → POST JSON {accion: 'delete', tipo: 'instrumentos', id: 42}</code></pre>
+
+        <p><strong>Manejo de sesión expirada</strong>: Si cualquier respuesta es 401, automáticamente llama <code>UIComponents.showSessionExpired()</code> que muestra el modal de sesión caducada.</p>
+
+        <h3>6.2 <code>ui_components.js</code> — Componentes UI Reutilizables</h3>
+
+        <div class="table-wrapper">
+            <table>
+                <thead><tr><th>Método</th><th>Qué hace</th><th>Implementación interna</th></tr></thead>
+                <tbody>
+                    <tr><td><code>UIComponents.toggleLoading(show)</code></td><td>Muestra/oculta spinner de carga</td><td>Llama a <code>window.mostrarCargando()</code> / <code>window.ocultarCargando()</code></td></tr>
+                    <tr><td><code>UIComponents.showSuccess(msg, callback)</code></td><td>Alerta verde de éxito</td><td>SweetAlert2 via <code>window.mostrarExitoCustom()</code></td></tr>
+                    <tr><td><code>UIComponents.showError(title, msg)</code></td><td>Alerta roja de error</td><td>SweetAlert2 via <code>window.mostrarErrorCustom()</code></td></tr>
+                    <tr><td><code>UIComponents.showConfirm(title, msg, onConfirm)</code></td><td>Dialog de confirmación</td><td>SweetAlert2 via <code>window.mostrarConfirmacionCustom()</code></td></tr>
+                    <tr><td><code>UIComponents.showSessionExpired()</code></td><td>Modal bloqueante de sesión expirada</td><td>Crea DOM propio con botón "Aceptar y Salir" → <code>ejecutarLogout()</code></td></tr>
+                    <tr><td><code>UIComponents.renderTable(container, columns, data, actionsHtmlFn)</code></td><td>Genera tabla HTML estándar</td><td>Construye <code>&lt;table&gt;</code> con headers + filas + botones de acción</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p>Se exporta como <code>window.UIComponents</code> para acceso global.</p>
+
+        <h3>6.3 <code>validadores_base.js</code> — Validación en Tiempo Real</h3>
+
+        <p>El sistema de validación funciona así:</p>
+
+        <ol>
+            <li>Cada controlador registra reglas en <code>window.ValidationRules</code>:
+                <pre><span class="lang-label">JavaScript</span><code class="language-javascript">window.ValidationRules['nom_instrumento'] = {
+    validate: (val) => {
+        if (val.length > 35) return { valid: false, msg: "Máximo 35 caracteres." };
+        return { valid: true, msg: "Nombre válido." };
+    }
+};</code></pre>
+            </li>
+            <li>Al renderizar un formulario, <code>logica.js</code> llama <code>initFormValidations(form)</code>.</li>
+            <li><code>initFormValidations</code> escucha el evento <code>input</code> de cada campo.</li>
+            <li>Si existe una regla en <code>ValidationRules</code> para ese campo, la ejecuta.</li>
+            <li>Muestra un ícono ✅ o ❌ y un mensaje debajo del campo en tiempo real.</li>
+        </ol>
+
+        <h3>6.4 <code>navigation.js</code> — Navegación SPA</h3>
+
+        <p><strong>¿Qué es SPA parcial?</strong> El panel admin NO recarga la página al navegar entre secciones. Usa JavaScript para mostrar/ocultar contenedores.</p>
+
+        <div class="mermaid-wrapper">
+            <div class="mermaid">
+graph TB
+    S["Sidebar (sidebar.php)"]
+    S -->|clic btn-instrumental| N["navigation.js"]
+    S -->|clic btn-materia-prima| N
+    S -->|clic btn-productos| N
+    S -->|clic btn-historial| N
+    S -->|clic btn-finanzas| N
+
+    N -->|"activateMenu()"| SM["Resalta botón activo<br/>(clase active-menu)"]
+    N -->|"loadView('instrumental')"| LV["Oculta #dashboard-view<br/>Muestra #dynamic-view<br/>Limpia innerHTML<br/>Oculta panel derecho (.a3)"]
+
+    LV -->|"instrumental"| IC["loadSelectionView()<br/>(instrumental_controller.js)"]
+    LV -->|"materia-prima"| MC["loadMateriaPrimaView()<br/>(mat_prim_controller.js)"]
+    LV -->|"productos"| PC["loadProductosView()<br/>(productos_controller.js)"]
+    LV -->|"historial"| HC["loadHistorialView()<br/>(historial_controller.js)"]
+    LV -->|"finanzas"| FC["loadFinanzasView()<br/>(finanzas_controller.js)"]
+            </div>
+        </div>
+
+        <p><strong>Toggle inteligente:</strong> Si haces clic en un botón que ya está activo, llama a <code>returnToDashboard()</code> que:</p>
+        <ol>
+            <li>Oculta <code>#dynamic-view</code></li>
+            <li>Muestra <code>#dashboard-view</code> con animación fade-in</li>
+            <li>Remueve clase <code>active-menu</code> de todos los botones</li>
+            <li>Muestra panel derecho (.a3) de nuevo</li>
+        </ol>
+
+        <h3>6.5 <code>logica.js</code> — Motor de Formularios Genéricos (1520 líneas)</h3>
+        <p>Este archivo es el <strong>corazón de la generación dinámica de formularios</strong>. Sus funciones clave:</p>
+
+        <h4><code>cargaAuxiliares()</code> — Carga de datos auxiliares</h4>
+        <div class="flow-block">1. fetch('./api_gestion.php?tipo=auxiliares')
+2. Parsea JSON
+3. Guarda en window.auxiliares
+→ RESULTADO: window.auxiliares = {ciudades:[...], documentos:[...], ...}</div>
+
+        <h4><code>abrirGestion(tipo)</code> — Abrir modal de gestión de una entidad</h4>
+        <div class="flow-block">1. Muestra modalGestion con spinner
+2. En paralelo: fetch(datos de la tabla) + cargaAuxiliares()
+3. Guarda datos en variable currentData
+4. Llama renderTabla(data, columns, tipo)
+5. Muestra botón "Nuevo" si no es 'nuevos_mes'</div>
+
+        <p><strong>¿Desde dónde se llama?</strong> Desde las tarjetas del dashboard: <code>onclick="abrirGestion('usuarios')"</code>, <code>onclick="abrirGestion('clientes')"</code>, etc.</p>
+
+        <h4><code>mostrarFormulario(tipo, accion, data, originType)</code> — Genera formulario dinámico</h4>
+        <div class="flow-block">1. Si no hay auxiliares → cargaAuxiliares() (lazy load)
+2. Si tipo === 'kits' → renderiza Kit Builder especial (2 columnas, selector de instrumentos)
+3. Si no → obtener esquema del formulario: obtenerEsquemaFormulario(tipo, data)
+   → Esto busca en window.FormSchemas[tipo](data)
+4. Generar HTML: recorre cada campo del esquema:
+   - type='select' → &lt;select&gt; con options de auxiliares
+   - type='datalist' → &lt;input&gt; + &lt;datalist&gt; + &lt;input hidden&gt; para ID
+   - type='file' → &lt;input type="file"&gt;
+   - type='number' → convierte a &lt;input type="text"&gt; con formato de miles
+   - type='text' → &lt;input&gt; con pattern/maxlength
+5. Inyectar HTML en modalGestionBody
+6. Inicializar validaciones en tiempo real: initFormValidations(form)</div>
+
+        <h4><code>guardarRegistro(event, tipo, accion, id, returnType)</code> — Enviar datos al servidor</h4>
+        <div class="flow-block">1. event.preventDefault()
+2. Recolectar datos del formulario:
+   - Si hay file → usar FormData
+   - Si no → usar objeto JSON
+3. Para campos number: limpiar formato de miles (quitar puntos)
+4. Para kits: recolectar instruments[] del Kit Builder
+5. Llamar ApiService.fetchApiGestion(accion, tipo, payload, id)
+6. Si éxito → mostrar SweetAlert + recargar datos:
+   - Si origin='local' → refreshInstrumentalTable(tipo) (para instrumental)
+   - Si origin='local_materia' → refreshMateriaPrimaView() (para materia prima)
+   - Si no → abrirGestion(returnType) (para dashboard)
+7. Si error → mostrar mensaje de error del servidor</div>
+
+        <h3>6.6 Los FormSchemas — Definición de Formularios</h3>
+        <p>Cada controlador JS registra sus esquemas de formulario en <code>window.FormSchemas</code>:</p>
+
+        <pre><span class="lang-label">JavaScript</span><code class="language-javascript">// dashboard_controller.js registra:
+window.FormSchemas['usuarios'] = (data) => [
+    { label: 'Usuario', name: 'nom_user', type: 'text', required: true, ... },
+    { label: 'Email', name: 'mail_user', type: 'email', ... },
+    ...
+];
+window.FormSchemas['clientes'] = (data) => [...];
+window.FormSchemas['empleados'] = (data) => [...];
+window.FormSchemas['proveedores'] = (data) => [...];
+window.FormSchemas['productos'] = (data) => [...];
+
+// instrumental_controller.js registra:
+window.FormSchemas['instrumentos'] = (data) => [...];
+window.FormSchemas['kits'] = (data) => [...];
+
+// mat_prim_controller.js registra:
+window.FormSchemas['materias_primas'] = (data) => [...];
+window.FormSchemas['categorias_materia'] = (data) => [...];</code></pre>
+
+        <h3>6.7 Controladores JS por módulo</h3>
+
+        <h4><code>instrumental_controller.js</code> (1290 líneas)</h4>
+
+        <div class="table-wrapper">
+            <table>
+                <thead><tr><th>Función</th><th>Evento que la dispara</th><th>Qué hace</th></tr></thead>
+                <tbody>
+                    <tr><td><code>loadSelectionView(container)</code></td><td>Clic en "Instrumental" del sidebar</td><td>Renderiza las 2 tarjetas (Instrumentos/Kits) + botón "Registrar Movimiento Global"</td></tr>
+                    <tr><td><code>loadManagementView(type, container)</code></td><td>Clic en tarjeta "Instrumentos" o "Kits"</td><td>Renderiza barra de controles (búsqueda, filtros, btn agregar) + llama <code>fetchData()</code></td></tr>
+                    <tr><td><code>fetchData(type)</code></td><td>Carga inicial o cambio de filtro</td><td><code>ApiService.get('api_gestion.php?tipo=X&estado=Y')</code> → guarda en <code>localData</code></td></tr>
+                    <tr><td><code>renderGrid(type, data)</code></td><td>Después de <code>fetchData()</code></td><td>Genera HTML de tarjetas (cards) con imagen, stock, botones editar/eliminar/movimiento</td></tr>
+                    <tr><td><code>verDetalle(type, id)</code></td><td>Clic en una tarjeta</td><td>Abre <code>modalGestion</code> con vista detalle (imagen grande, stock, especialización, contenido del kit)</td></tr>
+                    <tr><td><code>editLocal(type, id)</code></td><td>Clic en ícono lápiz ✏️</td><td>Busca el registro en <code>localData</code> → llama <code>mostrarFormulario(type, 'update', row)</code></td></tr>
+                    <tr><td><code>deleteLocal(type, id)</code></td><td>Clic en ícono basura 🗑️</td><td><code>UIComponents.showConfirm()</code> → <code>performDelete()</code> → <code>ApiService.fetchApiGestion('delete', ...)</code></td></tr>
+                    <tr><td><code>restoreItem(type, id)</code></td><td>Clic en ícono restaurar 🔄 (en tab inhabilitados)</td><td><code>ApiService.fetchApiGestion('restore', ...)</code></td></tr>
+                    <tr><td><code>openMovementModal(type, id)</code></td><td>Clic en ícono camión 🚚</td><td>Abre <code>modalMovimientoInstrumental</code> con formulario de movimiento (tipo, cantidad, observaciones)</td></tr>
+                    <tr><td><code>openGlobalMovementModal()</code></td><td>Clic en botón verde "Registrar Movimiento de Inventario"</td><td>Abre <code>modalMovimientoGlobal</code> con selector de tipo → selector de item → formulario</td></tr>
+                    <tr><td><code>toggleStatusFilter(estado)</code></td><td>Clic en "Habilitados" / "Inhabilitados"</td><td>Cambia <code>currentStatusFilter</code> → <code>fetchData()</code> con nuevo estado</td></tr>
+                    <tr><td><code>filterTable(type, query)</code></td><td>Escribir en campo de búsqueda</td><td>Filtra <code>localData</code> por texto y re-renderiza</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p><strong>Dato clave — <code>localData</code></strong>: Cuando se cargan instrumentos/kits, se guardan en una variable local <code>localData</code>. Esto permite buscar, filtrar y acceder a los datos SIN hacer más peticiones al servidor. Se actualiza solo cuando se llama <code>fetchData()</code> de nuevo.</p>
+
+        <h4><code>dashboard_controller.js</code> (292 líneas)</h4>
+        <p>No tiene lógica de vista propia (eso lo hace <code>menuPrincipal.php</code> + <code>dashboard_controller.php</code> server-side). Solo contiene:</p>
+        <ul>
+            <li><strong>FormSchemas</strong> para: usuarios, clientes, empleados, proveedores, productos</li>
+            <li><strong>ValidationRules</strong> para: todos los campos de los formularios del dashboard</li>
+        </ul>
+
+        <h4><code>mat_prim_controller.js</code></h4>
+        <p>Similar a instrumental: tiene vista de categorías como tarjetas, vista de materias primas por categoría, CRUD con modales, administrador de categorías como FAB (Floating Action Button).</p>
+
+        <h4><code>historial_controller.js</code></h4>
+        <p>Maneja 4 sub-vistas: Kardex de materia prima, Historial de producción (instrumentos/kits), Ventas y Devoluciones.</p>
+
+        <h4><code>productos_controller.js</code></h4>
+        <p>Gestión de productos de venta: tabla con filtros habilitados/inhabilitados, vinculación visual a instrumentos o kits de origen.</p>
+
+        <h4><code>finanzas_controller.js</code></h4>
+        <p>Dashboard financiero con métricas de ingresos, tasa de retorno, medios de pago, rentabilidad global, ticket promedio por especialidad, alertas de compra.</p>
+
+        <hr>
+
+        <!-- =============================================== -->
+        <!-- SECTION 7: FLUJO AUXILIARES -->
+        <!-- =============================================== -->
+        <h2 id="flujo-auxiliares">7. Flujo Detallado: Carga de Datos Auxiliares</h2>
+
+        <div class="mermaid-wrapper">
+            <div class="mermaid">
+sequenceDiagram
+    participant PHP as menuPrincipal.php
+    participant DC as dashboard_controller.php
+    participant Q as querys.php
+    participant DB as PostgreSQL
+    participant Footer as footer.php
+    participant JS as JavaScript
+
+    Note over PHP: Al cargar la página del admin...
+    PHP->>DC: require_once "controllers/dashboard_controller.php"
+    DC->>Q: $db->getAuxiliaresJSON()
+    Q->>DB: SELECT fun_obtener_auxiliares() as json_data
+    DB-->>Q: JSON string con 9 categorías
+    Q-->>DC: String JSON
+    DC-->>PHP: $auxiliares = resultado
+
+    PHP->>Footer: include_once "includes/footer.php"
+    Footer->>JS: const auxiliares = <?php echo json_encode($auxiliares); ?>
+
+    Note over JS: Ahora window.auxiliares tiene<br/>todas las listas de referencia<br/>DISPONIBLES EN MEMORIA del navegador
+
+    Note over JS: Cuando el usuario abre un formulario...
+    JS->>JS: mostrarFormulario('empleados', 'create')
+    JS->>JS: FormSchemas['empleados'](data) usa window.auxiliares
+    JS->>JS: mapOptionsLocal(aux.ciudades) → opciones para datalist
+    JS->>JS: mapOptionsLocal(aux.cargos) → opciones para select
+    JS->>JS: Renderiza formulario con todos los dropdowns llenos
+            </div>
+        </div>
+
+        <blockquote class="alert-tip">
+            <div class="alert-title">💡 Tip</div>
+            Los auxiliares se cargan <strong>DOS VECES</strong>:
+            <ol>
+                <li><strong>Carga inicial (PHP)</strong>: <code>dashboard_controller.php</code> los lee y los inyecta como variable JS en <code>footer.php</code>.</li>
+                <li><strong>Recarga bajo demanda (JS)</strong>: <code>logica.js → cargaAuxiliares()</code> los vuelve a pedir por AJAX si <code>window.auxiliares</code> está vacío (por si se limpió la variable).</li>
+            </ol>
+        </blockquote>
+
+        <hr>
+
+        <!-- =============================================== -->
+        <!-- SECTION 8: FLUJO CRUD COMPLETO -->
+        <!-- =============================================== -->
+        <h2 id="flujo-crud-completo">8. Flujo Detallado: CRUD Completo — Crear Instrumento</h2>
+
+        <h3>Paso 1: El usuario navega a Instrumental</h3>
+        <div class="flow-block">click en #btn-instrumental (sidebar)
+  → navigation.js captura el evento
+  → activateMenu(btnInstrumental) → resalta el botón
+  → loadView('instrumental')
+    → oculta #dashboard-view
+    → muestra #dynamic-view
+    → llama loadSelectionView(dynamicView)
+      → instrumental_controller.js renderiza 2 tarjetas + botón movimiento</div>
+
+        <h3>Paso 2: El usuario elige "Instrumentos"</h3>
+        <div class="flow-block">click en #card-instrumentos
+  → loadManagementView('instrumentos', container)
+    → renderiza barra de controles + spinner "Cargando..."
+    → fetchData('instrumentos')
+      → ApiService.get('api_gestion.php?tipo=instrumentos&estado=true')
+      → Respuesta: {data: [...], columns: [...]}
+      → Guarda en localData (variable local)
+      → renderGrid('instrumentos', localData)
+        → Genera grid de cards con imagen, stock, nombre, botones</div>
+
+        <h3>Paso 3: El usuario hace clic en "Agregar Nuevo"</h3>
+        <div class="flow-block">click en #btn-add-instrumentos
+  → openAddModal('instrumentos')
+    → modalGestion.style.display = 'block'
+    → mostrarFormulario('instrumentos', 'create', null, 'local')
+      → Si !window.auxiliares → cargaAuxiliares()
+      → FormSchemas['instrumentos'](null) retorna array de campos:
+        [nom_instrumento, id_especializacion, tipo_mat, stock_min, stock_max, cant_disp, lote, numeral_en_kit, img_url]
+      → Genera HTML del formulario con inputs, selects, file
+      → Inyecta en #modalGestionBody
+      → initFormValidations(form)</div>
+
+        <h3>Paso 4: El usuario llena el formulario y hace clic en "Guardar"</h3>
+        <div class="flow-block">submit #formGestionDinamico
+  → guardarRegistro(event, 'instrumentos', 'create', 'null', 'local')
+    → event.preventDefault()
+    → Detecta que hay &lt;input type="file"&gt; → usa FormData
+    → FormData.append('accion', 'create')
+    → FormData.append('tipo', 'instrumentos')
+    → FormData.append('data', JSON.stringify({nom_instrumento: 'X', ...}))
+    → FormData.append('img_url', file)
+    → ApiService.postFormData('api_gestion.php', formData)
+    
+    ═══ En el servidor ═══
+    → api_gestion.php recibe POST
+    → Detecta $_FILES['img_url'] → mueve a /images/instrum/ → genera hash.jpg
+    → $data['img_url'] = '../../images/instrum/hash.jpg'
+    → $conn->beginTransaction()
+    → ApiInstrumentalController::handleCreate($db, 'instrumentos', $data)
+      → Resuelve: $data['id_especializacion'] = getIdByName(..., 'Endodoncia') → 3
+      → $db->insertInstrumento($data)
+        → SELECT fun_insert_instrumentos(3, 'Espejo Bucal', 50, 101, 0, 1, '../../images/instrum/hash.jpg', 10, 100) as result
+        → PostgreSQL: INSERT INTO tab_instrumentos + trigger audit_trail
+        → Retorna: {result: true}
+    → $conn->commit()
+    → echo json_encode({success: true, message: 'Creado correctamente'})
+    
+    ═══ De vuelta en JavaScript ═══
+    → UIComponents.showSuccess('Creado', callback)
+    → callback: refreshInstrumentalTable('instrumentos')
+      → fetchData('instrumentos') → recarga la tabla
+    → SweetAlert2 muestra ✓ verde
+    → Modal se cierra
+    → Tabla muestra el nuevo instrumento</div>
+
+        <hr>
+
+        <!-- =============================================== -->
+        <!-- SECTION 9: FLUJO NAVEGACIÓN -->
+        <!-- =============================================== -->
+        <h2 id="flujo-navegacion">9. Flujo Detallado: Navegación SPA</h2>
+
+        <h3>Estructura de la página</h3>
+        <pre><span class="lang-label">HTML</span><code class="language-html">&lt;body&gt;
+  &lt;section class="a1"&gt;  ← SIDEBAR (menú lateral, siempre visible)
+  &lt;section class="a2"&gt;  ← CONTENIDO PRINCIPAL
+    &lt;div id="dashboard-view"&gt;  ← Dashboard con stats (visible por defecto)
+    &lt;div id="dynamic-view"&gt;    ← Contenedor para vistas SPA (oculto por defecto)
+  &lt;/section&gt;
+  &lt;section class="a3"&gt;  ← PANEL DERECHO (perfil, estadísticas)
+&lt;/body&gt;</code></pre>
+
+        <h3>Flujo de transición</h3>
+        <div class="flow-block">Estado inicial: dashboard-view visible, dynamic-view oculto, a3 visible
+
+Click "Instrumental" en sidebar:
+  1. dashboard-view.style.display = 'none'
+  2. dynamic-view.style.display = 'block'
+  3. dynamic-view.innerHTML = '' (limpiar contenido previo)
+  4. document.body.classList.add('expand-content') → CSS oculta .a3
+  5. loadSelectionView(dynamicView) → instrumental_controller.js renderiza aquí
+
+Click en logo o toggle del mismo botón:
+  1. returnToDashboard()
+  2. dynamic-view.style.display = 'none'
+  3. dynamic-view.innerHTML = '' (libera memoria)
+  4. dashboard-view.style.display = 'block'
+  5. dashboard-view.classList.add('fade-in')
+  6. document.body.classList.remove('expand-content') → CSS muestra .a3</div>
+
+        <hr>
+
+        <!-- =============================================== -->
+        <!-- SECTION 10: AUTENTICACIÓN -->
+        <!-- =============================================== -->
+        <h2 id="flujo-autenticacion">10. Flujo Detallado: Autenticación</h2>
+
+        <div class="mermaid-wrapper">
+            <div class="mermaid">
+sequenceDiagram
+    participant U as Usuario
+    participant IS as InicioSesion.html
+    participant ISjs as inicio_sesion.js
+    participant Val as validar.php
+    participant JWT as jwt.php
+    participant DB as PostgreSQL
+    participant MP as menuPrincipal.php
+    participant MC as menuCliente.php
+
+    U->>IS: Abre la página de login
+    U->>IS: Escribe usuario + contraseña
+    U->>ISjs: Click "Iniciar Sesión"
+    ISjs->>Val: POST {usuario, password}
+
+    Val->>DB: SELECT u.*, um.id_menu FROM tab_users u JOIN tab_users_menu um WHERE nom_user = :usuario
+    DB-->>Val: Datos del usuario + hash
+
+    Val->>Val: password_verify(password, hash)
+    Note over Val: Si es contraseña legada,<br/>compara texto plano y<br/>migra a bcrypt automáticamente
+
+    Val->>DB: SELECT ind_idle FROM tab_parametros
+    DB-->>Val: 30 (minutos)
+
+    Val->>JWT: generarJWT({id, usuario, menu, iat, exp: now+30min})
+    JWT-->>Val: token string
+
+    Val->>Val: session_start() + $_SESSION['ind_idle'] = 30
+
+    Val-->>ISjs: {success: true, token: "xxx", id_menu: 1}
+
+    ISjs->>ISjs: localStorage.setItem('token', token)
+
+    alt id_menu === 1 (Admin)
+        ISjs->>MP: window.location.href = 'menuPrincipal.php?token=xxx'
+        MP->>MP: dashboard_controller.php valida JWT
+        MP->>MP: Crea sesión PHP: $_SESSION['id_usuario'], $_SESSION['nom_user'], $_SESSION['id_menu']
+    else id_menu === 2 (Cliente)
+        ISjs->>MC: window.location.href = 'menuCliente.php?token=xxx'
+    end
+            </div>
+        </div>
+
+        <h3>Doble capa de autenticación</h3>
+
+        <div class="table-wrapper">
+            <table>
+                <thead><tr><th>Capa</th><th>Responsable</th><th>Cuándo se usa</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>JWT</strong></td><td><code>jwt.php</code> + <code>inicio_sesion.js</code></td><td>Para transferir la identidad entre páginas (del login al dashboard)</td></tr>
+                    <tr><td><strong>Sesión PHP</strong></td><td><code>$_SESSION</code></td><td>Para mantener la sesión activa en el servidor durante la navegación</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>Expiración de sesión</h3>
+        <ol>
+            <li><strong>Proactiva (JS)</strong>: <code>logica.js → verificarExpiracionTokenAdmin()</code> decodifica el JWT, calcula el tiempo restante, y programa un <code>setTimeout</code> para mostrar el modal de expiración.</li>
+            <li><strong>Reactiva (API)</strong>: Si cualquier petición a <code>api_gestion.php</code> no tiene sesión (<code>!$_SESSION['id_usuario']</code>), retorna 401. <code>api_service.js</code> detecta el 401 y muestra <code>UIComponents.showSessionExpired()</code>.</li>
+            <li><strong>Visual</strong>: Modal bloqueante con botón "Aceptar y Salir" que ejecuta <code>ejecutarLogout()</code>.</li>
+        </ol>
+
+        <hr>
+
+        <!-- =============================================== -->
+        <!-- SECTION 11: VENTAS Y FACTURACIÓN -->
+        <!-- =============================================== -->
+        <h2 id="flujo-ventas">11. Flujo Detallado: Ventas y Facturación</h2>
+
+        <div class="mermaid-wrapper">
+            <div class="mermaid">
+sequenceDiagram
+    participant U as Admin
+    participant JS as historial_controller.js
+    participant API as api_gestion.php
+    participant CTRL as ApiHistorialController
+    participant Q as querys.php
+    participant DB as fun_fact()
+
+    U->>JS: Selecciona "Salida por Venta" en Modal Global
+    JS->>JS: Carga lista de productos, clientes, formas de pago
+    U->>JS: Selecciona cliente, items, cantidades, forma de pago
+    U->>JS: Click "Registrar Movimiento"
+
+    JS->>API: POST {accion:'create', tipo:'venta_formal', data:{...}}
+    API->>CTRL: ApiHistorialController::handleCreate($db, 'venta_formal', $data)
+    CTRL->>Q: $db->registrarVentaFormal($data)
+    Q->>DB: SELECT fun_fact(:id_cliente, '{1,2}'::INTEGER[], '{5,3}'::INTEGER[], :id_pago, :obs)
+
+    Note over DB: fun_fact() ejecuta:<br/>1. Inserta cab en tab_facturas<br/>2. Inserta detalles en tab_detalle_facturas<br/>3. Aplica descuento (val_pordesc)<br/>4. Para cada producto:<br/>   - Obtiene instrumento o kit vinculado<br/>   - Llama fun_kardex_productos() tipo=2 (salida)<br/>   - Descuenta cant_disp automáticamente
+
+    DB-->>Q: {result: id_factura}
+    Q-->>CTRL: Array con result
+    CTRL-->>API: return $res
+    API-->>JS: {success: true, data: {result: 42}}
+    JS->>JS: UIComponents.showSuccess("Venta registrada")
+    JS->>JS: Actualiza sidebar stats
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- =============================================== -->
+        <!-- SECTION 12: MAPA DE EVENTOS -->
+        <!-- =============================================== -->
+        <h2 id="mapa-eventos">12. Mapa de Eventos — Qué dispara Qué</h2>
+
+        <h3>Eventos del Dashboard (menuPrincipal.php)</h3>
+
+        <div class="table-wrapper">
+            <table>
+                <thead><tr><th>Evento</th><th>Elemento</th><th>Función ejecutada</th><th>Resultado</th></tr></thead>
+                <tbody>
+                    <tr><td><code>click</code></td><td>Tarjeta "Total Usuarios"</td><td><code>abrirGestion('usuarios')</code></td><td>Abre modal con tabla de usuarios + btn "Nuevo"</td></tr>
+                    <tr><td><code>click</code></td><td>Tarjeta "Nuevos este mes"</td><td><code>abrirGestion('nuevos_mes')</code></td><td>Abre modal con tabla de registros del mes (sin btn "Nuevo")</td></tr>
+                    <tr><td><code>click</code></td><td>Tarjeta "Empleados"</td><td><code>abrirGestion('empleados')</code></td><td>Abre modal con tabla de empleados</td></tr>
+                    <tr><td><code>click</code></td><td>Tarjeta "Clientes"</td><td><code>abrirGestion('clientes')</code></td><td>Abre modal con tabla de clientes</td></tr>
+                    <tr><td><code>click</code></td><td>Tarjeta "Proveedores"</td><td><code>abrirGestion('proveedores')</code></td><td>Abre modal con tabla de proveedores</td></tr>
+                    <tr><td><code>click</code></td><td>Tarjeta "Productos"</td><td><code>btnProductos.click()</code> → SPA a productos</td><td>Navega a vista de Productos</td></tr>
+                    <tr><td><code>click</code></td><td>"Modificar Perfil"</td><td><code>abrirModalPerfil()</code></td><td>Abre modal de edición de perfil</td></tr>
+                    <tr><td><code>click</code></td><td>"Cambiar Contraseña"</td><td><code>abrirModalPassword()</code></td><td>Abre modal de cambio de contraseña</td></tr>
+                    <tr><td><code>click</code></td><td>"Notificaciones"</td><td><code>abrirModalNotificaciones()</code></td><td>Abre modal con alertas de stock bajo</td></tr>
+                    <tr><td><code>click</code></td><td>"Cerrar Sesión"</td><td><code>cerrarSesionSeguro()</code></td><td>Confirmación → logout → redirect</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>Eventos del Sidebar (navigation.js)</h3>
+
+        <div class="table-wrapper">
+            <table>
+                <thead><tr><th>Evento</th><th>Elemento</th><th>Función ejecutada</th></tr></thead>
+                <tbody>
+                    <tr><td><code>click</code></td><td><code>#btn-instrumental</code></td><td><code>loadView('instrumental')</code> → <code>loadSelectionView()</code></td></tr>
+                    <tr><td><code>click</code></td><td><code>#btn-materia-prima</code></td><td><code>loadView('materia-prima')</code> → <code>loadMateriaPrimaView()</code></td></tr>
+                    <tr><td><code>click</code></td><td><code>#btn-productos</code></td><td><code>loadView('productos')</code> → <code>loadProductosView()</code></td></tr>
+                    <tr><td><code>click</code></td><td><code>#btn-historial</code></td><td><code>loadView('historial')</code> → <code>loadHistorialView()</code></td></tr>
+                    <tr><td><code>click</code></td><td><code>#btn-finanzas</code></td><td><code>loadView('finanzas')</code> → <code>loadFinanzasView()</code></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>Eventos de Instrumental (instrumental_controller.js)</h3>
+
+        <div class="table-wrapper">
+            <table>
+                <thead><tr><th>Evento</th><th>Elemento</th><th>Función</th></tr></thead>
+                <tbody>
+                    <tr><td><code>click</code></td><td>Tarjeta "Instrumentos"</td><td><code>loadManagementView('instrumentos')</code></td></tr>
+                    <tr><td><code>click</code></td><td>Tarjeta "Kits"</td><td><code>loadManagementView('kits')</code></td></tr>
+                    <tr><td><code>click</code></td><td>Botón "Agregar Nuevo"</td><td><code>openAddModal(type)</code> → <code>mostrarFormulario(type, 'create')</code></td></tr>
+                    <tr><td><code>click</code></td><td>Card de instrumento/kit</td><td><code>verDetalle(type, id)</code></td></tr>
+                    <tr><td><code>click</code></td><td>Ícono ✏️ (editar)</td><td><code>editLocal(type, id)</code> → <code>mostrarFormulario(type, 'update', row)</code></td></tr>
+                    <tr><td><code>click</code></td><td>Ícono 🗑️ (eliminar)</td><td><code>deleteLocal(type, id)</code> → confirmar → <code>performDelete()</code></td></tr>
+                    <tr><td><code>click</code></td><td>Ícono 🚚 (movimiento)</td><td><code>openMovementModal(type, id)</code></td></tr>
+                    <tr><td><code>click</code></td><td>Ícono 🔄 (restaurar)</td><td><code>restoreItem(type, id)</code></td></tr>
+                    <tr><td><code>click</code></td><td>Botón "Registrar Movimiento Global"</td><td><code>openGlobalMovementModal()</code></td></tr>
+                    <tr><td><code>click</code></td><td>Filtro "Habilitados"/"Inhabilitados"</td><td><code>toggleStatusFilter('true'/'false')</code></td></tr>
+                    <tr><td><code>input</code></td><td>Campo de búsqueda</td><td><code>filterTable(type, query)</code></td></tr>
+                    <tr><td><code>submit</code></td><td>Formulario de movimiento</td><td>POST <code>kardex_producto</code> → refresca tabla</td></tr>
+                    <tr><td><code>submit</code></td><td>Formulario de venta global</td><td>POST <code>venta_formal</code> → genera factura</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>Eventos de Formularios (logica.js)</h3>
+
+        <div class="table-wrapper">
+            <table>
+                <thead><tr><th>Evento</th><th>Elemento</th><th>Función</th></tr></thead>
+                <tbody>
+                    <tr><td><code>click</code></td><td>Botón "Nuevo" (modal header)</td><td><code>mostrarFormulario(tipo, 'create')</code></td></tr>
+                    <tr><td><code>click</code></td><td>Botón "Editar" en tabla</td><td><code>prepararEdicion(tipo, id)</code> → <code>mostrarFormulario(tipo, 'update', row)</code></td></tr>
+                    <tr><td><code>click</code></td><td>Botón "Eliminar" en tabla</td><td><code>eliminarRegistro(tipo, id)</code></td></tr>
+                    <tr><td><code>submit</code></td><td><code>#formGestionDinamico</code></td><td><code>guardarRegistro()</code></td></tr>
+                    <tr><td><code>input</code></td><td>Cualquier campo del formulario</td><td><code>validadores_base.js</code> → <code>ValidationRules[field].validate()</code></td></tr>
+                    <tr><td><code>change</code></td><td>Select de Especialización (Kit Builder)</td><td><code>updateFilteredOptions()</code> → filtra instrumentos compatibles</td></tr>
+                    <tr><td><code>change</code></td><td>Select de Material (Kit Builder)</td><td><code>updateFilteredOptions()</code></td></tr>
+                    <tr><td><code>click</code></td><td>"Agregar Instrumento" (Kit Builder)</td><td><code>addRow()</code> → nueva fila con select de instrumento</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <hr>
+
+        <!-- =============================================== -->
+        <!-- SECTION 13: REFERENCIA BACK -->
+        <!-- =============================================== -->
+        <h2 id="referencia-back">13. Referencia Rápida: Archivos fuera de <code>Front y Logica</code></h2>
+
+        <h3>Carpeta <code>BACK/</code></h3>
+        <p>Copia de referencia de los scripts SQL. Contiene las mismas subcarpetas que <code>Front y Logica/sql/</code> más funciones de validación adicionales.</p>
+
+        <div class="table-wrapper">
+            <table>
+                <thead><tr><th>Carpeta</th><th>Contenido</th><th>Descripción breve</th></tr></thead>
+                <tbody>
+                    <tr><td><code>BACK/Consultas/</code></td><td>5 archivos SQL</td><td>Funciones de lectura (stats, auxiliares, alertas, productos, precios)</td></tr>
+                    <tr><td><code>BACK/Fun_insert/</code></td><td>27 archivos SQL</td><td>Una función INSERT por cada entidad del sistema</td></tr>
+                    <tr><td><code>BACK/fun_update/</code></td><td>33 archivos SQL</td><td>Una función UPDATE por cada entidad</td></tr>
+                    <tr><td><code>BACK/fun_delete/</code></td><td>34 archivos SQL</td><td>Funciones de borrado lógico (ind_vivo = false)</td></tr>
+                    <tr><td><code>BACK/fun_transaccionales/</code></td><td>9 archivos SQL</td><td>Lógica compleja: facturación, kardex, precios, caja</td></tr>
+                    <tr><td><code>BACK/fun_audit_trail/</code></td><td>1 archivo SQL</td><td>Trigger global de auditoría</td></tr>
+                    <tr><td><code>BACK/fun_validaciones/</code></td><td>4 archivos SQL</td><td><strong>Solo aquí</strong>: validaciones de stock, cliente, instrumento, kit</td></tr>
+                    <tr><td><code>BACK/inserts_instalacion.sql</code></td><td>1 archivo</td><td>Datos semilla para instalación inicial (ciudades, documentos, cargos, etc.)</td></tr>
+                    <tr><td><code>BACK/script_instalacion_audit_trail.sql</code></td><td>1 archivo</td><td>Script para crear triggers de auditoría en cada tabla</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>Archivos raíz del proyecto</h3>
+
+        <div class="table-wrapper">
+            <table>
+                <thead><tr><th>Archivo</th><th>Descripción</th></tr></thead>
+                <tbody>
+                    <tr><td><code>analysis_results.md</code></td><td>Versión anterior de este análisis (v1.0)</td></tr>
+                    <tr><td><code>arquitectura_y_flujo.md</code></td><td>Documento anterior de arquitectura</td></tr>
+                    <tr><td><code>ModeloRelacionalPdf_V2.png</code></td><td>Diagrama del modelo de datos</td></tr>
+                    <tr><td><code>ModeloRelacional_V2.dia</code></td><td>Fuente editable del diagrama (Dia)</td></tr>
+                    <tr><td><code>inserts_instalacion.sql</code></td><td>Script de carga inicial de datos</td></tr>
+                    <tr><td><code>aduit.txt</code></td><td>Notas sobre auditoría</td></tr>
+                    <tr><td><code>otros.txt</code></td><td>Notas varias</td></tr>
+                    <tr><td><code>INFORME ANALISIS SPECIAL INSTRUMENTS.docx</code></td><td>Informe formal del proyecto</td></tr>
+                    <tr><td><code>LISTADO_REQ_SPECIALIZED V1.3.xlsx</code></td><td>Lista de requerimientos</td></tr>
+                    <tr><td><code>Diagrama de Gantt ágil1.xlsx</code></td><td>Cronograma del proyecto</td></tr>
+                    <tr><td><code>Guia para Proyectos ADSO 2026.pptx</code></td><td>Guía institucional</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>Carpetas <code>MANUALES/</code> y <code>PRUEBAS/</code></h3>
+        <p>Documentación de usuario y evidencias de pruebas (no contienen código ejecutable).</p>
+
+        <hr>
+
+        <!-- =============================================== -->
+        <!-- SECTION 14: DICCIONARIO PHP -->
+        <!-- =============================================== -->
+        <h2 id="diccionario-querys">14. Diccionario de Funciones PHP (<code>querys.php</code>)</h2>
+
+        <h3>Consultas (GET)</h3>
+
+        <div class="table-wrapper">
+            <table>
+                <thead><tr><th>Método</th><th>SQL que ejecuta</th><th>Retorna</th><th>Llamado desde</th></tr></thead>
+                <tbody>
+                    <tr><td><code>getAuxiliaresJSON()</code></td><td><code>SELECT fun_obtener_auxiliares()</code></td><td>String JSON con 9 categorías</td><td><code>ApiDashboardController::handleGet</code></td></tr>
+                    <tr><td><code>getIdByName($table, $colId, $colName, $val)</code></td><td><code>SELECT $colId FROM $table WHERE LOWER($colName) = LOWER(:val)</code></td><td>int (ID) o null</td><td>Todos los controladores al crear/editar</td></tr>
+                    <tr><td><code>getClientes()</code></td><td>JOIN con documentos, ciudades, géneros</td><td>Array de clientes activos</td><td><code>ApiDashboardController</code></td></tr>
+                    <tr><td><code>getEmpleados()</code></td><td>JOIN con cargos, documentos, ciudades, sangre, bancos, géneros</td><td>Array de empleados activos</td><td><code>ApiDashboardController</code></td></tr>
+                    <tr><td><code>getProveedores()</code></td><td>JOIN con documentos, ciudades</td><td>Array de proveedores activos</td><td><code>ApiDashboardController</code></td></tr>
+                    <tr><td><code>getUsuarios()</code></td><td>Simple SELECT</td><td>Array de usuarios activos</td><td><code>ApiDashboardController</code></td></tr>
+                    <tr><td><code>getInstrumentos($soloHabilitados)</code></td><td>JOIN con especializaciones, filtro por ind_vivo</td><td>Array de instrumentos</td><td><code>ApiInstrumentalController</code></td></tr>
+                    <tr><td><code>getKits($soloHabilitados)</code></td><td>JOIN con especializaciones, filtro por ind_vivo</td><td>Array de kits</td><td><code>ApiInstrumentalController</code></td></tr>
+                    <tr><td><code>getInstrumentsByKit($id_kit)</code></td><td>JOIN instrumentos_kit con instrumentos</td><td>Array de instrumentos del kit</td><td><code>ApiInstrumentalController</code></td></tr>
+                    <tr><td><code>getStats()</code></td><td><code>SELECT * FROM fun_obtener_stats()</code></td><td>Array con 16 métricas</td><td><code>ApiDashboardController</code></td></tr>
+                    <tr><td><code>getAlertasDetalle()</code></td><td><code>SELECT * FROM fun_obtener_alertas_detalle()</code></td><td>Array de alertas de stock</td><td><code>dashboard_controller.php</code></td></tr>
+                    <tr><td><code>getProductosAdmin($estado)</code></td><td>JOIN con instrumentos y kits</td><td>Array de productos</td><td><code>ApiProductosController</code></td></tr>
+                    <tr><td><code>buscarProductos($q)</code></td><td><code>SELECT * FROM fun_buscar_productos(:q)</code></td><td>Array de resultados</td><td><code>api_productos.php</code></td></tr>
+                    <tr><td><code>getBodega()</code></td><td>JOINs múltiples (bodega, mat_prima, prov, medida)</td><td>Array de items en bodega</td><td><code>ApiHistorialController</code></td></tr>
+                    <tr><td><code>getProduccion()</code></td><td>JOINs múltiples (producción, bodega, mat_prima)</td><td>Array de items en producción</td><td><code>ApiHistorialController</code></td></tr>
+                    <tr><td><code>getKardexHistory()</code></td><td>JOIN kardex_mat_prima con materias_primas y unidades</td><td>Array de movimientos kardex MP</td><td><code>ApiHistorialController</code></td></tr>
+                    <tr><td><code>getKardexVentasDevoluciones()</code></td><td>JOIN kardex_productos con instrumentos, kits, productos</td><td>Array de ventas/devoluciones</td><td><code>ApiHistorialController</code></td></tr>
+                    <tr><td><code>getCategoriesMateriaPrima($estado)</code></td><td>Simple SELECT con filtro ind_vivo</td><td>Array de categorías</td><td><code>ApiMatPrimController</code></td></tr>
+                    <tr><td><code>getMateriasXCategoria($id_cat, $estado)</code></td><td>JOIN con prov y unidades</td><td>Array de materias de una categoría</td><td><code>ApiMatPrimController</code></td></tr>
+                    <tr><td><code>getMateriasByProveedor($id_prov)</code></td><td>LEFT JOIN con prov y unidades</td><td>Array de materias de un proveedor</td><td><code>ApiMatPrimController</code></td></tr>
+                    <tr><td><code>getHistoricoPrecios($id)</code></td><td><code>SELECT * FROM fun_get_historico_precios(:id)</code></td><td>Array de cambios de precio</td><td><code>ApiMatPrimController</code></td></tr>
+                    <tr><td><code>getFinanzasStats($mes, $anio)</code></td><td>Múltiples queries: ingresos, devoluciones, pagos, rentabilidad</td><td>Array compuesto</td><td><code>ApiDashboardController</code></td></tr>
+                    <tr><td><code>getTicketEspecialidad($mes, $anio)</code></td><td>Agrupación por especialización médica</td><td>Array de tickets por especialidad</td><td><code>ApiDashboardController</code></td></tr>
+                    <tr><td><code>getPrevisionesCompra()</code></td><td>Materias primas con stock ≤ mínimo</td><td>Array de alertas de compra</td><td><code>ApiDashboardController</code></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>Inserciones (CREATE)</h3>
+
+        <div class="table-wrapper">
+            <table>
+                <thead><tr><th>Método</th><th>Función SQL</th><th>Entidad</th></tr></thead>
+                <tbody>
+                    <tr><td><code>insertUser($nom, $pass, $tel, $mail)</code></td><td><code>fun_insert_user</code></td><td>Usuarios</td></tr>
+                    <tr><td><code>insertCliente($d)</code></td><td><code>fun_insert_cliente</code></td><td>Clientes</td></tr>
+                    <tr><td><code>insertEmpleado($d)</code></td><td><code>fun_insert_empleados</code></td><td>Empleados</td></tr>
+                    <tr><td><code>insertProveedor($d)</code></td><td><code>fun_insert_proveedor</code></td><td>Proveedores</td></tr>
+                    <tr><td><code>insertInstrumento($d)</code></td><td><code>fun_insert_instrumentos</code></td><td>Instrumentos</td></tr>
+                    <tr><td><code>insertKit($d)</code></td><td><code>fun_insert_kits</code></td><td>Kits (con array de instrumentos en formato PG)</td></tr>
+                    <tr><td><code>insertProducto($d)</code></td><td><code>fun_insert_producto</code></td><td>Productos (vinculados a instrumento o kit)</td></tr>
+                    <tr><td><code>insertMateriaPrima($d)</code></td><td><code>fun_insert_materia_primas</code> + <code>fun_insert_mat_prima_proveedor</code></td><td>Materia prima + vínculo proveedor</td></tr>
+                    <tr><td><code>insertCategoriaMateria($nom)</code></td><td><code>fun_insert_cat_mat</code></td><td>Categorías de materia prima</td></tr>
+                    <tr><td><code>insertKardexProducto($d)</code></td><td><code>fun_kardex_productos</code></td><td>Movimientos de inventario de productos</td></tr>
+                    <tr><td><code>registrarMovimientoKardex($d)</code></td><td><code>fun_kardex_materia_prima</code></td><td>Movimientos de inventario de materia prima</td></tr>
+                    <tr><td><code>registrarVentaFormal($d)</code></td><td><code>fun_fact</code></td><td>Facturación completa</td></tr>
+                    <tr><td><code>registrarDevolucionMultiple($d)</code></td><td><code>fun_registrar_devolucion_multiple</code></td><td>Devoluciones</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>Actualizaciones (UPDATE)</h3>
+
+        <div class="table-wrapper">
+            <table>
+                <thead><tr><th>Método</th><th>Función SQL / Lógica</th></tr></thead>
+                <tbody>
+                    <tr><td><code>updateEmpleado($d)</code></td><td><code>fun_update_empleados</code></td></tr>
+                    <tr><td><code>updateCliente($d)</code></td><td><code>fun_update_clientes</code></td></tr>
+                    <tr><td><code>updateProveedor($d)</code></td><td><code>fun_update_proveedores</code></td></tr>
+                    <tr><td><code>updateInstrumento($id, $d)</code></td><td><code>fun_update_instrumentos</code> (con validaciones de stock e imagen)</td></tr>
+                    <tr><td><code>updateKit($id, $d)</code></td><td><code>fun_update_kits</code> (con validaciones + array de instrumentos)</td></tr>
+                    <tr><td><code>updateProducto($id, $d)</code></td><td><code>fun_update_producto</code> (con herencia de imagen del origen)</td></tr>
+                    <tr><td><code>updateMateriaPrima($id, $d)</code></td><td><code>fun_update_materias_primas</code> + update/insert vínculo proveedor</td></tr>
+                    <tr><td><code>updateCategoriaMateria($id, $nom)</code></td><td><code>fun_update_cat_mat_prim</code></td></tr>
+                    <tr><td><code>updateGeneric($table, $data, $idField, $idValue, $userSession)</code></td><td>UPDATE dinámico construido con campos variables</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>Eliminación y Restauración</h3>
+
+        <div class="table-wrapper">
+            <table>
+                <thead><tr><th>Método</th><th>Lógica</th></tr></thead>
+                <tbody>
+                    <tr><td><code>deleteGeneric($tipo, $id)</code></td><td>Switch por tipo → verificar existencia → verificar no-eliminado → ejecutar <code>fun_delete_*</code></td></tr>
+                    <tr><td><code>restoreGeneric($tipo, $id)</code></td><td>Switch por tipo → <code>UPDATE tab_X SET ind_vivo = true WHERE pk = :id</code></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <hr>
+
+        <!-- =============================================== -->
+        <!-- SECTION 15: DICCIONARIO JS -->
+        <!-- =============================================== -->
+        <h2 id="diccionario-js">15. Diccionario de Funciones JS</h2>
+
+        <h3>Core (<code>api_service.js</code>)</h3>
+
+        <div class="table-wrapper">
+            <table>
+                <thead><tr><th>Función</th><th>Cuándo se usa</th></tr></thead>
+                <tbody>
+                    <tr><td><code>ApiService.get(url)</code></td><td>Toda consulta GET al backend</td></tr>
+                    <tr><td><code>ApiService.postJson(url, payload)</code></td><td>Toda escritura sin archivos</td></tr>
+                    <tr><td><code>ApiService.postFormData(url, formData)</code></td><td>Toda escritura con archivos</td></tr>
+                    <tr><td><code>ApiService.fetchApiGestion(accion, tipo, payload, id)</code></td><td>Abstracción principal: determina GET/POST/FormData automáticamente</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>Core (<code>ui_components.js</code>)</h3>
+
+        <div class="table-wrapper">
+            <table>
+                <thead><tr><th>Función</th><th>Cuándo se usa</th></tr></thead>
+                <tbody>
+                    <tr><td><code>UIComponents.toggleLoading(show)</code></td><td>Antes/después de cada petición async</td></tr>
+                    <tr><td><code>UIComponents.showSuccess(msg, callback)</code></td><td>Después de CREATE/UPDATE/DELETE exitoso</td></tr>
+                    <tr><td><code>UIComponents.showError(title, msg)</code></td><td>Cuando el servidor retorna error</td></tr>
+                    <tr><td><code>UIComponents.showConfirm(title, msg, onConfirm)</code></td><td>Antes de DELETE o acciones destructivas</td></tr>
+                    <tr><td><code>UIComponents.showSessionExpired()</code></td><td>Al recibir 401 o al expirar timeout del JWT</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>Motor de formularios (<code>logica.js</code>)</h3>
+
+        <div class="table-wrapper">
+            <table>
+                <thead><tr><th>Función</th><th>Cuándo se usa</th></tr></thead>
+                <tbody>
+                    <tr><td><code>cargaAuxiliares()</code></td><td>Al abrir formularios (lazy load de dropdowns)</td></tr>
+                    <tr><td><code>abrirGestion(tipo)</code></td><td>Click en tarjetas del dashboard</td></tr>
+                    <tr><td><code>renderTabla(data, columns, tipo)</code></td><td>Después de cargar datos de gestión</td></tr>
+                    <tr><td><code>prepararEdicion(tipo, id)</code></td><td>Click en botón editar de una tabla</td></tr>
+                    <tr><td><code>mostrarFormulario(tipo, accion, data, originType)</code></td><td>Al crear o editar cualquier entidad</td></tr>
+                    <tr><td><code>guardarRegistro(event, tipo, accion, id, returnType)</code></td><td>Submit de cualquier formulario dinámico</td></tr>
+                    <tr><td><code>eliminarRegistro(tipo, id)</code></td><td>Click en botón eliminar de una tabla</td></tr>
+                    <tr><td><code>obtenerEsquemaFormulario(tipo, data)</code></td><td>Busca en <code>window.FormSchemas[tipo](data)</code></td></tr>
+                    <tr><td><code>syncDatalist(input, hiddenId)</code></td><td>Al escribir en un datalist (sincroniza selección con ID oculto)</td></tr>
+                    <tr><td><code>verificarExpiracionTokenAdmin()</code></td><td>Al cargar la página (programa timeout de sesión)</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>Navegación (<code>navigation.js</code>)</h3>
+
+        <div class="table-wrapper">
+            <table>
+                <thead><tr><th>Función</th><th>Cuándo se usa</th></tr></thead>
+                <tbody>
+                    <tr><td><code>loadView(viewName)</code></td><td>Click en botón del sidebar</td></tr>
+                    <tr><td><code>activateMenu(element)</code></td><td>Click en botón del sidebar (visual)</td></tr>
+                    <tr><td><code>returnToDashboard()</code></td><td>Click en botón activo del sidebar o logo</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <hr>
+
+        <!-- =============================================== -->
+        <!-- SECTION 16: DICCIONARIO SQL -->
+        <!-- =============================================== -->
+        <h2 id="diccionario-sql">16. Diccionario de Funciones SQL</h2>
+
+        <h3>Funciones de Consulta</h3>
+
+        <div class="table-wrapper">
+            <table>
+                <thead><tr><th>Función</th><th>Retorna</th><th>Llamada desde</th></tr></thead>
+                <tbody>
+                    <tr><td><code>fun_obtener_auxiliares()</code></td><td>JSON con 9 listas de referencia</td><td><code>querys.php → getAuxiliaresJSON()</code></td></tr>
+                    <tr><td><code>fun_obtener_stats()</code></td><td>Fila con 16 métricas numéricas</td><td><code>querys.php → getStats()</code></td></tr>
+                    <tr><td><code>fun_obtener_alertas_detalle()</code></td><td>Tabla con items en stock bajo</td><td><code>querys.php → getAlertasDetalle()</code></td></tr>
+                    <tr><td><code>fun_buscar_productos(:q)</code></td><td>Tabla con productos que coinciden con búsqueda</td><td><code>querys.php → buscarProductos()</code></td></tr>
+                    <tr><td><code>fun_get_historico_precios(:id)</code></td><td>Tabla con historial de precios</td><td><code>querys.php → getHistoricoPrecios()</code></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>Funciones Transaccionales</h3>
+
+        <div class="table-wrapper">
+            <table>
+                <thead><tr><th>Función</th><th>Qué hace</th><th>Llamada desde</th></tr></thead>
+                <tbody>
+                    <tr><td><code>fun_fact(:id_cliente, :ids[], :cants[], :id_pago, :obs)</code></td><td>Crea factura + detalle + descuenta stock</td><td><code>querys.php → registrarVentaFormal()</code></td></tr>
+                    <tr><td><code>fun_kardex_productos(:tipo_item, :id_item, :tipo_mov, :cant, :obs, :reparable)</code></td><td>Registra movimiento de instrumento/kit</td><td><code>querys.php → insertKardexProducto()</code></td></tr>
+                    <tr><td><code>fun_kardex_materia_prima(:id_mat, :id_prov, :tipo, :cant, :valor, :unidad, :obs)</code></td><td>Registra movimiento de materia prima</td><td><code>querys.php → registrarMovimientoKardex()</code></td></tr>
+                    <tr><td><code>fun_act_precio(...)</code></td><td>Actualiza precio + registra en histórico</td><td>Llamada interna desde otras funciones</td></tr>
+                    <tr><td><code>fun_registrar_devolucion_multiple(:id_factura, :ids[], :cants[], :reps[], :obs)</code></td><td>Procesa devolución de múltiples items</td><td><code>querys.php → registrarDevolucionMultiple()</code></td></tr>
+                    <tr><td><code>fun_caja_diario(...)</code></td><td>Cierre de caja diario</td><td>No tiene endpoint directo actualmente</td></tr>
+                    <tr><td><code>fun_listar_fact(...)</code></td><td>Lista facturas con filtros</td><td>Consultas internas</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>Tipos de Movimiento en Kardex</h3>
+
+        <div class="table-wrapper">
+            <table>
+                <thead><tr><th>Código</th><th>Significado</th><th>Efecto en stock</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>1</strong></td><td>Entrada (Producción/Fabricación)</td><td><span style="color:var(--accent-green);">+ Incrementa <code>cant_disp</code></span></td></tr>
+                    <tr><td><strong>2</strong></td><td>Salida por Venta</td><td><span style="color:var(--accent-red);">- Decrementa <code>cant_disp</code></span></td></tr>
+                    <tr><td><strong>3</strong></td><td>Ajuste positivo de inventario</td><td><span style="color:var(--accent-green);">+ Incrementa <code>cant_disp</code></span></td></tr>
+                    <tr><td><strong>4</strong></td><td>Baja / Daño / Pérdida</td><td><span style="color:var(--accent-red);">- Decrementa <code>cant_disp</code></span></td></tr>
+                    <tr><td><strong>5</strong></td><td>Devolución de cliente</td><td><span style="color:var(--accent-orange);">+ o 0 según sea reparable</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <hr>
+
+        <!-- =============================================== -->
+        <!-- SECTION: ORDEN DE CARGA -->
+        <!-- =============================================== -->
+        <h2 id="orden-carga">Orden de Carga de Scripts (footer.php)</h2>
+
+        <pre><span class="lang-label">HTML</span><code class="language-html">&lt;!-- 1. Datos inyectados de PHP a JS --&gt;
+&lt;script&gt;const auxiliares = &lt;?php echo json_encode($auxiliares); ?&gt;;&lt;/script&gt;
+
+&lt;!-- 2. Core (sin dependencias entre sí) --&gt;
+&lt;script src="api_service.js"&gt;&lt;/script&gt;      &lt;!-- ApiService global --&gt;
+&lt;script src="ui_components.js"&gt;&lt;/script&gt;    &lt;!-- UIComponents global --&gt;
+&lt;script src="validadores_base.js"&gt;&lt;/script&gt; &lt;!-- initFormValidations, ValidationRules global --&gt;
+
+&lt;!-- 3. Controladores (dependen de Core) --&gt;
+&lt;script src="instrumental_controller.js"&gt;&lt;/script&gt;  &lt;!-- FormSchemas['instrumentos','kits'] --&gt;
+&lt;script src="mat_prim_controller.js"&gt;&lt;/script&gt;       &lt;!-- FormSchemas['materias_primas'] --&gt;
+&lt;script src="historial_controller.js"&gt;&lt;/script&gt;      &lt;!-- loadHistorialView --&gt;
+&lt;script src="productos_controller.js"&gt;&lt;/script&gt;      &lt;!-- FormSchemas['productos'] --&gt;
+&lt;script src="finanzas_controller.js"&gt;&lt;/script&gt;       &lt;!-- loadFinanzasView --&gt;
+&lt;script src="dashboard_controller.js"&gt;&lt;/script&gt;      &lt;!-- FormSchemas + ValidationRules --&gt;
+
+&lt;!-- 4. Navegación (depende de controladores) --&gt;
+&lt;script src="navigation.js"&gt;&lt;/script&gt;
+
+&lt;!-- 5. Motor de formularios (depende de FormSchemas + ValidationRules) --&gt;
+&lt;script src="logica.js"&gt;&lt;/script&gt;
+
+&lt;!-- 6. Módulo adicional --&gt;
+&lt;script src="bodega_produccion.js"&gt;&lt;/script&gt;</code></pre>
+
+        <blockquote class="alert-warning">
+            <div class="alert-title">⚠️ Warning</div>
+            <strong>El orden importa</strong>: <code>logica.js</code> debe cargarse DESPUÉS de todos los controladores porque usa <code>window.FormSchemas</code> que ellos registran. <code>navigation.js</code> debe cargarse DESPUÉS de los controladores porque llama a <code>window.loadSelectionView()</code>, <code>window.loadMateriaPrimaView()</code>, etc.
+        </blockquote>
+
+        <!-- FOOTER -->
+        <div style="text-align: center; margin-top: 80px; padding: 30px 0; border-top: 1px solid var(--border-primary); color: var(--text-muted); font-size: 12px;">
+            <p style="margin-bottom: 4px;">Specialized Instrumental Dental — Análisis Técnico v2.0</p>
+            <p>Generado el 18 de Abril de 2026</p>
+        </div>
+
+    </article>
+</div>
+
+<!-- BACK TO TOP BUTTON -->
+<button class="back-to-top" id="backToTop" aria-label="Volver arriba">↑</button>
+
+<script>
+    // ===== MERMAID INIT =====
+    mermaid.initialize({
+        startOnLoad: true,
+        theme: 'dark',
+        themeVariables: {
+            primaryColor: '#21262d',
+            primaryTextColor: '#e6edf3',
+            primaryBorderColor: '#30363d',
+            lineColor: '#58a6ff',
+            secondaryColor: '#161b22',
+            tertiaryColor: '#1c2333',
+            noteBkgColor: '#161b22',
+            noteTextColor: '#8b949e',
+            noteBorderColor: '#30363d',
+            actorBkg: '#21262d',
+            actorBorder: '#58a6ff',
+            actorTextColor: '#e6edf3',
+            signalColor: '#58a6ff',
+            signalTextColor: '#e6edf3',
+            labelBoxBkgColor: '#21262d',
+            labelBoxBorderColor: '#30363d',
+            labelTextColor: '#e6edf3',
+            loopTextColor: '#8b949e',
+            activationBkgColor: '#1c2333',
+            activationBorderColor: '#58a6ff',
+            sequenceNumberColor: '#bc8cff',
+        },
+        flowchart: {
+            htmlLabels: true,
+            curve: 'basis',
+            nodeSpacing: 30,
+            rankSpacing: 50,
+        },
+        sequence: {
+            diagramMarginX: 20,
+            diagramMarginY: 10,
+            actorMargin: 50,
+            width: 150,
+            height: 65,
+            boxMargin: 10,
+            boxTextMargin: 5,
+            noteMargin: 10,
+            messageMargin: 35,
+            mirrorActors: true,
+            useMaxWidth: true,
+        }
+    });
+
+    // ===== HIGHLIGHT.JS INIT =====
+    hljs.highlightAll();
+
+    // ===== SIDEBAR TOGGLE (MOBILE) =====
+    const btnToggle = document.getElementById('btnMenuToggle');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+
+    function toggleSidebar() {
+        sidebar.classList.toggle('open');
+        overlay.classList.toggle('active');
+    }
+
+    btnToggle.addEventListener('click', toggleSidebar);
+    overlay.addEventListener('click', toggleSidebar);
+
+    // ===== ACTIVE NAV LINK (Intersection Observer) =====
+    const navLinks = document.querySelectorAll('.nav-link');
+    const sections = [];
+
+    navLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        if (href && href.startsWith('#')) {
+            const el = document.getElementById(href.slice(1));
+            if (el) sections.push({ id: href.slice(1), el: el, link: link });
+        }
+    });
+
+    const observerOptions = {
+        rootMargin: '-100px 0px -60% 0px',
+        threshold: 0
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                navLinks.forEach(l => l.classList.remove('active'));
+                const match = sections.find(s => s.id === entry.target.id);
+                if (match) match.link.classList.add('active');
+            }
+        });
+    }, observerOptions);
+
+    sections.forEach(s => observer.observe(s.el));
+
+    // Close sidebar on nav click (mobile)
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            if (window.innerWidth <= 1024) {
+                sidebar.classList.remove('open');
+                overlay.classList.remove('active');
+            }
+        });
+    });
+
+    // ===== PROGRESS BAR =====
+    const progressBar = document.getElementById('progress-bar');
+
+    window.addEventListener('scroll', () => {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        progressBar.style.width = progress + '%';
+    });
+
+    // ===== BACK TO TOP =====
+    const backToTop = document.getElementById('backToTop');
+
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 400) {
+            backToTop.classList.add('visible');
+        } else {
+            backToTop.classList.remove('visible');
+        }
+    });
+
+    backToTop.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+</script>
+
+</body>
+</html>

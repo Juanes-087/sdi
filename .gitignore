@@ -1,0 +1,11 @@
+# Ignorar archivos de configuración sensible
+.env
+.env.local
+
+# Ignorar carpetas de dependencias (si usa Node o PHP)
+node_modules/
+vendor/
+
+# Ignorar archivos temporales de Windows
+Thumbs.db
+desktop.ini

@@ -1,0 +1,35 @@
+{
+    "dashboard": {
+        "title": "Administration Panel",
+        "subtitle": "Specialized dental instrumental management system",
+        "welcome": "Welcome",
+        "intro": "Here is a summary of your platform activity. Data is updated in real-time from the database.",
+        "stats": {
+            "total_users": "Total Users",
+            "new_users": "New this month",
+            "employees": "Employees",
+            "clients": "Clients",
+            "providers": "Providers",
+            "products": "Products in inventory",
+            "instruments": "Instruments",
+            "kits": "Kits",
+            "max_sale": "Max sale",
+            "low_stock": "Lowest stock product"
+        }
+    },
+    "menu": {
+        "profile": "Modify Profile",
+        "password": "Change Password",
+        "notifications": "Notifications",
+        "settings": "Accessibility",
+        "support": "Help & Support",
+        "logout": "Logout"
+    },
+    "settings": {
+        "title": "Accessibility",
+        "theme": "Dark Mode",
+        "theme_desc": "Change the application appearance",
+        "language": "Platform Language",
+        "save": "Save Changes"
+    }
+}

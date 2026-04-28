@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Specialized</title>
+    <link rel="stylesheet" href="./styles/index.css?v=3">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="./src/JavaScript/security.js?v=1"></script>
+    <script src="https://kit.fontawesome.com/a2e0e6ad5a.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <header>
+        <div class="contenedor_logo">
+            <img class="logo_header" src="./images/logo central solo.png" alt="">
+            <img class="texto_logo" src="./images/texto logo.png" alt="">
+        </div>
+        <div class="search-container">
+            <input type="text" class="barra_busqueda" placeholder="Buscar Instrumental...">
+        </div>
+        <div class="contenedor_botones">
+            <div class="button"> <a class="btn-link" href="./html/InicioSesion.html" target="_blank">Ingresar</a></div>
+        </div>
+    </header>
+    <div class="contenedores-container">
+        <div class="contenedores-bar">
+            <div class="contenedor-item">
+                <button class="contenedor-tab" data-contenedor="estetica">
+                    Estética
+                </button>
+                <div class="contenedor-content" id="contenedor-estetica">
+                    <div class="content-header">
+                        <h3>Instrumental de Estética Dental</h3>
+                        <p>Herramientas especializadas para procedimientos estéticos y restauradores</p>
+                    </div>
+                    <div class="images-grid">
+                        <!-- Items cargados dinámicamente -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="contenedor-item">
+                <button class="contenedor-tab" data-contenedor="esterilizacion">
+                    Esterilización
+                </button>
+                <div class="contenedor-content" id="contenedor-esterilizacion">
+                    <div class="content-header">
+                        <h3>Equipos de Esterilización</h3>
+                        <p>Sistemas de esterilización y control de infecciones</p>
+                    </div>
+                    <div class="images-grid">
+                        <!-- Items cargados dinámicamente -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="contenedor-item">
+                <button class="contenedor-tab" data-contenedor="endodoncia">
+                    Endodoncia
+                </button>
+                <div class="contenedor-content" id="contenedor-endodoncia">
+                    <div class="content-header">
+                        <h3>Instrumental de Endodoncia</h3>
+                        <p>Herramientas para tratamientos de conducto radicular</p>
+                    </div>
+                    <div class="images-grid">
+                        <!-- Items cargados dinámicamente -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="contenedor-item">
+                <button class="contenedor-tab" data-contenedor="periodoncia">
+                    Periodoncia
+                </button>
+                <div class="contenedor-content" id="contenedor-periodoncia">
+                    <div class="content-header">
+                        <h3>Instrumental de Periodoncia</h3>
+                        <p>Herramientas para tratamiento de encías y tejidos periodontales</p>
+                    </div>
+                    <div class="images-grid">
+                        <!-- Items cargados dinámicamente -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="welcome-section">
+            <h2>Specialized - Instrumental Dental</h2>
+            <p>Especialistas en instrumental y equipos dentales de la más alta calidad. Ofrecemos soluciones completas
+                para todas las especialidades odontológicas con productos certificados y garantía internacional.</p>
+        </div>
+
+        <div class="products-grid">
+            <div class="product-card">
+                <h3>Estética Dental</h3>
+                <p>Todo lo necesario para procedimientos estéticos: blanqueamiento, carillas, resinas y sistemas de
+                    fotocurado de última generación.</p>
+            </div>
+            <div class="product-card">
+                <h3>Esterilización</h3>
+                <p>Equipos y suministros para esterilización: autoclaves, cubas ultrasónicas, indicadores y sistemas de
+                    control de infecciones.</p>
+            </div>
+            <div class="product-card">
+                <h3>Endodoncia</h3>
+                <p>Instrumental especializado para tratamientos de conducto: limas, motores, localizadores de ápice y
+                    materiales de obturación.</p>
+            </div>
+            <div class="product-card">
+                <h3>Periodoncia</h3>
+                <p>Herramientas para el tratamiento periodontal: curetas, sondas, scalers ultrasónicos y material
+                    quirúrgico especializado.</p>
+            </div>
+        </div>
+
+        <section class="best-sellers-section">
+            <h2 class="section-title">Productos Más Vendidos</h2>
+            <p class="section-subtitle">Nuestra selección de instrumentos y kits preferida por profesionales</p>
+            
+            <div class="carousel-container">
+                <button class="carousel-btn prev" aria-label="Anterior">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                
+                <div class="carousel-track-container">
+                    <ul class="carousel-track" id="best-sellers-track">
+                        <!-- Cargado dinámicamente -->
+                        <div class="loading-spinner"></div>
+                    </ul>
+                </div>
+                
+                <button class="carousel-btn next" aria-label="Siguiente">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+            
+            <div class="carousel-nav" id="carousel-dots">
+                <!-- Dots cargados dinámicamente -->
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-container">
+            <!-- Columna 1: Logo Specialized -->
+            <div class="footer-col footer-logo-col">
+                <div class="footer-logo-container">
+                    <img class="footer-logo-icon" src="./images/logo central solo.png" alt="">
+                    <img class="footer-logo-text" src="./images/texto logo.png" alt="Specialized Instrumental Dental">
+                </div>
+            </div>
+
+            <!-- Columna 2: Redes Sociales -->
+            <div class="footer-col footer-redes">
+                <h4 class="footer-title">NUESTRAS REDES</h4>
+                <div class="footer-social-icons">
+                    <a href="https://wa.me/" target="_blank" class="social-icon whatsapp" aria-label="WhatsApp">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                    <a href="https://instagram.com/" target="_blank" class="social-icon instagram"
+                        aria-label="Instagram">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://facebook.com/" target="_blank" class="social-icon facebook" aria-label="Facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Columna 3: Información de Contacto -->
+            <div class="footer-col footer-contacto">
+                <h4 class="footer-title">CONTÁCTANOS:</h4>
+                <div class="footer-contact-info">
+                    <p><i class="fas fa-map-marker-alt"></i> Calle 41 #6-68, Lagos 2, Floridablanca, Santander, Colombia
+                    </p>
+                    <p><i class="fas fa-envelope"></i> <strong>Email:</strong> <a
+                            href="mailto:specializedinst@yahoo.es">specializedinst@yahoo.es</a></p>
+                    <p><i class="fas fa-phone"></i> <strong>Tel:</strong> +57 (607) 649 6730</p>
+                    <p><i class="fas fa-clock"></i> <strong>Horarios de atención:</strong></p>
+                    <p class="horario-detalle">Lun - Vie: 7AM a 12PM - 2PM a 6PM</p>
+                    <p class="horario-detalle">Sab: 7AM a 12PM</p>
+                </div>
+            </div>
+
+            <!-- Columna 4: Logo INVIMA -->
+            <div class="footer-col footer-invima">
+                <img src="./images/footer invima.avif" alt="INVIMA Registro Sanitario" class="footer-invima-img">
+                <p class="invima-text">Registro Sanitario</p>
+                <p class="invima-numero">No. 2015DM-0014009</p>
+            </div>
+        </div>
+        
+        <!-- Sección de Derechos de Autor -->
+        <div class="footer-copyright">
+            <div class="copyright-content">
+                <p>&copy; 2026 Specialized Instrumental Dental. Todos los derechos reservados.</p>
+                <p class="copyright-legal">Calidad y Precisión en Instrumental Odontológico</p>
+            </div>
+        </div>
+    </footer>
+
+</body>
+<script src="./src/JavaScript/cookies.js?v=99"></script>
+<script src="./src/JavaScript/index.js?v=99"></script>
+<script>
+    // ============================================
+    // SEGURIDAD: Limpiar sesión y bloquear historial
+    // ============================================
+    (function () {
+        try {
+            // Limpiar token local si existe
+            if (localStorage.getItem('token')) {
+                localStorage.removeItem('token');
+            }
+        } catch (e) { }
+
+        // Bloquear navegación hacia atrás (Historial infinito)
+        window.history.pushState(null, null, window.location.href);
+        window.onpopstate = function () {
+            window.history.pushState(null, null, window.location.href);
+        };
+
+        // Prevenir restauración desde caché (botón atrás)
+        window.addEventListener('pageshow', function (event) {
+            if (event.persisted) {
+                window.location.reload();
+            }
+        });
+    })();
+
+    // Scroll reveal para el footer
+    const footer = document.querySelector('.site-footer');
+    if (footer) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    footer.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+        observer.observe(footer);
+    }
+</script>
+
+</html>

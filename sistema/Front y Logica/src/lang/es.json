@@ -1,0 +1,35 @@
+{
+    "dashboard": {
+        "title": "Panel de Administración",
+        "subtitle": "Sistema de gestión de instrumental dental especializado",
+        "welcome": "Bienvenido",
+        "intro": "Aquí tienes un resumen de la actividad de tu plataforma. Los datos se actualizan en tiempo real desde la base de datos.",
+        "stats": {
+            "total_users": "Total Usuarios",
+            "new_users": "Nuevos este mes",
+            "employees": "Empleados",
+            "clients": "Clientes",
+            "providers": "Proveedores",
+            "products": "Productos en inventario",
+            "instruments": "Instrumentos",
+            "kits": "Kits",
+            "max_sale": "Mayor venta",
+            "low_stock": "Menor producto en stock"
+        }
+    },
+    "menu": {
+        "profile": "Modificar Perfil",
+        "password": "Cambiar Contraseña",
+        "notifications": "Notificaciones",
+        "settings": "Accesibilidad",
+        "support": "Ayuda y Soporte",
+        "logout": "Cerrar Sesión"
+    },
+    "settings": {
+        "title": "Accesibilidad",
+        "theme": "Modo Oscuro",
+        "theme_desc": "Cambiar la apariencia de la aplicación",
+        "language": "Idioma de la Plataforma",
+        "save": "Guardar Cambios"
+    }
+}

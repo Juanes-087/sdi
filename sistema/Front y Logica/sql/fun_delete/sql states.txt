@@ -1,0 +1,43 @@
+   9.  SQL Injection:        SELECT fun_user_delete(1 OR 1=1); -- Error SQLSTATE, revisar:ERROR:  el argumento de OR debe ser de tipo boolean, no tipo integer
+LINE 1: SELECT fun_user_delete(1 OR 1=1);
+                               ^
+
+SQL state: 42804
+Character: 24
+
+-------
+
+Float Cast:           SELECT fun_delete_tip_sangre(1.0::INT); - El error dio true la primera vez al ejecutar, no se que se supone
+que debia salir, pero dio true entonces aja, elimino el registro 1.
+
+
+-----
+
+SELECT fun_delete_tip_espec(9.9::INT);
+
+Resultado: NOTICE:  Tipo de especialización con ID 10 eliminado exitosamente.
+
+Successfully run. Total query runtime: 34 msec.
+1 rows affected.
+
+Resultado raro de float Cast
+
+------
+
+SELECT fun_delete_tip_doc(2.8::INT);
+
+Resultado: NOTICE:  Tipo de Documento con ID 3 eliminado exitosamente.
+
+Successfully run. Total query runtime: 34 msec.
+1 rows affected.
+
+------
+
+SELECT fun_delete_instrum_kit(1.5::INT);
+
+NOTICE:  Aviso: El Kit con instrumentos con ID 2 ya fue eliminado anteriormente.
+
+Successfully run. Total query runtime: 50 msec.
+1 rows affected.
+
+-----

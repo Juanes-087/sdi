@@ -1,0 +1,61 @@
+/* styles/validation.css */
+:root {
+    --error-color: #ff4757;
+    --success-color: #2ed573;
+    --warning-color: #ffa502;
+}
+
+.validation-msg {
+    font-size: 12px;
+    font-weight: 500;
+    margin-top: 5px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    display: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0;
+    transform: translateY(-5px);
+}
+
+.input-error {
+    border-color: var(--error-color) !important;
+    box-shadow: 0 0 0 3px rgba(255, 71, 87, 0.15) !important;
+    animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+.input-success {
+    border-color: var(--success-color) !important;
+    box-shadow: 0 0 0 3px rgba(46, 213, 115, 0.15) !important;
+}
+
+.validation-msg.error {
+    color: var(--error-color);
+    background: rgba(255, 71, 87, 0.05);
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.validation-msg.success {
+    color: var(--success-color);
+    background: rgba(46, 213, 115, 0.05);
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@keyframes shake {
+    10%, 90% { transform: translate3d(-1px, 0, 0); }
+    20%, 80% { transform: translate3d(2px, 0, 0); }
+    30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+    40%, 60% { transform: translate3d(4px, 0, 0); }
+}
+
+@keyframes fadeInScale {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.validation-msg {
+    animation: fadeInScale 0.2s ease-out forwards;
+}

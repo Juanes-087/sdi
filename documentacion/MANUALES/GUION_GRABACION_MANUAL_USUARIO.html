@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Guion de Grabación — Manual de Usuario SID</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;font-size:11pt;line-height:1.7;color:#1a202c;max-width:210mm;margin:0 auto;padding:25mm 20mm;background:#fff}
+h1{font-size:22pt;color:#1a365d;border-bottom:3px solid #1a365d;padding-bottom:8px;margin:40px 0 20px}
+h2{font-size:15pt;color:#2c5282;border-bottom:2px solid #e2e8f0;padding-bottom:6px;margin:30px 0 12px}
+h3{font-size:12pt;color:#2b6cb0;margin:20px 0 8px}
+p{margin-bottom:10px;text-align:justify}
+table{width:100%;border-collapse:collapse;margin:10px 0 20px;font-size:10pt}
+th,td{border:1px solid #e2e8f0;padding:7px 10px;text-align:left;vertical-align:top}
+th{background:#edf2f7;font-weight:600;color:#1a365d}
+tr:nth-child(even){background:#fafbfc}
+ul,ol{padding-left:22px;margin-bottom:10px}
+li{margin-bottom:4px}
+code{background:#f7fafc;border:1px solid #e2e8f0;padding:1px 4px;border-radius:3px;font-size:9pt;font-family:'Consolas',monospace;color:#9b2c2c}
+.cover{page-break-after:always;text-align:center;padding:60px 40px;border:3px solid #1a365d;min-height:70vh;display:flex;flex-direction:column;align-items:center;justify-content:center;margin-bottom:40px}
+.cover h1{border:none;font-size:26pt;margin-bottom:10px}
+.cover .sub{font-size:14pt;color:#2c5282;margin-bottom:30px}
+.cover .meta{font-size:11pt;color:#4a5568;line-height:2}
+.video-card{background:linear-gradient(135deg,#ebf8ff,#f0fff4);border:2px solid #2b6cb0;border-radius:10px;padding:18px 22px;margin:15px 0;page-break-inside:avoid}
+.video-card h3{color:#1a365d;margin:0 0 8px;font-size:13pt}
+.video-card .dur{display:inline-block;background:#2b6cb0;color:#fff;padding:2px 10px;border-radius:12px;font-size:9pt;font-weight:600;margin-bottom:8px}
+.tip{background:#fffff0;border-left:4px solid #d69e2e;padding:10px 14px;border-radius:4px;margin:10px 0;font-size:10pt;color:#975a16}
+.tip::before{content:"💡 TIP: ";font-weight:700}
+.warn{background:#fff5f5;border-left:4px solid #e53e3e;padding:10px 14px;border-radius:4px;margin:10px 0;font-size:10pt;color:#9b2c2c}
+.warn::before{content:"⚠️ ";font-weight:700}
+.check{list-style:none;padding-left:0}
+.check li::before{content:"☐ ";font-weight:700;color:#2b6cb0}
+.section{margin-bottom:25px}
+.page-break{page-break-before:always}
+.footer{margin-top:50px;padding-top:15px;border-top:2px solid #1a365d;text-align:center;font-size:9pt;color:#a0aec0}
+</style>
+</head>
+<body>
+
+<div class="cover">
+<h1>🎬 GUION DE GRABACIÓN</h1>
+<div class="sub">Manual de Usuario — Specialized Instrumental Dental</div>
+<p style="color:#718096;font-size:11pt;max-width:500px">Documento guía para grabar los videos paso a paso del Manual de Usuario del sistema SID. Cada sección indica qué grabar, qué decir y cuánto debe durar.</p>
+<div class="meta">
+<strong>Preparado para:</strong> Equipo de Grabación<br>
+<strong>Sistema:</strong> Specialized Instrumental Dental (SID)<br>
+<strong>Fecha:</strong> Abril 2026<br>
+<strong>Videos estimados:</strong> 8-10 clips (máx. 15 min c/u)
+</div>
+</div>
+
+<h1>📋 ANTES DE GRABAR — Checklist de Preparación</h1>
+<ul class="check">
+<li>Sistema corriendo en <code>localhost</code> con datos de prueba cargados</li>
+<li>Tener al menos 3 instrumentos, 2 kits, 3 materias primas, 2 proveedores, 2 empleados, 2 clientes creados</li>
+<li>Tener al menos 1 factura generada y 1 movimiento de bodega registrado</li>
+<li>Resolución de pantalla: <strong>1920×1080</strong> (Full HD)</li>
+<li>Programa de grabación listo (OBS Studio, Camtasia, o Xbox Game Bar)</li>
+<li>Micrófono probado (si se va a narrar)</li>
+<li>Cerrar notificaciones de Windows y pestañas innecesarias</li>
+<li>Navegador: <strong>Google Chrome</strong> en modo limpio (sin extensiones visibles)</li>
+<li>Zoom del navegador al <strong>100%</strong></li>
+</ul>
+<div class="tip">Si no vas a narrar en vivo, graba sin audio y después agrega narración. Es más profesional.</div>
+
+<h1 class="page-break">🎬 VIDEO 1 — Introducción y Landing Page</h1>
+<div class="video-card">
+<h3>🎬 Video 1: Presentación del Sistema y Landing Page</h3>
+<span class="dur">⏱ Duración: 3-5 min</span>
+<h3>Qué grabar:</h3>
+<ol>
+<li>Abrir Chrome → Navegar a <code>http://localhost/specialized/</code></li>
+<li>Mostrar la <strong>Landing Page</strong> completa: hacer scroll lento de arriba a abajo</li>
+<li>Señalar el <strong>logo</strong>, el <strong>nombre de la empresa</strong> y la <strong>descripción</strong></li>
+<li>Mostrar el <strong>catálogo público</strong> de productos (scroll por las cards)</li>
+<li>Mostrar el <strong>banner de cookies</strong> → clic en "Aceptar"</li>
+<li>Señalar los botones <strong>"Iniciar Sesión"</strong> y <strong>"Registrarse"</strong> en el header</li>
+</ol>
+<h3>Qué decir (guion sugerido):</h3>
+<p><em>"Bienvenidos al sistema Specialized Instrumental Dental. Esta es la página principal pública donde los visitantes pueden ver nuestro catálogo de productos. Desde aquí pueden iniciar sesión o registrarse como nuevos usuarios."</em></p>
+</div>
+
+<h1>🎬 VIDEO 2 — Registro e Inicio de Sesión</h1>
+<div class="video-card">
+<h3>🎬 Video 2: Registro de Usuario, Login y Recuperación</h3>
+<span class="dur">⏱ Duración: 5-7 min</span>
+<h3>Qué grabar:</h3>
+<ol>
+<li>Desde la landing, clic en <strong>"Registrarse"</strong></li>
+<li>Mostrar el formulario de registro → llenar todos los campos (nombre, usuario, contraseña, teléfono, correo)</li>
+<li>Mostrar las <strong>validaciones en vivo</strong>: intentar dejar un campo vacío, poner una contraseña corta</li>
+<li>Mostrar los <strong>Términos y Condiciones</strong> → aceptar checkbox</li>
+<li>Enviar el formulario → mostrar mensaje de éxito</li>
+<li>Ir a pantalla de <strong>Login</strong></li>
+<li>Iniciar sesión con el usuario recién creado → mostrar que redirige a <strong>Menú Cliente</strong></li>
+<li><strong>Cerrar sesión</strong></li>
+<li>Iniciar sesión como <strong>Administrador</strong> → mostrar que redirige a <strong>Menú Principal (Dashboard)</strong></li>
+<li>Mostrar brevemente el botón <strong>"Recuperar Contraseña"</strong> y explicar el flujo</li>
+</ol>
+<div class="tip">Mostrar el toggle de contraseña (ojo) para ver/ocultar la contraseña. Es un detalle que impresiona.</div>
+</div>
+
+<h1 class="page-break">🎬 VIDEO 3 — Dashboard y Navegación</h1>
+<div class="video-card">
+<h3>🎬 Video 3: Panel de Control y Navegación General</h3>
+<span class="dur">⏱ Duración: 4-6 min</span>
+<h3>Qué grabar:</h3>
+<ol>
+<li>Ya logueado como Admin, mostrar el <strong>Dashboard</strong> completo</li>
+<li>Señalar cada <strong>tarjeta de estadísticas</strong>: Total Usuarios, Clientes, Empleados, Proveedores, Productos</li>
+<li>Mostrar las <strong>alertas de stock crítico</strong> (badges rojos en instrumentos/kits con bajo stock)</li>
+<li>Mostrar las <strong>ventas del día</strong> y el <strong>producto más vendido</strong></li>
+<li>Mostrar la <strong>gráfica de ganancia neta</strong> (si existe)</li>
+<li>Recorrer el <strong>menú lateral (sidebar)</strong> completo: hacer clic en cada sección y nombrarla</li>
+<li>Explicar la navegación: <em>"El sistema funciona sin recargar la página, al hacer clic en cada opción del menú se carga la vista correspondiente"</em></li>
+<li>Mostrar el <strong>nombre de usuario</strong> en la esquina y el botón de <strong>Cerrar Sesión</strong></li>
+</ol>
+<div class="warn">No olvides mostrar el sidebar completo expandido. Cada botón debe ser visible.</div>
+</div>
+
+<h1>🎬 VIDEO 4 — CRUD de Entidades (Empleados, Clientes, Proveedores)</h1>
+<div class="video-card">
+<h3>🎬 Video 4: Gestión de Personas (Crear, Editar, Eliminar, Restaurar)</h3>
+<span class="dur">⏱ Duración: 10-12 min</span>
+<h3>Qué grabar — Empleados (ejemplo principal):</h3>
+<ol>
+<li>Ir a <strong>Gestión de Empleados</strong> desde el sidebar</li>
+<li>Mostrar la <strong>tabla</strong> con los empleados existentes</li>
+<li>Clic en <strong>"Crear Empleado"</strong> → llenar el formulario completo (tipo documento, número, nombres, apellidos, ciudad, cargo, género, tipo sangre, teléfono, correo, fecha contratación, peso, altura, banco, cuenta)</li>
+<li>Mostrar los <strong>dropdowns</strong> (selectores): cómo se cargan departamentos → ciudades en cascada</li>
+<li>Mostrar <strong>validaciones</strong>: intentar guardar con campos vacíos, poner un documento duplicado</li>
+<li>Guardar → mostrar <strong>alerta de éxito</strong> (SweetAlert)</li>
+<li>En la tabla, clic en <strong>Editar</strong> (ícono lápiz) → modificar un campo → Guardar</li>
+<li>Clic en <strong>Eliminar</strong> (ícono papelera) → confirmar → mostrar que desaparece de la tabla</li>
+<li>Ir a pestaña <strong>"Inhabilitados"</strong> → mostrar el registro eliminado</li>
+<li>Clic en <strong>"Restaurar"</strong> → mostrar que vuelve a la tabla principal</li>
+</ol>
+<h3>Repetir brevemente con:</h3>
+<ul>
+<li><strong>Clientes:</strong> Mostrar creación rápida (ya se entiende el patrón)</li>
+<li><strong>Proveedores:</strong> Mostrar creación + campo de calidad</li>
+<li><strong>Usuarios:</strong> Mostrar la lista y roles asignados</li>
+</ul>
+<div class="tip">Para el primer CRUD (Empleados) sé muy detallado. Para los demás, muestra solo las diferencias. No repitas todo.</div>
+</div>
+
+<h1 class="page-break">🎬 VIDEO 5 — Instrumentos y Kits</h1>
+<div class="video-card">
+<h3>🎬 Video 5: Gestión de Instrumental (Instrumentos + Kits)</h3>
+<span class="dur">⏱ Duración: 10-13 min</span>
+<h3>Qué grabar — Instrumentos:</h3>
+<ol>
+<li>Ir a <strong>Instrumental</strong> → pestaña <strong>Instrumentos</strong></li>
+<li>Mostrar la tabla con columnas: nombre, especialización, lote, stock, material, imagen</li>
+<li>Crear un instrumento nuevo → llenar formulario: nombre, especialización (dropdown), lote, tipo material (Specialized/Special), stock mín/máx</li>
+<li><strong>Subir una imagen</strong> del instrumento → mostrar la preview</li>
+<li>Guardar → mostrar en la tabla con la imagen</li>
+<li>Mostrar el <strong>badge de stock</strong> (alerta si está por debajo del mínimo)</li>
+<li>Editar un instrumento → cambiar el stock → Guardar</li>
+<li>Mostrar el botón de <strong>"Registrar Movimiento"</strong> → abrir modal de movimiento Kardex</li>
+<li>Registrar una <strong>Entrada</strong> (ej: entrada de producción, cantidad 10) → ver cómo actualiza el stock</li>
+</ol>
+<h3>Qué grabar — Kits:</h3>
+<ol>
+<li>Cambiar a pestaña <strong>Kits</strong></li>
+<li>Crear un kit nuevo → nombre, especialización, tipo material</li>
+<li>Mostrar el <strong>Kit Builder</strong>: agregar instrumentos al kit, seleccionar cantidad por instrumento</li>
+<li>Guardar kit → mostrar en tabla</li>
+<li>Mostrar el <strong>detalle del kit</strong> (qué instrumentos contiene)</li>
+</ol>
+</div>
+
+<h1>🎬 VIDEO 6 — Materia Prima y Categorías</h1>
+<div class="video-card">
+<h3>🎬 Video 6: Gestión de Materia Prima</h3>
+<span class="dur">⏱ Duración: 6-8 min</span>
+<h3>Qué grabar:</h3>
+<ol>
+<li>Ir a <strong>Materia Prima</strong> desde el sidebar</li>
+<li>Mostrar pestaña <strong>Categorías</strong> → crear una categoría (ej: "Varillas de Acero")</li>
+<li>Mostrar pestaña <strong>Materias Primas</strong> → crear una materia prima: nombre, categoría (dropdown), imagen, stock mín/máx</li>
+<li>Mostrar la <strong>relación Materia Prima ↔ Proveedor</strong>: asociar un proveedor a la materia prima con lote, tipo, unidad de medida, cantidad</li>
+<li>Editar una materia prima existente</li>
+<li>Eliminar y restaurar (mostrar brevemente)</li>
+</ol>
+</div>
+
+<h1 class="page-break">🎬 VIDEO 7 — Bodega y Producción</h1>
+<div class="video-card">
+<h3>🎬 Video 7: Flujo Bodega → Producción</h3>
+<span class="dur">⏱ Duración: 5-7 min</span>
+<h3>Qué grabar:</h3>
+<ol>
+<li>Ir a <strong>Bodega</strong> desde el sidebar</li>
+<li>Mostrar la tabla de movimientos de bodega (materia prima en almacén)</li>
+<li><strong>Registrar ingreso</strong>: seleccionar proveedor, materia prima, confirmar → mostrar en tabla con fecha de ingreso</li>
+<li>Mostrar que la columna "Fecha Salida" está vacía (aún en bodega)</li>
+<li>Clic en <strong>"Enviar a Producción"</strong> → confirmar</li>
+<li>Ir a pestaña <strong>Producción</strong> → mostrar que el material aparece con fecha de ingreso a producción</li>
+<li>Explicar: <em>"Este flujo garantiza la trazabilidad completa: sabemos de qué proveedor vino cada material y cuándo entró a producción"</em></li>
+</ol>
+</div>
+
+<h1>🎬 VIDEO 8 — Historial, Kardex y Facturación</h1>
+<div class="video-card">
+<h3>🎬 Video 8: Historial de Movimientos y Ventas</h3>
+<span class="dur">⏱ Duración: 8-10 min</span>
+<h3>Qué grabar — Kardex:</h3>
+<ol>
+<li>Ir a <strong>Historial</strong> desde el sidebar</li>
+<li>Mostrar el <strong>Kardex de Instrumentos</strong>: tabla con tipo movimiento, cantidad, fecha, observaciones</li>
+<li>Mostrar el <strong>Kardex de Kits</strong></li>
+<li>Mostrar el <strong>Kardex de Materia Prima</strong></li>
+</ol>
+<h3>Qué grabar — Facturación:</h3>
+<ol>
+<li>Ir a la sección de <strong>Ventas/Facturación</strong></li>
+<li>Crear una <strong>nueva venta</strong>: seleccionar cliente, agregar productos al detalle (instrumento o kit), cantidad</li>
+<li>Mostrar el <strong>cálculo automático</strong>: subtotal, descuento (%), total</li>
+<li>Seleccionar <strong>forma de pago</strong> (Efectivo/Transferencia/Mixto)</li>
+<li>Confirmar venta → mostrar alerta de éxito con número de factura</li>
+<li>Mostrar la factura en la <strong>tabla de ventas</strong></li>
+<li>Clic en <strong>"Imprimir Factura"</strong> → mostrar el PDF generado</li>
+<li>Mostrar una <strong>devolución</strong>: seleccionar factura → registrar motivo → confirmar</li>
+</ol>
+<div class="tip">Al imprimir la factura, haz zoom en el PDF para que se vean los datos de la empresa, el cliente, los productos y el total.</div>
+</div>
+
+<h1 class="page-break">🎬 VIDEO 9 — Tienda del Cliente</h1>
+<div class="video-card">
+<h3>🎬 Video 9: Experiencia del Cliente</h3>
+<span class="dur">⏱ Duración: 5-7 min</span>
+<h3>Qué grabar:</h3>
+<ol>
+<li><strong>Cerrar sesión</strong> del admin</li>
+<li>Iniciar sesión como <strong>Cliente</strong> (usuario con rol cliente)</li>
+<li>Mostrar el <strong>Menú del Cliente</strong> (diferente al admin)</li>
+<li>Navegar por el <strong>catálogo de productos</strong>: mostrar las cards con imagen, nombre, precio</li>
+<li>Usar la <strong>barra de búsqueda</strong> → buscar un producto por nombre</li>
+<li>Usar los <strong>filtros por categoría/especialización</strong></li>
+<li>Clic en <strong>"Agregar al carrito"</strong> en varios productos → mostrar el badge del carrito actualizándose</li>
+<li>Abrir el <strong>carrito de compras</strong> → mostrar productos, cantidades, total</li>
+<li>Modificar cantidad de un producto en el carrito</li>
+<li>Ir a <strong>Perfil</strong> → mostrar datos del cliente y opción de cambiar contraseña</li>
+<li><strong>Cerrar sesión</strong></li>
+</ol>
+</div>
+
+<h1>🎬 VIDEO 10 (Opcional) — Seguridad y Auditoría</h1>
+<div class="video-card">
+<h3>🎬 Video 10: Características de Seguridad</h3>
+<span class="dur">⏱ Duración: 3-5 min</span>
+<h3>Qué grabar:</h3>
+<ol>
+<li>Loguearse como Admin</li>
+<li>Mostrar el <strong>Audit Trail</strong> (si tiene vista en el historial): tabla con usuario, tabla afectada, operación, datos anteriores/nuevos, fecha</li>
+<li>Intentar acceder a una <strong>URL de admin sin sesión</strong> → mostrar que redirige al login</li>
+<li>Mostrar que la <strong>sesión expira</strong> por inactividad (explicar el parámetro ind_idle)</li>
+<li>Mostrar el <strong>cierre de sesión seguro</strong></li>
+</ol>
+<div class="tip">Este video es opcional pero muy valorado. Demuestra que el sistema tiene seguridad real.</div>
+</div>
+
+<h1 class="page-break">📝 RESUMEN DE VIDEOS</h1>
+<table>
+<tr><th>#</th><th>Video</th><th>Duración</th><th>Contenido Clave</th></tr>
+<tr><td>1</td><td>Introducción y Landing</td><td>3-5 min</td><td>Landing page, catálogo público, cookies</td></tr>
+<tr><td>2</td><td>Registro y Login</td><td>5-7 min</td><td>Registro, login, roles, recuperar contraseña</td></tr>
+<tr><td>3</td><td>Dashboard y Navegación</td><td>4-6 min</td><td>Estadísticas, alertas stock, sidebar, navegación SPA</td></tr>
+<tr><td>4</td><td>CRUD Entidades</td><td>10-12 min</td><td>Empleados (detallado), Clientes, Proveedores, Usuarios</td></tr>
+<tr><td>5</td><td>Instrumentos y Kits</td><td>10-13 min</td><td>CRUD instrumentos, imágenes, kit builder, movimientos</td></tr>
+<tr><td>6</td><td>Materia Prima</td><td>6-8 min</td><td>Categorías, materias primas, relación con proveedores</td></tr>
+<tr><td>7</td><td>Bodega → Producción</td><td>5-7 min</td><td>Ingreso a bodega, envío a producción, trazabilidad</td></tr>
+<tr><td>8</td><td>Historial y Facturación</td><td>8-10 min</td><td>Kardex, crear venta, factura PDF, devoluciones</td></tr>
+<tr><td>9</td><td>Tienda del Cliente</td><td>5-7 min</td><td>Catálogo, búsqueda, carrito, perfil</td></tr>
+<tr><td>10</td><td>Seguridad (opcional)</td><td>3-5 min</td><td>Audit trail, expiración sesión, acceso no autorizado</td></tr>
+</table>
+<p><strong>Tiempo total estimado:</strong> 59-80 minutos de grabación bruta → ~45-60 min editados.</p>
+
+<h1>🎯 TIPS PARA UNA GRABACIÓN PROFESIONAL</h1>
+<table>
+<tr><th>Aspecto</th><th>Recomendación</th></tr>
+<tr><td>🖱️ Movimiento del mouse</td><td>Movimientos lentos y deliberados. No muevas el mouse nerviosamente.</td></tr>
+<tr><td>⌨️ Escritura</td><td>Escribe a velocidad normal. Si te equivocas, borra y reescribe (no edites después).</td></tr>
+<tr><td>⏸️ Pausas</td><td>Haz una pausa de 2 seg antes y después de cada acción importante.</td></tr>
+<tr><td>🔍 Zoom</td><td>Si hay texto pequeño, usa Ctrl+= para hacer zoom temporal.</td></tr>
+<tr><td>📏 Consistencia</td><td>Usa siempre los mismos datos de prueba en todos los videos.</td></tr>
+<tr><td>❌ Errores</td><td>NO cortes si algo falla. Muestra el error y cómo resolverlo — eso es contenido valioso.</td></tr>
+<tr><td>🎨 Tema oscuro</td><td>Si el sistema tiene tema oscuro, úsalo. Se ve más profesional en video.</td></tr>
+<tr><td>📁 Nombres de archivo</td><td>Nombra cada video: <code>01_landing.mp4</code>, <code>02_login.mp4</code>, etc.</td></tr>
+</table>
+
+<div class="footer">
+<p><strong>Specialized Instrumental Dental</strong> — Guion de Grabación para Manual de Usuario</p>
+<p>Documento generado el 23 de abril de 2026 | Programa ADSO — SENA</p>
+</div>
+</body>
+</html>

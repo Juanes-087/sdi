@@ -1,0 +1,57 @@
+OWASP Top 10 Security Audit Report
+Executive Summary
+The application has a generally solid security foundation, with good practices in password handling and output encoding. However, a High Severity vulnerability was identified in the API's Access Control logic, which could allow unauthorized users to modify data.
+
+Findings Detail
+🚨 A01:2021-Broken Access Control (HIGH RISK)
+Vulnerability: The main API endpoint (
+api_gestion.php
+) validates that a user is logged in.
+Impact: PATCHED. Logic added to restrict modifications to Admins only.
+Recommendation: Verification Pending.
+api_gestion.php
+. Verify $_SESSION['id_menu'] == 1 before processing POST actions. (Done 2026-02-12)
+TODO: Perform manual testing of RBAC with a Client account when environment permits.
+⚠️ A02:2021-Cryptographic Failures (MEDIUM RISK)
+Vulnerability: The JWT logic relies on JWT_SECRET from 
+.env
+. If the default value (cambiar_por_clave_segura...) is used, tokens can be forged.
+Recommendation: Ensure 
+specialized/.env
+ contains a strong, random 32+ character string for JWT_SECRET and is NOT committed to version control.
+Positive Finding: Passwords are correctly hashed using password_hash() (Bcrypt/Argon2) and verified with password_verify().
+✅ A03:2021-Injection (LOW RISK)
+SQL Injection:
+While 
+querys.php
+ contains helper methods (
+getAuxList
+, 
+updateGeneric
+) that use variable interpolation, static analysis confirms that 
+api_gestion.php
+ only passes hardcoded strings to these methods. User inputs are strictly bound as parameters.
+Status: Safe under current usage patterns.
+XSS:
+Frontend (
+menuPrincipal.php
+) correctly uses htmlspecialchars() for echoing user details.
+API endpoints return JSON, shifting XSS mitigation responsibility to the frontend JavaScript.
+✅ A07:2021-Identification and Authentication (LOW RISK)
+Authentication: The login logic (
+validar.php
+) correctly verifies credentials and issues a signed JWT.
+Configuration: Password complexity is enforced during registration.
+✅ A05:2021-Security Misconfiguration (LOW RISK)
+Error Handling: Production settings suppress raw PHP errors (display_errors = 0). The API catches exceptions and returns generic JSON error messages, preventing stack trace leakage.
+Next Steps
+Immediate Action: Patch 
+api_gestion.php
+ to restrict create, 
+update
+, and 
+delete
+ actions to Administrators (id_menu == 1) only.
+Configuration: Verify 
+.env
+ file security.

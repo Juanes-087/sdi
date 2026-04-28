@@ -1,0 +1,1716 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual Técnico y de Operación — Specialized Instrumental Dental</title>
+    <style>
+        /* ═══════════════════════════════════════════════════════════
+           ESTILOS DEL MANUAL TÉCNICO
+           Diseñado para visualización web y exportación a Word.
+           Para exportar a Word: Abrir en navegador → Ctrl+A → Copiar → Pegar en Word
+           ═══════════════════════════════════════════════════════════ */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap');
+
+        :root {
+            --color-primary: #1a365d;
+            --color-primary-light: #2c5282;
+            --color-accent: #2b6cb0;
+            --color-success: #276749;
+            --color-warning: #975a16;
+            --color-danger: #9b2c2c;
+            --color-bg: #ffffff;
+            --color-text: #1a202c;
+            --color-text-secondary: #4a5568;
+            --color-border: #e2e8f0;
+            --color-table-header: #edf2f7;
+            --color-code-bg: #f7fafc;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, sans-serif;
+            font-size: 11pt;
+            line-height: 1.7;
+            color: var(--color-text);
+            background: var(--color-bg);
+            max-width: 210mm;
+            margin: 0 auto;
+            padding: 25mm 20mm;
+        }
+
+        /* ── Portada ── */
+        .cover-page {
+            page-break-after: always;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 80vh;
+            text-align: center;
+            border: 3px solid var(--color-primary);
+            padding: 60px 40px;
+            margin-bottom: 40px;
+        }
+        .cover-page .logo-placeholder {
+            width: 120px; height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 36px; font-weight: 700;
+            margin-bottom: 30px;
+            letter-spacing: 2px;
+        }
+        .cover-page h1 {
+            font-size: 28pt;
+            color: var(--color-primary);
+            margin-bottom: 10px;
+            line-height: 1.2;
+        }
+        .cover-page .subtitle {
+            font-size: 16pt;
+            color: var(--color-primary-light);
+            margin-bottom: 40px;
+            font-weight: 500;
+        }
+        .cover-page .meta-info {
+            font-size: 11pt;
+            color: var(--color-text-secondary);
+            line-height: 2;
+        }
+        .cover-page .meta-info strong { color: var(--color-text); }
+
+        /* ── Encabezados ── */
+        h1 {
+            font-size: 22pt;
+            color: var(--color-primary);
+            border-bottom: 3px solid var(--color-primary);
+            padding-bottom: 8px;
+            margin: 40px 0 20px 0;
+            page-break-after: avoid;
+        }
+        h2 {
+            font-size: 16pt;
+            color: var(--color-primary-light);
+            border-bottom: 2px solid var(--color-border);
+            padding-bottom: 6px;
+            margin: 30px 0 15px 0;
+            page-break-after: avoid;
+        }
+        h3 {
+            font-size: 13pt;
+            color: var(--color-accent);
+            margin: 25px 0 10px 0;
+            page-break-after: avoid;
+        }
+        h4 {
+            font-size: 11pt;
+            color: var(--color-text);
+            margin: 15px 0 8px 0;
+            font-weight: 600;
+        }
+
+        p { margin-bottom: 12px; text-align: justify; }
+
+        /* ── Tabla de contenido ── */
+        .toc { page-break-after: always; }
+        .toc h1 { text-align: center; border-bottom: none; }
+        .toc ul {
+            list-style: none;
+            padding: 0;
+        }
+        .toc > ul > li {
+            border-bottom: 1px dotted var(--color-border);
+            padding: 6px 0;
+        }
+        .toc > ul > li > a {
+            font-weight: 600;
+            font-size: 12pt;
+        }
+        .toc ul ul {
+            padding-left: 25px;
+        }
+        .toc ul ul li {
+            border-bottom: none;
+            padding: 3px 0;
+        }
+        .toc ul ul ul {
+            padding-left: 20px;
+        }
+        .toc a {
+            text-decoration: none;
+            color: var(--color-text);
+        }
+        .toc a:hover { color: var(--color-accent); text-decoration: underline; }
+
+        /* ── Tablas ── */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0 25px 0;
+            font-size: 10pt;
+            page-break-inside: avoid;
+        }
+        th, td {
+            border: 1px solid var(--color-border);
+            padding: 8px 12px;
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background: var(--color-table-header);
+            font-weight: 600;
+            color: var(--color-primary);
+            white-space: nowrap;
+        }
+        tr:nth-child(even) { background: #fafbfc; }
+        tr:hover { background: #edf2f7; }
+
+        /* ── Código ── */
+        code {
+            font-family: 'Roboto Mono', 'Consolas', monospace;
+            background: var(--color-code-bg);
+            border: 1px solid var(--color-border);
+            padding: 1px 5px;
+            border-radius: 3px;
+            font-size: 9.5pt;
+            color: var(--color-danger);
+        }
+        pre {
+            background: #1a202c;
+            color: #e2e8f0;
+            padding: 16px 20px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-size: 9pt;
+            line-height: 1.5;
+            margin: 15px 0 25px 0;
+            page-break-inside: avoid;
+        }
+        pre code {
+            background: transparent;
+            border: none;
+            color: inherit;
+            padding: 0;
+        }
+
+        /* ── Listas ── */
+        ul, ol {
+            padding-left: 25px;
+            margin-bottom: 12px;
+        }
+        li { margin-bottom: 4px; }
+
+        /* ── Alertas / Notas ── */
+        .note, .warning, .important {
+            padding: 14px 18px;
+            border-radius: 6px;
+            margin: 15px 0;
+            border-left: 4px solid;
+            page-break-inside: avoid;
+        }
+        .note {
+            background: #ebf8ff;
+            border-color: var(--color-accent);
+            color: #2c5282;
+        }
+        .warning {
+            background: #fffff0;
+            border-color: #d69e2e;
+            color: #975a16;
+        }
+        .important {
+            background: #fff5f5;
+            border-color: #e53e3e;
+            color: #9b2c2c;
+        }
+        .note::before { content: "ℹ️ NOTA: "; font-weight: 700; }
+        .warning::before { content: "⚠️ ADVERTENCIA: "; font-weight: 700; }
+        .important::before { content: "🔴 IMPORTANTE: "; font-weight: 700; }
+
+        /* ── Diagrama (imagen) ── */
+        .diagram-container {
+            text-align: center;
+            margin: 20px 0;
+            page-break-inside: avoid;
+        }
+        .diagram-container img {
+            max-width: 100%;
+            border: 1px solid var(--color-border);
+            border-radius: 4px;
+        }
+        .diagram-container .caption {
+            font-size: 9.5pt;
+            color: var(--color-text-secondary);
+            font-style: italic;
+            margin-top: 6px;
+        }
+
+        /* ── Secciones ── */
+        .section { margin-bottom: 30px; }
+        .page-break { page-break-before: always; }
+
+        /* ── Footer ── */
+        .doc-footer {
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 2px solid var(--color-primary);
+            text-align: center;
+            font-size: 9pt;
+            color: var(--color-text-secondary);
+        }
+
+        /* ── Control de versiones ── */
+        .version-table td:first-child { font-weight: 600; white-space: nowrap; }
+
+        /* ── Árbol de directorios ── */
+        .dir-tree {
+            background: var(--color-code-bg);
+            border: 1px solid var(--color-border);
+            padding: 16px 20px;
+            border-radius: 6px;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 9pt;
+            line-height: 1.6;
+            margin: 15px 0 25px 0;
+            white-space: pre;
+            overflow-x: auto;
+        }
+
+        /* ── Print ── */
+        @media print {
+            body { padding: 15mm; max-width: none; }
+            .cover-page { min-height: 90vh; }
+            pre { white-space: pre-wrap; word-wrap: break-word; }
+            a { color: inherit !important; text-decoration: none !important; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ╔══════════════════════════════════════════════════════════════╗ -->
+<!-- ║                      PORTADA                                ║ -->
+<!-- ╚══════════════════════════════════════════════════════════════╝ -->
+<div class="cover-page">
+    <div class="logo-placeholder">SID</div>
+    <h1>MANUAL TÉCNICO Y DE OPERACIÓN DEL SISTEMA</h1>
+    <div class="subtitle">Specialized Instrumental Dental</div>
+    <p style="font-size: 12pt; color: #718096; margin-bottom: 40px;">
+        Sistema de Gestión de Inventario, Producción y Ventas<br>
+        de Instrumentación Odontológica Especializada
+    </p>
+    <div class="meta-info">
+        <strong>Versión:</strong> 2.1<br>
+        <strong>Fecha de Elaboración:</strong> Abril 2026<br>
+        <strong>Autores:</strong> Juan Barrios y Yulvin Santiago<br>
+        <strong>Tipo de Documento:</strong> Manual Técnico<br>
+        <strong>Programa:</strong> Análisis y Desarrollo de Software (ADSO)<br>
+        <strong>Centro de Formación:</strong> SENA<br>
+        <strong>Ubicación:</strong> Bucaramanga, Santander — Colombia
+    </div>
+</div>
+
+<!-- ╔══════════════════════════════════════════════════════════════╗ -->
+<!-- ║                 CONTROL DE VERSIONES                        ║ -->
+<!-- ╚══════════════════════════════════════════════════════════════╝ -->
+<div class="section">
+    <h2>Control de Versiones</h2>
+    <table class="version-table">
+        <thead>
+            <tr>
+                <th>Versión</th>
+                <th>Fecha</th>
+                <th>Descripción del Cambio</th>
+                <th>Responsable</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1.0</td>
+                <td>2025-03-01</td>
+                <td>Creación inicial del manual técnico con estructura base</td>
+                <td>Juan Barrios y Yulvin Santiago</td>
+            </tr>
+            <tr>
+                <td>2.0</td>
+                <td>2026-04-21</td>
+                <td>Actualización completa: arquitectura refactorizada, controladores atómicos, auditoría, seguridad OWASP</td>
+                <td>Juan Barrios y Yulvin Santiago</td>
+            </tr>
+            <tr>
+                <td>2.1</td>
+                <td>2026-04-25</td>
+                <td>Refactorización de Devoluciones: Implementación de estados (Pendiente, Reparado, Desechado) y trazabilidad en Kardex</td>
+                <td>Juan Barrios y Yulvin Santiago</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- ╔══════════════════════════════════════════════════════════════╗ -->
+<!-- ║                 TABLA DE CONTENIDO                           ║ -->
+<!-- ╚══════════════════════════════════════════════════════════════╝ -->
+<div class="toc">
+    <h1>TABLA DE CONTENIDO</h1>
+    <ul>
+        <li><a href="#s1">1. OBJETIVO</a></li>
+        <li><a href="#s2">2. ALCANCE</a></li>
+        <li><a href="#s3">3. TÉRMINOS Y DEFINICIONES</a></li>
+        <li><a href="#s4">4. ¿QUÉ ES EL MANUAL TÉCNICO Y DE OPERACIÓN DEL SISTEMA?</a></li>
+        <li><a href="#s5">5. INTRODUCCIÓN</a></li>
+        <li><a href="#s6">6. TAXONOMÍA Y CONTENIDO DEL MANUAL TÉCNICO</a>
+            <ul>
+                <li><a href="#s6-1">6.1 Descripción del Sistema de Información Desarrollado</a></li>
+                <li><a href="#s6-2">6.2 Diseño Técnico del Sistema de Información</a>
+                    <ul>
+                        <li><a href="#s6-2-1">6.2.1 Esquema o Modelo de Requerimientos</a></li>
+                        <li><a href="#s6-2-1b">6.2.1.1 Diagramas de Casos de Uso</a></li>
+                        <li><a href="#s6-2-2">6.2.2 Software Base del Sistema y Prerequisitos</a></li>
+                        <li><a href="#s6-2-3">6.2.3 Componentes y Estándares</a></li>
+                        <li><a href="#s6-2-4">6.2.4 Modelo de Datos</a></li>
+                        <li><a href="#s6-2-5">6.2.5 Funcionalidad y Servicios Ofrecidos</a></li>
+                    </ul>
+                </li>
+                <li><a href="#s6-3">6.3 Despliegue y Configuración de Componentes</a>
+                    <ul>
+                        <li><a href="#s6-3-1">6.3.1 Organización de Componentes</a></li>
+                        <li><a href="#s6-3-2">6.3.2 Instalación</a></li>
+                        <li><a href="#s6-3-3">6.3.3 Configuración</a></li>
+                        <li><a href="#s6-3-4">6.3.4 Despliegue</a></li>
+                    </ul>
+                </li>
+                <li><a href="#s6-4">6.4 Resolución de Problemas</a>
+                    <ul>
+                        <li><a href="#s6-4-1">6.4.1 Errores Técnicos Más Comunes y su Solución</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</div>
+
+<!-- ╔══════════════════════════════════════════════════════════════╗ -->
+<!-- ║              1. OBJETIVO                                     ║ -->
+<!-- ╚══════════════════════════════════════════════════════════════╝ -->
+<div class="section page-break" id="s1">
+    <h1>1. OBJETIVO</h1>
+    <p>
+        El presente manual tiene como objetivo documentar de manera integral la arquitectura técnica, el diseño,
+        la funcionalidad, la configuración y los procedimientos de despliegue del sistema de información
+        <strong>"Specialized Instrumental Dental"</strong>, proporcionando al equipo de desarrollo, mantenimiento
+        y soporte una referencia completa que facilite la comprensión, el mantenimiento evolutivo y la
+        transferencia de conocimiento del sistema.
+    </p>
+    <p>
+        Este documento sirve como guía para:
+    </p>
+    <ul>
+        <li>Comprender la arquitectura de tres capas (Frontend, Backend, Base de Datos) implementada.</li>
+        <li>Identificar los componentes del sistema y sus interacciones.</li>
+        <li>Facilitar la instalación y configuración del sistema en nuevos ambientes.</li>
+        <li>Documentar los patrones de diseño y estándares de seguridad aplicados.</li>
+        <li>Proveer una guía de resolución de problemas técnicos comunes.</li>
+    </ul>
+</div>
+
+<!-- ╔══════════════════════════════════════════════════════════════╗ -->
+<!-- ║              2. ALCANCE                                      ║ -->
+<!-- ╚══════════════════════════════════════════════════════════════╝ -->
+<div class="section" id="s2">
+    <h1>2. ALCANCE</h1>
+    <p>
+        Este manual abarca la totalidad de los módulos que componen el sistema <strong>Specialized Instrumental Dental</strong>,
+        incluyendo:
+    </p>
+    <ul>
+        <li><strong>Módulo de Autenticación y Seguridad:</strong> Login con JWT, gestión de sesiones, cabeceras de seguridad HTTP.</li>
+        <li><strong>Módulo de Dashboard Administrativo:</strong> Panel de estadísticas, alertas de stock, métricas de eficiencia.</li>
+        <li><strong>Módulo de Gestión de Instrumental:</strong> CRUD de instrumentos individuales y kits (conjuntos de instrumentos).</li>
+        <li><strong>Módulo de Gestión de Materia Prima:</strong> CRUD de materias primas, categorías y relaciones con proveedores.</li>
+        <li><strong>Módulo de Historial y Kardex:</strong> Registro de movimientos de inventario (entradas, salidas, ajustes).</li>
+        <li><strong>Módulo de Bodega y Producción:</strong> Control del flujo de materia prima hacia la línea de producción.</li>
+        <li><strong>Módulo de Facturación y Ventas:</strong> Generación de facturas, devoluciones, cierre de caja diario.</li>
+        <li><strong>Módulo de Tienda del Cliente:</strong> Catálogo de productos, carrito de compras, perfil de usuario.</li>
+        <li><strong>Módulo de Auditoría (Audit Trail):</strong> Trazabilidad completa de todas las operaciones sobre la base de datos.</li>
+        <li><strong>Landing Page Pública:</strong> Página de inicio con catálogo y consentimiento de cookies.</li>
+    </ul>
+    <p>
+        El alcance comprende la documentación técnica del sistema tal como se encuentra en su versión actual (V2.0),
+        y está dirigido al personal técnico con conocimientos en desarrollo web, PHP y PostgreSQL.
+    </p>
+</div>
+
+<!-- ╔══════════════════════════════════════════════════════════════╗ -->
+<!-- ║              3. TÉRMINOS Y DEFINICIONES                      ║ -->
+<!-- ╚══════════════════════════════════════════════════════════════╝ -->
+<div class="section" id="s3">
+    <h1>3. TÉRMINOS Y DEFINICIONES</h1>
+    <table>
+        <thead>
+            <tr><th>Término</th><th>Definición</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>MVC</strong></td><td>Modelo-Vista-Controlador. Patrón de arquitectura de software que separa la lógica de negocio, la presentación y el control de flujo en tres componentes independientes.</td></tr>
+            <tr><td><strong>SPA</strong></td><td>Single Page Application. Aplicación de una sola página que carga contenido dinámicamente sin recargar la página completa. En este sistema se implementa de forma parcial mediante navegación basada en hash.</td></tr>
+            <tr><td><strong>JWT</strong></td><td>JSON Web Token. Estándar abierto (RFC 7519) para la transmisión segura de información entre partes como un objeto JSON firmado digitalmente.</td></tr>
+            <tr><td><strong>PDO</strong></td><td>PHP Data Objects. Capa de abstracción de acceso a datos en PHP que permite consultas preparadas para prevenir inyección SQL.</td></tr>
+            <tr><td><strong>PL/pgSQL</strong></td><td>Procedural Language/PostgreSQL. Lenguaje procedural para escribir funciones almacenadas dentro de la base de datos PostgreSQL.</td></tr>
+            <tr><td><strong>CRUD</strong></td><td>Create, Read, Update, Delete. Las cuatro operaciones básicas de persistencia de datos.</td></tr>
+            <tr><td><strong>Kardex</strong></td><td>Registro cronológico de movimientos de inventario (entradas, salidas, ajustes) para instrumentos, kits y materia prima.</td></tr>
+            <tr><td><strong>Soft Delete</strong></td><td>Eliminación lógica. En lugar de borrar un registro de la base de datos, se marca un campo indicador (<code>ind_vivo = false</code>) para mantener historial.</td></tr>
+            <tr><td><strong>Audit Trail</strong></td><td>Pista de auditoría. Sistema de trazabilidad que registra automáticamente quién, cuándo y qué cambió en cada tabla.</td></tr>
+            <tr><td><strong>CSP</strong></td><td>Content Security Policy. Cabecera HTTP que restringe las fuentes desde las cuales la página puede cargar scripts, estilos y otros recursos.</td></tr>
+            <tr><td><strong>CSRF</strong></td><td>Cross-Site Request Forgery. Ataque que fuerza al navegador del usuario a ejecutar acciones no deseadas en una aplicación autenticada. El sistema usa tokens anti-CSRF para prevenirlo.</td></tr>
+            <tr><td><strong>OWASP</strong></td><td>Open Web Application Security Project. Organización que publica las mejores prácticas de seguridad en aplicaciones web.</td></tr>
+            <tr><td><strong>API RESTful</strong></td><td>Interfaz de programación que sigue los principios de transferencia de estado representacional, usando HTTP para las operaciones.</td></tr>
+            <tr><td><strong>DSN</strong></td><td>Data Source Name. Cadena de conexión que especifica el tipo de base de datos, host, puerto y nombre de la base de datos.</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- ╔══════════════════════════════════════════════════════════════╗ -->
+<!-- ║              4. ¿QUÉ ES EL MANUAL TÉCNICO?                   ║ -->
+<!-- ╚══════════════════════════════════════════════════════════════╝ -->
+<div class="section" id="s4">
+    <h1>4. ¿QUÉ ES EL MANUAL TÉCNICO Y DE OPERACIÓN DEL SISTEMA?</h1>
+    <p>
+        El Manual Técnico y de Operación del Sistema es un documento cuyo propósito es ilustrar la definición,
+        diseño, organización y estructura del sistema de información <strong>Specialized Instrumental Dental</strong>.
+        Está dirigido a:
+    </p>
+    <ul>
+        <li><strong>Desarrolladores y Arquitectos de Software:</strong> Para comprender la arquitectura, los patrones de diseño empleados y facilitar el mantenimiento evolutivo del código.</li>
+        <li><strong>Ingenieros de Pruebas (QA):</strong> Para entender los flujos de datos y las validaciones implementadas en cada capa del sistema.</li>
+        <li><strong>Personal de Soporte y Operaciones:</strong> Para ejecutar procedimientos de instalación, configuración, despliegue y resolución de incidencias.</li>
+        <li><strong>Instructores y Evaluadores del SENA:</strong> Para verificar la aplicación de buenas prácticas, estándares de seguridad y patrones de diseño en el proyecto formativo.</li>
+    </ul>
+    <p>
+        Este documento se elabora siguiendo los lineamientos del Marco de Referencia de Arquitectura TI de
+        <strong>MINTIC (LI.SIS.16)</strong>, que establece que todo sistema de información debe contar con
+        documentación técnica y de operación actualizada para garantizar el soporte tecnológico.
+    </p>
+</div>
+
+<!-- ╔══════════════════════════════════════════════════════════════╗ -->
+<!-- ║              5. INTRODUCCIÓN                                 ║ -->
+<!-- ╚══════════════════════════════════════════════════════════════╝ -->
+<div class="section page-break" id="s5">
+    <h1>5. INTRODUCCIÓN</h1>
+    <p>
+        <strong>Specialized Instrumental Dental</strong> es un sistema web integral diseñado para una empresa
+        fabricante de instrumentación odontológica especializada, ubicada en Bucaramanga, Santander (Colombia).
+        La empresa se dedica a la fabricación, gestión de inventario, y comercialización de instrumentos dentales
+        individuales y kits especializados en áreas como Endodoncia, Periodoncia, Estética Dental y Esterilización.
+    </p>
+    <p>
+        El sistema nace como respuesta a la necesidad de digitalizar y centralizar los procesos operativos de la empresa,
+        que anteriormente se gestionaban de forma manual o con herramientas dispersas. El alcance funcional cubre todo
+        el ciclo de vida del producto: desde la recepción de materia prima en bodega, pasando por el control de
+        producción, la gestión de inventario (instrumentos y kits), hasta la venta al cliente final con generación
+        de facturas y registro de devoluciones.
+    </p>
+    <p>
+        Desde el punto de vista técnico, el sistema implementa una <strong>arquitectura de tres capas (3-Tier)</strong>,
+        con un frontend construido en HTML5, CSS3 y JavaScript vanilla, un backend en PHP 8+ que actúa como API RESTful,
+        y una base de datos PostgreSQL que no solo almacena datos, sino que contiene gran parte de la lógica de negocio
+        mediante funciones en PL/pgSQL. Esta decisión arquitectónica delega las operaciones complejas (como facturación,
+        kardex y validaciones cruzadas) al motor de la base de datos, garantizando rendimiento, integridad transaccional
+        y consistencia de datos.
+    </p>
+    <p>
+        El sistema cuenta con dos interfaces principales:
+    </p>
+    <ul>
+        <li><strong>Panel de Administración:</strong> Accesible para usuarios con rol de administrador (<code>id_menu = 1</code>),
+            que permite la gestión completa de todas las entidades del sistema (empleados, clientes, proveedores,
+            instrumentos, kits, productos, materia prima, bodega, producción, facturación, kardex y auditoría).</li>
+        <li><strong>Tienda del Cliente:</strong> Accesible para usuarios con rol de cliente (<code>id_menu = 2</code>),
+            que ofrece un catálogo de productos con búsqueda, carrito de compras y gestión de perfil.</li>
+    </ul>
+</div>
+
+<!-- ╔══════════════════════════════════════════════════════════════╗ -->
+<!-- ║              6. TAXONOMÍA Y CONTENIDO                        ║ -->
+<!-- ╚══════════════════════════════════════════════════════════════╝ -->
+
+<!-- ─── 6.1 DESCRIPCIÓN DEL SISTEMA ─── -->
+<div class="section page-break" id="s6">
+    <h1>6. TAXONOMÍA Y CONTENIDO DEL MANUAL TÉCNICO</h1>
+
+    <div id="s6-1">
+        <h2>6.1 Descripción del Sistema de Información Desarrollado</h2>
+        <table>
+            <tr><th style="width:200px;">Característica</th><th>Detalle</th></tr>
+            <tr><td><strong>Nombre del Sistema</strong></td><td>Specialized Instrumental Dental (SID)</td></tr>
+            <tr><td><strong>Tipo de Aplicación</strong></td><td>Aplicación Web (SPA parcial con carga dinámica de vistas)</td></tr>
+            <tr><td><strong>Dominio de Negocio</strong></td><td>Fabricación y comercialización de instrumentación odontológica especializada</td></tr>
+            <tr><td><strong>Usuarios Objetivo</strong></td><td>Personal administrativo de la empresa (administradores) y clientes profesionales del sector odontológico</td></tr>
+            <tr><td><strong>Roles del Sistema</strong></td><td>Administrador (id_menu = 1) y Cliente (id_menu = 2)</td></tr>
+            <tr><td><strong>Arquitectura</strong></td><td>Tres capas (3-Tier): Frontend → Backend (API RESTful) → Base de Datos (con lógica de negocio en PL/pgSQL)</td></tr>
+            <tr><td><strong>Patrón de Diseño</strong></td><td>MVC (Modelo-Vista-Controlador) con controladores atómicos por módulo funcional</td></tr>
+            <tr><td><strong>Metodología</strong></td><td>Desarrollo iterativo e incremental</td></tr>
+        </tbody>
+        </table>
+
+        <h3>Valor para el Negocio</h3>
+        <p>El sistema aporta valor a la organización al:</p>
+        <ul>
+            <li>Centralizar la gestión de inventario, eliminando hojas de cálculo aisladas y reduciendo errores humanos.</li>
+            <li>Automatizar el kardex de movimientos, proporcionando trazabilidad completa de cada instrumento y materia prima.</li>
+            <li>Proveer un dashboard con métricas en tiempo real (ventas diarias, alertas de stock crítico, usuarios activos).</li>
+            <li>Ofrecer un canal de venta digital (tienda online) para los clientes profesionales.</li>
+            <li>Garantizar la auditoría completa de operaciones para cumplimiento normativo (INVIMA, trazabilidad de lotes).</li>
+        </ul>
+    </div>
+</div>
+
+<!-- ─── 6.2 DISEÑO TÉCNICO ─── -->
+<div class="section page-break" id="s6-2">
+    <h2>6.2 Diseño Técnico del Sistema de Información</h2>
+
+    <!-- 6.2.1 Requerimientos -->
+    <div id="s6-2-1">
+        <h3>6.2.1 Esquema o Modelo de Requerimientos</h3>
+        <p>
+            El sistema fue desarrollado siguiendo un modelo de requerimientos basado en módulos funcionales.
+            A continuación se listan los requerimientos funcionales principales organizados por módulo:
+        </p>
+
+        <h4>RF-01: Módulo de Autenticación</h4>
+        <table>
+            <tr><th>ID</th><th>Requerimiento</th><th>Prioridad</th></tr>
+            <tr><td>RF-01.1</td><td>El sistema debe permitir inicio de sesión con usuario y contraseña, generando un token JWT.</td><td>Alta</td></tr>
+            <tr><td>RF-01.2</td><td>El sistema debe soportar registro de nuevos usuarios con validación de campos.</td><td>Alta</td></tr>
+            <tr><td>RF-01.3</td><td>El sistema debe permitir la recuperación de contraseña vía correo electrónico.</td><td>Media</td></tr>
+            <tr><td>RF-01.4</td><td>El sistema debe cerrar sesión de forma segura, destruyendo token y sesión PHP.</td><td>Alta</td></tr>
+            <tr><td>RF-01.5</td><td>El sistema debe redirigir al usuario según su rol (Admin → menuPrincipal, Cliente → menuCliente).</td><td>Alta</td></tr>
+            <tr><td>RF-01.6</td><td>Las contraseñas deben almacenarse con hash seguro (password_hash de PHP).</td><td>Alta</td></tr>
+        </table>
+
+        <h4>RF-02: Módulo de Dashboard</h4>
+        <table>
+            <tr><th>ID</th><th>Requerimiento</th><th>Prioridad</th></tr>
+            <tr><td>RF-02.1</td><td>Mostrar tarjetas de estadísticas con conteo de usuarios, clientes, empleados, proveedores, productos.</td><td>Alta</td></tr>
+            <tr><td>RF-02.2</td><td>Mostrar alertas de stock crítico (instrumentos y kits con stock por debajo del mínimo).</td><td>Alta</td></tr>
+            <tr><td>RF-02.3</td><td>Mostrar ventas diarias y producto con mayor venta.</td><td>Media</td></tr>
+            <tr><td>RF-02.4</td><td>Proveer gráficas interactivas de ganancia neta y análisis financiero.</td><td>Media</td></tr>
+        </table>
+
+        <h4>RF-03: Módulo de Gestión (CRUD Genérico)</h4>
+        <table>
+            <tr><th>ID</th><th>Requerimiento</th><th>Prioridad</th></tr>
+            <tr><td>RF-03.1</td><td>CRUD completo para: Usuarios, Empleados, Clientes, Proveedores.</td><td>Alta</td></tr>
+            <tr><td>RF-03.2</td><td>CRUD completo para: Instrumentos, Kits, Productos, Materias Primas, Categorías.</td><td>Alta</td></tr>
+            <tr><td>RF-03.3</td><td>Todas las eliminaciones deben ser lógicas (soft delete con ind_vivo = false).</td><td>Alta</td></tr>
+            <tr><td>RF-03.4</td><td>Soporte para restauración de registros eliminados lógicamente.</td><td>Media</td></tr>
+            <tr><td>RF-03.5</td><td>Carga de imágenes para instrumentos, kits, productos y materias primas.</td><td>Media</td></tr>
+        </table>
+
+        <h4>RF-04: Módulo de Inventario y Kardex</h4>
+        <table>
+            <tr><th>ID</th><th>Requerimiento</th><th>Prioridad</th></tr>
+            <tr><td>RF-04.1</td><td>Registrar movimientos Kardex de instrumentos (entradas de fabricación, salidas por venta).</td><td>Alta</td></tr>
+            <tr><td>RF-04.2</td><td>Registrar movimientos Kardex de kits (ensamblaje, ventas).</td><td>Alta</td></tr>
+            <tr><td>RF-04.3</td><td>Registrar movimientos Kardex de materia prima (entradas de proveedor, consumo en producción).</td><td>Alta</td></tr>
+            <tr><td>RF-04.4</td><td>Control de bodega: ingreso de materia prima con trazabilidad de proveedor y lote.</td><td>Alta</td></tr>
+            <tr><td>RF-04.5</td><td>Control de producción: transición de materia prima de bodega a línea de producción.</td><td>Alta</td></tr>
+        </table>
+
+        <h4>RF-05: Módulo de Facturación</h4>
+        <table>
+            <tr><th>ID</th><th>Requerimiento</th><th>Prioridad</th></tr>
+            <tr><td>RF-05.1</td><td>Generar facturas con detalle de productos, cantidades, precios y descuento global configurable.</td><td>Alta</td></tr>
+            <tr><td>RF-05.2</td><td>Impresión de facturas en formato PDF.</td><td>Media</td></tr>
+            <tr><td>RF-05.3</td><td>Gestión de devoluciones vinculadas a facturas.</td><td>Media</td></tr>
+            <tr><td>RF-05.4</td><td>Cierre de caja diario con totalización de ventas.</td><td>Media</td></tr>
+        </table>
+
+        <h4>RF-06: Módulo de Tienda del Cliente</h4>
+        <table>
+            <tr><th>ID</th><th>Requerimiento</th><th>Prioridad</th></tr>
+            <tr><td>RF-06.1</td><td>Catálogo de productos con filtros por categoría/especialización.</td><td>Alta</td></tr>
+            <tr><td>RF-06.2</td><td>Búsqueda de productos por nombre.</td><td>Alta</td></tr>
+            <tr><td>RF-06.3</td><td>Carrito de compras con actualización de cantidades.</td><td>Alta</td></tr>
+            <tr><td>RF-06.4</td><td>Gestión de perfil del cliente y cambio de contraseña.</td><td>Media</td></tr>
+        </table>
+
+        <h4>Requerimientos No Funcionales</h4>
+        <table>
+            <tr><th>ID</th><th>Requerimiento</th><th>Categoría</th></tr>
+            <tr><td>RNF-01</td><td>Todas las consultas SQL deben usar sentencias preparadas (PDO) para prevenir inyección SQL.</td><td>Seguridad</td></tr>
+            <tr><td>RNF-02</td><td>Implementar cabeceras de seguridad HTTP: CSP, X-Frame-Options, X-Content-Type-Options, HSTS.</td><td>Seguridad</td></tr>
+            <tr><td>RNF-03</td><td>El sistema debe registrar toda operación de escritura en el audit trail automáticamente.</td><td>Auditoría</td></tr>
+            <tr><td>RNF-04</td><td>Las sesiones deben expirar después de un tiempo de inactividad configurable (parámetro ind_idle).</td><td>Seguridad</td></tr>
+            <tr><td>RNF-05</td><td>La interfaz debe ser responsiva y funcional en navegadores modernos (Chrome, Firefox, Edge).</td><td>Usabilidad</td></tr>
+            <tr><td>RNF-06</td><td>El sistema debe soportar al menos 100 registros por tabla sin degradación perceptible.</td><td>Rendimiento</td></tr>
+        </table>
+    </div>
+
+    <!-- 6.2.1.1 Casos de Uso -->
+    <div id="s6-2-1b" class="page-break">
+        <h3>6.2.1.1 Diagramas de Casos de Uso</h3>
+        <p>
+            A continuación se presentan los diagramas de casos de uso del sistema, organizados por módulo funcional.
+            Estos diagramas describen la interacción entre los actores (Administrador y Cliente) y las funcionalidades
+            del sistema.
+        </p>
+
+        <div class="warning">Sección pendiente de completar: Insertar aquí los diagramas de casos de uso elaborados por el equipo de desarrollo.</div>
+
+        <h4>CU-01: Módulo de Autenticación</h4>
+        <div class="diagram-container" style="min-height:200px; border: 2px dashed #cbd5e0; display:flex; align-items:center; justify-content:center; background:#f7fafc; border-radius:8px;">
+            <p style="color:#a0aec0; font-size:14pt; text-align:center;">📊 Insertar Diagrama de Casos de Uso<br><span style="font-size:10pt;">Actores: Usuario, Sistema · Casos: Login, Registro, Recuperar Contraseña, Logout</span></p>
+        </div>
+        <table>
+            <tr><th>Caso de Uso</th><th>Actor</th><th>Precondición</th><th>Flujo Principal</th><th>Postcondición</th></tr>
+            <tr><td>CU-01.1 Iniciar Sesión</td><td>Usuario</td><td>El usuario tiene una cuenta registrada</td><td>1. Ingresa usuario y contraseña → 2. El sistema valida credenciales → 3. Genera JWT → 4. Redirige según rol</td><td>Sesión activa con token.</td></tr>
+            <tr><td>CU-01.2 Registrarse</td><td>Usuario</td><td>No tiene cuenta previa</td><td>1. Llena formulario → 2. Sistema valida campos → 3. Crea usuario en BD → 4. Redirige a login</td><td>Usuario registrado con rol Cliente.</td></tr>
+            <tr><td>CU-01.3 Recuperar Contraseña</td><td>Usuario</td><td>Tiene cuenta y correo válido</td><td>1. Ingresa correo → 2. Sistema envía enlace → 3. Usuario cambia contraseña</td><td>Contraseña actualizada.</td></tr>
+            <tr><td>CU-01.4 Cerrar Sesión</td><td>Usuario</td><td>Sesión activa</td><td>1. Clic en cerrar sesión → 2. Sistema destruye token y sesión</td><td>Sesión finalizada. Redirige a login.</td></tr>
+        </table>
+
+        <h4>CU-02: Módulo de Gestión Administrativa</h4>
+        <div class="diagram-container" style="min-height:200px; border: 2px dashed #cbd5e0; display:flex; align-items:center; justify-content:center; background:#f7fafc; border-radius:8px;">
+            <p style="color:#a0aec0; font-size:14pt; text-align:center;">📊 Insertar Diagrama de Casos de Uso<br><span style="font-size:10pt;">Actores: Administrador · Casos: CRUD Empleados, Clientes, Proveedores, Instrumentos, Kits, Productos</span></p>
+        </div>
+        <table>
+            <tr><th>Caso de Uso</th><th>Actor</th><th>Precondición</th><th>Flujo Principal</th><th>Postcondición</th></tr>
+            <tr><td>CU-02.1 Crear Registro</td><td>Administrador</td><td>Sesión activa, rol admin</td><td>1. Selecciona módulo → 2. Clic Crear → 3. Llena formulario → 4. Envía datos → 5. BD valida e inserta</td><td>Registro creado y visible en tabla.</td></tr>
+            <tr><td>CU-02.2 Editar Registro</td><td>Administrador</td><td>Registro existente y activo</td><td>1. Clic editar → 2. Modifica campos → 3. Guarda → 4. BD valida y actualiza</td><td>Registro actualizado. Audit trail registra cambio.</td></tr>
+            <tr><td>CU-02.3 Eliminar Registro</td><td>Administrador</td><td>Registro sin dependencias activas</td><td>1. Clic eliminar → 2. Confirma → 3. Sistema marca ind_vivo=false</td><td>Registro oculto (soft delete).</td></tr>
+            <tr><td>CU-02.4 Restaurar Registro</td><td>Administrador</td><td>Registro eliminado lógicamente</td><td>1. Va a pestaña Inhabilitados → 2. Clic restaurar → 3. ind_vivo=true</td><td>Registro visible nuevamente.</td></tr>
+        </table>
+
+        <h4>CU-03: Módulo de Inventario y Kardex</h4>
+        <div class="diagram-container" style="min-height:200px; border: 2px dashed #cbd5e0; display:flex; align-items:center; justify-content:center; background:#f7fafc; border-radius:8px;">
+            <p style="color:#a0aec0; font-size:14pt; text-align:center;">📊 Insertar Diagrama de Casos de Uso<br><span style="font-size:10pt;">Actores: Administrador · Casos: Registrar Movimiento Kardex, Consultar Historial, Bodega→Producción</span></p>
+        </div>
+        <table>
+            <tr><th>Caso de Uso</th><th>Actor</th><th>Precondición</th><th>Flujo Principal</th><th>Postcondición</th></tr>
+            <tr><td>CU-03.1 Registrar Movimiento</td><td>Administrador</td><td>Instrumento/Kit existente</td><td>1. Selecciona item → 2. Indica tipo (Entrada/Salida) → 3. Cantidad y obs. → 4. BD actualiza stock</td><td>Movimiento registrado, stock actualizado.</td></tr>
+            <tr><td>CU-03.2 Consultar Kardex</td><td>Administrador</td><td>Sesión activa</td><td>1. Navega a Historial → 2. Selecciona tipo → 3. Ve tabla de movimientos</td><td>Lista de movimientos ordenada por fecha.</td></tr>
+            <tr><td>CU-03.3 Mover a Producción</td><td>Administrador</td><td>Materia prima en bodega</td><td>1. Selecciona material en Bodega → 2. Clic "Enviar a Producción" → 3. Se registra en tab_producc</td><td>Material en producción con trazabilidad.</td></tr>
+        </table>
+
+        <h4>CU-04: Módulo de Tienda del Cliente</h4>
+        <div class="diagram-container" style="min-height:200px; border: 2px dashed #cbd5e0; display:flex; align-items:center; justify-content:center; background:#f7fafc; border-radius:8px;">
+            <p style="color:#a0aec0; font-size:14pt; text-align:center;">📊 Insertar Diagrama de Casos de Uso<br><span style="font-size:10pt;">Actores: Cliente · Casos: Navegar Catálogo, Buscar Producto, Agregar al Carrito, Comprar</span></p>
+        </div>
+        <table>
+            <tr><th>Caso de Uso</th><th>Actor</th><th>Precondición</th><th>Flujo Principal</th><th>Postcondición</th></tr>
+            <tr><td>CU-04.1 Navegar Catálogo</td><td>Cliente</td><td>Sesión activa, rol cliente</td><td>1. Ve lista de productos → 2. Filtra por categoría → 3. Selecciona producto</td><td>Detalle de producto visible.</td></tr>
+            <tr><td>CU-04.2 Buscar Producto</td><td>Cliente</td><td>Sesión activa</td><td>1. Escribe en barra de búsqueda → 2. Sistema filtra en tiempo real</td><td>Productos coincidentes mostrados.</td></tr>
+            <tr><td>CU-04.3 Agregar al Carrito</td><td>Cliente</td><td>Producto con stock disponible</td><td>1. Clic "Agregar" → 2. Se añade al carrito → 3. Badge actualiza conteo</td><td>Producto en carrito.</td></tr>
+            <tr><td>CU-04.4 Realizar Compra</td><td>Cliente</td><td>Carrito con ≥1 producto</td><td>1. Va al carrito → 2. Confirma pedido → 3. Sistema genera factura → 4. Stock se descuenta</td><td>Factura generada, stock actualizado.</td></tr>
+        </table>
+    </div>
+
+    <!-- 6.2.2 Software Base y Prerequisitos -->
+    <div id="s6-2-2" class="page-break">
+        <h3>6.2.2 Software Base del Sistema y Prerequisitos</h3>
+
+        <h4>Stack Tecnológico</h4>
+        <table>
+            <tr><th>Capa</th><th>Tecnología</th><th>Versión Mínima</th><th>Propósito</th></tr>
+            <tr><td>Sistema Operativo</td><td>Windows / Linux</td><td>Windows 10+ / Ubuntu 20.04+</td><td>Sistema anfitrión del servidor</td></tr>
+            <tr><td>Servidor Web</td><td>Apache HTTP Server</td><td>2.4+</td><td>Servir archivos estáticos y ejecutar PHP</td></tr>
+            <tr><td>Lenguaje Backend</td><td>PHP</td><td>8.0+</td><td>Lógica de negocio, API RESTful</td></tr>
+            <tr><td>Base de Datos</td><td>PostgreSQL</td><td>13+</td><td>Persistencia de datos + lógica PL/pgSQL</td></tr>
+            <tr><td>Frontend</td><td>HTML5 + CSS3 + JavaScript (ES6+)</td><td>—</td><td>Interfaz de usuario</td></tr>
+            <tr><td>Entorno de Desarrollo</td><td>XAMPP / WAMP / Laragon</td><td>Última versión estable</td><td>Entorno local Apache+PHP+PostgreSQL</td></tr>
+        </table>
+
+        <h4>Extensiones PHP Requeridas</h4>
+        <table>
+            <tr><th>Extensión</th><th>Propósito</th></tr>
+            <tr><td><code>pdo_pgsql</code></td><td>Driver de conexión PDO para PostgreSQL</td></tr>
+            <tr><td><code>json</code></td><td>Codificación/decodificación de JSON (comunicación API)</td></tr>
+            <tr><td><code>mbstring</code></td><td>Manejo de cadenas multibyte (caracteres UTF-8 / español)</td></tr>
+            <tr><td><code>openssl</code></td><td>Generación de tokens aleatorios seguros (CSRF, JWT)</td></tr>
+            <tr><td><code>session</code></td><td>Gestión de sesiones del servidor</td></tr>
+            <tr><td><code>fileinfo</code></td><td>Detección de tipo MIME para carga de imágenes</td></tr>
+        </table>
+
+        <h4>Librerías Frontend (CDN)</h4>
+        <table>
+            <tr><th>Librería</th><th>Versión</th><th>Propósito</th></tr>
+            <tr><td>Font Awesome</td><td>6.x</td><td>Iconos vectoriales para la interfaz</td></tr>
+            <tr><td>SweetAlert2</td><td>11.x</td><td>Alertas y diálogos interactivos (reemplazo de alert/confirm nativos)</td></tr>
+            <tr><td>Google Fonts (Inter)</td><td>—</td><td>Tipografía principal del sistema</td></tr>
+        </table>
+
+        <h4>Navegadores Compatibles</h4>
+        <table>
+            <tr><th>Navegador</th><th>Versión Mínima</th><th>Estado</th></tr>
+            <tr><td>Google Chrome</td><td>90+</td><td>✅ Totalmente compatible</td></tr>
+            <tr><td>Mozilla Firefox</td><td>88+</td><td>✅ Totalmente compatible</td></tr>
+            <tr><td>Microsoft Edge</td><td>90+</td><td>✅ Totalmente compatible</td></tr>
+            <tr><td>Safari</td><td>14+</td><td>⚠️ Compatible parcial</td></tr>
+            <tr><td>Internet Explorer</td><td>—</td><td>❌ No compatible (ES6+)</td></tr>
+        </table>
+    </div>
+
+    <!-- 6.2.3 Componentes y Estándares -->
+    <div id="s6-2-3" class="page-break">
+        <h3>6.2.3 Componentes y Estándares</h3>
+
+        <h4>Arquitectura de Alto Nivel</h4>
+        <p>
+            El sistema implementa una arquitectura de <strong>tres capas (3-Tier)</strong> con un patrón
+            <strong>MVC (Modelo-Vista-Controlador)</strong> refactorizado en controladores atómicos por módulo funcional:
+        </p>
+
+        <table>
+            <tr><th>Capa</th><th>Componentes</th><th>Responsabilidad</th></tr>
+            <tr>
+                <td><strong>Presentación<br>(Frontend)</strong></td>
+                <td>HTML5, CSS3, JavaScript vanilla, controladores JS especializados</td>
+                <td>Renderizado de la interfaz de usuario, validaciones del lado del cliente, comunicación asíncrona con el backend vía <code>fetch()</code>.</td>
+            </tr>
+            <tr>
+                <td><strong>Lógica de Negocio<br>(Backend)</strong></td>
+                <td>PHP 8+, API RESTful, controladores PHP por módulo</td>
+                <td>Procesamiento de peticiones HTTP, validaciones de seguridad (sesión, roles), delegación de operaciones a la capa de datos.</td>
+            </tr>
+            <tr>
+                <td><strong>Persistencia<br>(Base de Datos)</strong></td>
+                <td>PostgreSQL, funciones PL/pgSQL, triggers de auditoría</td>
+                <td>Almacenamiento de datos, lógica de negocio compleja (facturación, kardex), validaciones de integridad, auditoría automática.</td>
+            </tr>
+        </table>
+
+        <h4>Patrones de Diseño Implementados</h4>
+        <table>
+            <tr><th>Patrón</th><th>Implementación en el Sistema</th></tr>
+            <tr>
+                <td><strong>MVC</strong></td>
+                <td>Vista: archivos <code>.php</code> con includes (header, sidebar, footer). Controlador: <code>controllers/</code> tanto en JS como PHP. Modelo: <code>querys.php</code> como capa de acceso a datos.</td>
+            </tr>
+            <tr>
+                <td><strong>Singleton / Punto Único de Entrada</strong></td>
+                <td><code>api_gestion.php</code> centraliza todas las peticiones administrativas (GET/POST), forzando la inclusión de <code>security_headers.php</code> en cada llamada.</td>
+            </tr>
+            <tr>
+                <td><strong>Data Mapper / Query Class</strong></td>
+                <td><code>CQuerys</code> actúa como capa de abstracción de datos. Ningún controlador escribe SQL directamente; solicita operaciones a la clase.</td>
+            </tr>
+            <tr>
+                <td><strong>Programación Orientada a BD</strong></td>
+                <td>La lógica pesada (facturación, kardex, validaciones cruzadas) se delega a funciones PL/pgSQL en PostgreSQL, garantizando operaciones atómicas e integridad transaccional.</td>
+            </tr>
+            <tr>
+                <td><strong>Soft Delete</strong></td>
+                <td>Todas las operaciones DELETE usan <code>ind_vivo = false</code> en vez de DELETE real, preservando historial y permitiendo restauración.</td>
+            </tr>
+            <tr>
+                <td><strong>SPA Parcial</strong></td>
+                <td>El panel administrativo usa navegación basada en hash (<code>#instrumental</code>, <code>#materia-prima</code>) para cargar vistas dinámicamente sin recargar la página completa.</td>
+            </tr>
+            <tr>
+                <td><strong>Audit Trail (Observer)</strong></td>
+                <td>Triggers automáticos en PostgreSQL disparan la función de auditoría ante cualquier INSERT, UPDATE o DELETE, registrando: usuario, tabla, datos anteriores, datos nuevos y marca temporal.</td>
+            </tr>
+        </table>
+
+        <h4>Estándares de Seguridad Aplicados (OWASP)</h4>
+        <table>
+            <tr><th>Vulnerabilidad OWASP</th><th>Control Implementado</th><th>Archivo</th></tr>
+            <tr><td>A01:2021 — Broken Access Control</td><td>Validación de roles por sesión; solo admin (<code>id_menu=1</code>) puede realizar operaciones de escritura.</td><td><code>api_gestion.php</code></td></tr>
+            <tr><td>A02:2021 — Cryptographic Failures</td><td>JWT firmado con HMAC-SHA256; contraseñas hasheadas con <code>password_hash()</code>.</td><td><code>jwt.php</code>, <code>validar.php</code></td></tr>
+            <tr><td>A03:2021 — Injection</td><td>Todas las queries usan sentencias preparadas (PDO + <code>bindValue</code>).</td><td><code>querys.php</code></td></tr>
+            <tr><td>A05:2021 — Security Misconfiguration</td><td>Cabeceras HTTP: CSP, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy.</td><td><code>security_headers.php</code></td></tr>
+            <tr><td>A07:2021 — XSS</td><td>Función <code>h()</code> para sanitización de salida con <code>htmlspecialchars()</code>; CSP restringe fuentes de scripts.</td><td><code>security_headers.php</code></td></tr>
+            <tr><td>A08:2021 — CSRF</td><td>Tokens anti-CSRF generados por sesión con <code>random_bytes(32)</code>.</td><td><code>security_headers.php</code></td></tr>
+        </table>
+    </div>
+
+    <!-- 6.2.4 Modelo de Datos -->
+    <div id="s6-2-4" class="page-break">
+        <h3>6.2.4 Modelo de Datos</h3>
+
+        <h4>Diagrama Entidad-Relación</h4>
+        <div class="diagram-container">
+            <img src="ModeloRelacionalPdf_V2.png" alt="Modelo Relacional V2 — Specialized Instrumental Dental">
+            <div class="caption">Figura 1. Modelo Relacional del Sistema — Versión 2.0</div>
+        </div>
+
+        <h4>Diccionario de Datos — Todas las Tablas del Sistema</h4>
+
+        <p><strong>Convenciones:</strong> <code>PK</code> = Clave Primaria, <code>FK</code> = Clave Foránea, <code>NN</code> = Not Null, <code>D</code> = Valor por Defecto. Campos comunes <code>ind_vivo</code>, <code>fec_insert</code>, <code>fec_update</code> están presentes en la mayoría de tablas y se omiten para brevedad (excepto en la primera tabla donde se documentan).</p>
+
+        <!-- ═══ GRUPO 1: CONFIGURACIÓN ═══ -->
+        <h4 style="color:#2c5282; border-bottom:1px solid #2c5282; padding-bottom:4px;">📋 Grupo 1: Configuración del Sistema</h4>
+
+        <h4>tab_parametros — Configuración Global de la Empresa</h4>
+        <table>
+            <tr><th>Campo</th><th>Tipo</th><th>Restricción</th><th>Descripción</th></tr>
+            <tr><td>id_empresa</td><td>INTEGER</td><td>PK</td><td>Identificador único de la empresa</td></tr>
+            <tr><td>nom_empresa</td><td>VARCHAR</td><td>NN</td><td>Razón social de la empresa</td></tr>
+            <tr><td>dir_empresa</td><td>VARCHAR</td><td>NN</td><td>Dirección fiscal</td></tr>
+            <tr><td>tel_empresa</td><td>BIGINT</td><td>NN</td><td>Teléfono principal</td></tr>
+            <tr><td>id_ciudad</td><td>INTEGER</td><td>NN, FK → tab_ciudades</td><td>Ciudad de ubicación</td></tr>
+            <tr><td>val_pordesc</td><td>NUMERIC</td><td>NN</td><td>Porcentaje de descuento global para facturas</td></tr>
+            <tr><td>val_inifact</td><td>INTEGER</td><td>NN</td><td>Número inicial de facturación</td></tr>
+            <tr><td>val_finfact</td><td>INTEGER</td><td>NN</td><td>Número final de facturación</td></tr>
+            <tr><td>val_actfact</td><td>INTEGER</td><td>NN</td><td>Número actual de facturación</td></tr>
+            <tr><td>val_observa</td><td>VARCHAR</td><td>NN</td><td>Observaciones o descripción de la empresa</td></tr>
+            <tr><td>ind_idle</td><td>INTEGER</td><td>NN, D: 30</td><td>Tiempo de inactividad de sesión en minutos</td></tr>
+            <tr><td>ind_salario</td><td>NUMERIC</td><td>NN</td><td>Salario mínimo vigente para validaciones</td></tr>
+            <tr><td>reg_invima</td><td>VARCHAR</td><td>NN</td><td>Número de registro INVIMA de la empresa</td></tr>
+        </table>
+
+        <!-- ═══ GRUPO 2: USUARIOS Y SEGURIDAD ═══ -->
+        <h4 style="color:#2c5282; border-bottom:1px solid #2c5282; padding-bottom:4px;">🔐 Grupo 2: Usuarios y Seguridad</h4>
+
+        <h4>tab_users — Usuarios del Sistema</h4>
+        <table>
+            <tr><th>Campo</th><th>Tipo</th><th>Restricción</th><th>Descripción</th></tr>
+            <tr><td>id_user</td><td>SERIAL</td><td>PK</td><td>Identificador autoincremental del usuario</td></tr>
+            <tr><td>nom_user</td><td>VARCHAR</td><td>NN, UNIQUE</td><td>Nombre de usuario para login</td></tr>
+            <tr><td>pass_user</td><td>VARCHAR</td><td>NN</td><td>Contraseña (almacenada como hash bcrypt)</td></tr>
+            <tr><td>tel_user</td><td>BIGINT</td><td>NN</td><td>Teléfono del usuario</td></tr>
+            <tr><td>mail_user</td><td>VARCHAR</td><td>NN</td><td>Correo electrónico</td></tr>
+            <tr><td>ind_vivo</td><td>BOOLEAN</td><td>NN, D: true</td><td>Indicador de estado activo (soft delete)</td></tr>
+            <tr><td>fec_insert</td><td>TIMESTAMP</td><td>NN, D: NOW()</td><td>Fecha de creación del registro</td></tr>
+            <tr><td>fec_update</td><td>TIMESTAMP</td><td>NN</td><td>Fecha de última actualización</td></tr>
+        </table>
+
+        <h4>tab_menu — Menús / Perfiles del Sistema</h4>
+        <table>
+            <tr><th>Campo</th><th>Tipo</th><th>Restricción</th><th>Descripción</th></tr>
+            <tr><td>id_menu</td><td>INTEGER</td><td>PK</td><td>Identificador del menú/perfil</td></tr>
+            <tr><td>nom_menu</td><td>VARCHAR</td><td>NN</td><td>Nombre del menú (ej: Gestión de Usuarios, Gestión de Productos)</td></tr>
+        </table>
+
+        <h4>tab_users_menu — Asignación de Menús a Usuarios</h4>
+        <table>
+            <tr><th>Campo</th><th>Tipo</th><th>Restricción</th><th>Descripción</th></tr>
+            <tr><td>id_user</td><td>INTEGER</td><td>PK, FK → tab_users</td><td>Usuario asignado</td></tr>
+            <tr><td>id_menu</td><td>INTEGER</td><td>PK, FK → tab_menu</td><td>Menú/perfil asignado (1=Admin, 2=Cliente)</td></tr>
+            <tr><td>nom_prog</td><td>VARCHAR</td><td>NN</td><td>Nombre del programa/archivo asociado al menú</td></tr>
+        </table>
+
+        <!-- ═══ GRUPO 3: CATÁLOGOS AUXILIARES ═══ -->
+        <h4 style="color:#2c5282; border-bottom:1px solid #2c5282; padding-bottom:4px;">📚 Grupo 3: Tablas de Catálogo (Auxiliares)</h4>
+
+        <h4>tab_tipo_documentos — Tipos de Documento de Identidad</h4>
+        <table>
+            <tr><th>Campo</th><th>Tipo</th><th>Restricción</th><th>Descripción</th></tr>
+            <tr><td>id_documento</td><td>INTEGER</td><td>PK</td><td>Identificador del tipo de documento</td></tr>
+            <tr><td>nom_tipo_docum</td><td>VARCHAR</td><td>NN</td><td>Nombre del tipo (CC, TI, CE, NIT, Pasaporte)</td></tr>
+        </table>
+
+        <h4>tab_departamentos — Departamentos de Colombia</h4>
+        <table>
+            <tr><th>Campo</th><th>Tipo</th><th>Restricción</th><th>Descripción</th></tr>
+            <tr><td>id_depart</td><td>INTEGER</td><td>PK</td><td>Código DANE del departamento</td></tr>
+            <tr><td>nom_depart</td><td>VARCHAR</td><td>NN</td><td>Nombre del departamento</td></tr>
+        </table>
+
+        <h4>tab_ciudades — Ciudades de Colombia</h4>
+        <table>
+            <tr><th>Campo</th><th>Tipo</th><th>Restricción</th><th>Descripción</th></tr>
+            <tr><td>id_ciudad</td><td>INTEGER</td><td>PK</td><td>Código DANE de la ciudad</td></tr>
+            <tr><td>id_depart</td><td>INTEGER</td><td>NN, FK → tab_departamentos</td><td>Departamento al que pertenece</td></tr>
+            <tr><td>nom_ciudad</td><td>VARCHAR</td><td>NN</td><td>Nombre de la ciudad</td></tr>
+        </table>
+
+        <h4>tab_cargos — Cargos de la Empresa</h4>
+        <table>
+            <tr><th>Campo</th><th>Tipo</th><th>Restricción</th><th>Descripción</th></tr>
+            <tr><td>id_cargo</td><td>INTEGER</td><td>PK</td><td>Identificador del cargo</td></tr>
+            <tr><td>nom_cargo</td><td>VARCHAR</td><td>NN</td><td>Nombre del cargo (ej: Operario de Producción, Gerente General)</td></tr>
+        </table>
+
+
+
+        <h4>tab_tipo_sangre — Tipos de Sangre (RH)</h4>
+        <table>
+            <tr><th>Campo</th><th>Tipo</th><th>Restricción</th><th>Descripción</th></tr>
+            <tr><td>id_tipo_sangre</td><td>INTEGER</td><td>PK</td><td>Identificador del tipo de sangre</td></tr>
+            <tr><td>nom_tip_sang</td><td>VARCHAR</td><td>NN</td><td>Tipo de sangre (O+, O−, A+, A−, B+, B−, AB+, AB−)</td></tr>
+        </table>
+
+        <h4>tab_bancos — Bancos Colombianos</h4>
+        <table>
+            <tr><th>Campo</th><th>Tipo</th><th>Restricción</th><th>Descripción</th></tr>
+            <tr><td>id_banco</td><td>INTEGER</td><td>PK</td><td>Identificador del banco</td></tr>
+            <tr><td>id_ciudad</td><td>INTEGER</td><td>NN, FK → tab_ciudades</td><td>Ciudad de la sede principal</td></tr>
+            <tr><td>nom_banco</td><td>VARCHAR</td><td>NN</td><td>Nombre del banco</td></tr>
+            <tr><td>dir_banco</td><td>VARCHAR</td><td>NN</td><td>Dirección de la sede</td></tr>
+        </table>
+
+        <h4>tab_unidades_medida — Unidades de Medida</h4>
+        <table>
+            <tr><th>Campo</th><th>Tipo</th><th>Restricción</th><th>Descripción</th></tr>
+            <tr><td>id_unidad_medida</td><td>INTEGER</td><td>PK</td><td>Identificador de la unidad</td></tr>
+            <tr><td>nom_unidad</td><td>VARCHAR</td><td>NN</td><td>Abreviación (g, kg, mm, cm, m, unidades)</td></tr>
+        </table>
+
+        <h4>tab_tipo_especializacion — Especializaciones Odontológicas</h4>
+        <table>
+            <tr><th>Campo</th><th>Tipo</th><th>Restricción</th><th>Descripción</th></tr>
+            <tr><td>id_especializacion</td><td>INTEGER</td><td>PK</td><td>Identificador de la especialización</td></tr>
+            <tr><td>nom_espec</td><td>VARCHAR</td><td>NN</td><td>Nombre (Estética Dental, Esterilización, Endodoncia, Periodoncia)</td></tr>
+        </table>
+
+        <h4>tab_estado_fact — Estados de Factura</h4>
+        <table>
+            <tr><th>Campo</th><th>Tipo</th><th>Restricción</th><th>Descripción</th></tr>
+            <tr><td>id_estado_fact</td><td>INTEGER</td><td>PK</td><td>Identificador del estado</td></tr>
+            <tr><td>nom_estado_fact</td><td>VARCHAR</td><td>NN</td><td>Estado (Pagada, Pendiente, Anulada, Devuelta)</td></tr>
+        </table>
+
+        <!-- ═══ GRUPO 4: ENTIDADES PRINCIPALES ═══ -->
+        <h4 style="color:#2c5282; border-bottom:1px solid #2c5282; padding-bottom:4px;">👥 Grupo 4: Entidades Principales</h4>
+
+        <h4>tab_empleados — Empleados de la Empresa</h4>
+        <table>
+            <tr><th>Campo</th><th>Tipo</th><th>Restricción</th><th>Descripción</th></tr>
+            <tr><td>id_empleado</td><td>SERIAL</td><td>PK</td><td>Identificador del empleado</td></tr>
+            <tr><td>id_documento</td><td>INTEGER</td><td>NN, FK → tab_tipo_documentos</td><td>Tipo de documento de identidad</td></tr>
+            <tr><td>id_ciudad</td><td>INTEGER</td><td>NN, FK → tab_ciudades</td><td>Ciudad de residencia</td></tr>
+            <tr><td>id_cargo</td><td>INTEGER</td><td>NN, FK → tab_cargos</td><td>Cargo en la empresa</td></tr>
+            <tr><td>id_tipo_sangre</td><td>INTEGER</td><td>NN, FK → tab_tipo_sangre</td><td>Tipo de sangre (RH)</td></tr>
+            <tr><td>ind_genero</td><td>INTEGER</td><td>NN, CHECK (1,2,3)</td><td>Género (1:Masculino, 2:Femenino, 3:Otro)</td></tr>
+            <tr><td>num_documento</td><td>VARCHAR</td><td>NN, UNIQUE</td><td>Número de documento de identidad</td></tr>
+            <tr><td>prim_nom, segun_nom</td><td>VARCHAR</td><td>NN / NULL</td><td>Primer y segundo nombre</td></tr>
+            <tr><td>prim_apell, segun_apell</td><td>VARCHAR</td><td>NN / NULL</td><td>Primer y segundo apellido</td></tr>
+            <tr><td>mail_empleado</td><td>VARCHAR</td><td>NN</td><td>Correo electrónico corporativo</td></tr>
+            <tr><td>tel_empleado</td><td>BIGINT</td><td>NN</td><td>Teléfono de contacto</td></tr>
+            <tr><td>dir_emple</td><td>VARCHAR</td><td>NN</td><td>Dirección de residencia</td></tr>
+            <tr><td>ind_fecha_contratacion</td><td>DATE</td><td>NN</td><td>Fecha de contratación</td></tr>
+            <tr><td>ind_peso</td><td>NUMERIC</td><td>NN</td><td>Peso en kg (salud ocupacional)</td></tr>
+            <tr><td>ind_altura</td><td>NUMERIC</td><td>NN</td><td>Altura en metros</td></tr>
+            <tr><td>ult_fec_exam</td><td>DATE</td><td>NN</td><td>Fecha del último examen médico</td></tr>
+            <tr><td>observ</td><td>VARCHAR</td><td>NN</td><td>Observaciones</td></tr>
+            <tr><td>id_banco</td><td>INTEGER</td><td>NN, FK → tab_bancos</td><td>Banco de nómina</td></tr>
+            <tr><td>num_cuenta</td><td>VARCHAR</td><td>NN</td><td>Número de cuenta bancaria</td></tr>
+        </table>
+
+        <h4>tab_clientes — Clientes del Sistema</h4>
+        <table>
+            <tr><th>Campo</th><th>Tipo</th><th>Restricción</th><th>Descripción</th></tr>
+            <tr><td>id_cliente</td><td>SERIAL</td><td>PK</td><td>Identificador del cliente</td></tr>
+            <tr><td>id_documento</td><td>INTEGER</td><td>NN, FK → tab_tipo_documentos</td><td>Tipo de documento</td></tr>
+            <tr><td>id_ciudad</td><td>INTEGER</td><td>NN, FK → tab_ciudades</td><td>Ciudad de residencia</td></tr>
+            <tr><td>ind_genero</td><td>INTEGER</td><td>NN, CHECK (1,2,3)</td><td>Género (1:Masculino, 2:Femenino, 3:Otro)</td></tr>
+            <tr><td>prim_nom, segun_nom</td><td>VARCHAR</td><td>NN / NULL</td><td>Primer y segundo nombre</td></tr>
+            <tr><td>prim_apell, segun_apell</td><td>VARCHAR</td><td>NN / NULL</td><td>Primer y segundo apellido</td></tr>
+            <tr><td>num_documento</td><td>VARCHAR</td><td>NN</td><td>Número de documento</td></tr>
+            <tr><td>tel_cliente</td><td>BIGINT</td><td>NN</td><td>Teléfono de contacto</td></tr>
+            <tr><td>dir_cliente</td><td>VARCHAR</td><td>NN</td><td>Dirección de residencia</td></tr>
+            <tr><td>ind_profesion</td><td>VARCHAR</td><td>NN</td><td>Profesión odontológica (Ortodoncista, Endodoncista, etc.)</td></tr>
+            <tr><td>val_puntos</td><td>INTEGER</td><td>NN, D: 0</td><td>Puntos de fidelización acumulados</td></tr>
+        </table>
+
+        <h4>tab_proveedores — Proveedores de Materia Prima</h4>
+        <table>
+            <tr><th>Campo</th><th>Tipo</th><th>Restricción</th><th>Descripción</th></tr>
+            <tr><td>id_prov</td><td>SERIAL</td><td>PK</td><td>Identificador del proveedor</td></tr>
+            <tr><td>id_documento</td><td>INTEGER</td><td>NN, FK → tab_tipo_documentos</td><td>Tipo de documento (generalmente NIT)</td></tr>
+            <tr><td>id_ciudad</td><td>INTEGER</td><td>NN, FK → tab_ciudades</td><td>Ciudad del proveedor</td></tr>
+            <tr><td>num_documento</td><td>VARCHAR</td><td>NN</td><td>NIT o documento del proveedor</td></tr>
+            <tr><td>nom_prov</td><td>VARCHAR</td><td>NN</td><td>Razón social del proveedor</td></tr>
+            <tr><td>tel_prov</td><td>BIGINT</td><td>NN</td><td>Teléfono</td></tr>
+            <tr><td>mail_prov</td><td>VARCHAR</td><td>NN</td><td>Correo electrónico</td></tr>
+            <tr><td>dir_prov</td><td>VARCHAR</td><td>NN</td><td>Dirección</td></tr>
+            <tr><td>ind_calidad</td><td>VARCHAR</td><td>NN</td><td>Indicador de calidad / observaciones</td></tr>
+        </table>
+
+        <h4>tab_bancos_proveedor — Cuentas Bancarias de Proveedores</h4>
+        <table>
+            <tr><th>Campo</th><th>Tipo</th><th>Restricción</th><th>Descripción</th></tr>
+            <tr><td>id_prov</td><td>INTEGER</td><td>PK, FK → tab_proveedores</td><td>Proveedor asociado</td></tr>
+            <tr><td>id_banco</td><td>INTEGER</td><td>PK, FK → tab_bancos</td><td>Banco asociado</td></tr>
+            <tr><td>num_cuenta</td><td>VARCHAR</td><td>NN</td><td>Número de cuenta bancaria del proveedor</td></tr>
+        </table>
+
+        <!-- ═══ GRUPO 5: INVENTARIO ═══ -->
+        <h4 style="color:#2c5282; border-bottom:1px solid #2c5282; padding-bottom:4px;">🦷 Grupo 5: Inventario (Instrumentos, Kits, Materia Prima)</h4>
+
+        <h4>tab_instrumentos — Instrumentos Odontológicos Individuales</h4>
+        <table>
+            <tr><th>Campo</th><th>Tipo</th><th>Restricción</th><th>Descripción</th></tr>
+            <tr><td>id_instrumento</td><td>SERIAL</td><td>PK</td><td>Identificador del instrumento</td></tr>
+            <tr><td>id_especializacion</td><td>INTEGER</td><td>NN, FK → tab_tipo_especializacion</td><td>Área (Endodoncia, Periodoncia, etc.)</td></tr>
+            <tr><td>nom_instrumento</td><td>VARCHAR</td><td>NN</td><td>Nombre descriptivo</td></tr>
+            <tr><td>lote</td><td>INTEGER</td><td>NN</td><td>Número de lote de fabricación</td></tr>
+            <tr><td>cant_disp</td><td>INTEGER</td><td>NN, D: 0</td><td>Cantidad disponible en inventario</td></tr>
+            <tr><td>numeral_en_kit</td><td>INTEGER</td><td>NN</td><td>Posición numerada dentro de un kit</td></tr>
+            <tr><td>tipo_mat</td><td>INTEGER</td><td>NN</td><td>1=Specialized (Acero), 2=Special (Aluminio)</td></tr>
+            <tr><td>img_url</td><td>VARCHAR</td><td>NN</td><td>Ruta relativa a la imagen</td></tr>
+            <tr><td>stock_min</td><td>INTEGER</td><td>NN, D: 0</td><td>Umbral mínimo para alerta de stock</td></tr>
+            <tr><td>stock_max</td><td>INTEGER</td><td>NN, D: 0</td><td>Umbral máximo de inventario</td></tr>
+        </table>
+
+        <h4>tab_kits — Kits (Conjuntos de Instrumentos)</h4>
+        <table>
+            <tr><th>Campo</th><th>Tipo</th><th>Restricción</th><th>Descripción</th></tr>
+            <tr><td>id_kit</td><td>SERIAL</td><td>PK</td><td>Identificador del kit</td></tr>
+            <tr><td>id_especializacion</td><td>INTEGER</td><td>NN, FK → tab_tipo_especializacion</td><td>Área de especialización</td></tr>
+            <tr><td>nom_kit</td><td>VARCHAR</td><td>NN</td><td>Nombre del kit</td></tr>
+            <tr><td>cant_disp</td><td>INTEGER</td><td>NN, D: 0</td><td>Cantidad disponible</td></tr>
+            <tr><td>tipo_mat</td><td>INTEGER</td><td>NN</td><td>1=Specialized (Acero), 2=Special (Aluminio)</td></tr>
+            <tr><td>img_url</td><td>VARCHAR</td><td>NN</td><td>Ruta relativa a la imagen</td></tr>
+            <tr><td>stock_min</td><td>INTEGER</td><td>NN, D: 0</td><td>Umbral mínimo de stock</td></tr>
+            <tr><td>stock_max</td><td>INTEGER</td><td>NN, D: 0</td><td>Umbral máximo de stock</td></tr>
+        </table>
+
+        <h4>tab_instrumentos_kit — Composición de Kits (Qué instrumentos tiene cada kit)</h4>
+        <table>
+            <tr><th>Campo</th><th>Tipo</th><th>Restricción</th><th>Descripción</th></tr>
+            <tr><td>id_instrumento_kit</td><td>SERIAL</td><td>PK</td><td>Identificador de la relación</td></tr>
+            <tr><td>id_kit</td><td>INTEGER</td><td>NN, FK → tab_kits</td><td>Kit contenedor</td></tr>
+            <tr><td>id_instrumento</td><td>INTEGER</td><td>NN, FK → tab_instrumentos</td><td>Instrumento incluido</td></tr>
+            <tr><td>cant_instrumento</td><td>INTEGER</td><td>NN</td><td>Cantidad de este instrumento en el kit</td></tr>
+        </table>
+
+        <h4>tab_cat_mat_prim — Categorías de Materia Prima</h4>
+        <table>
+            <tr><th>Campo</th><th>Tipo</th><th>Restricción</th><th>Descripción</th></tr>
+            <tr><td>id_cat_mat</td><td>SERIAL</td><td>PK</td><td>Identificador de la categoría</td></tr>
+            <tr><td>nom_categoria</td><td>VARCHAR</td><td>NN</td><td>Nombre (Varillas, Tornillos, Alambres)</td></tr>
+        </table>
+
+        <h4>tab_materias_primas — Materias Primas</h4>
+        <table>
+            <tr><th>Campo</th><th>Tipo</th><th>Restricción</th><th>Descripción</th></tr>
+            <tr><td>id_mat_prima</td><td>SERIAL</td><td>PK</td><td>Identificador de la materia prima</td></tr>
+            <tr><td>id_cat_mat</td><td>INTEGER</td><td>NN, FK → tab_cat_mat_prim</td><td>Categoría a la que pertenece</td></tr>
+            <tr><td>nom_materia_prima</td><td>VARCHAR</td><td>NN</td><td>Nombre de la materia prima</td></tr>
+            <tr><td>img_url</td><td>VARCHAR</td><td>NN</td><td>Ruta relativa a la imagen</td></tr>
+            <tr><td>stock_min</td><td>INTEGER</td><td>NN, D: 0</td><td>Umbral mínimo de stock</td></tr>
+            <tr><td>stock_max</td><td>INTEGER</td><td>NN, D: 0</td><td>Umbral máximo de stock</td></tr>
+        </table>
+
+        <h4>tab_mat_primas_prov — Relación Materia Prima ↔ Proveedor</h4>
+        <table>
+            <tr><th>Campo</th><th>Tipo</th><th>Restricción</th><th>Descripción</th></tr>
+            <tr><td>id_prov</td><td>INTEGER</td><td>PK, FK → tab_proveedores</td><td>Proveedor que suministra</td></tr>
+            <tr><td>id_mat_prima</td><td>INTEGER</td><td>PK, FK → tab_materias_primas</td><td>Materia prima suministrada</td></tr>
+            <tr><td>lote</td><td>INTEGER</td><td>NN</td><td>Número de lote del proveedor</td></tr>
+            <tr><td>tipo_mat_prima</td><td>VARCHAR</td><td>NN</td><td>Tipo de material (descripción)</td></tr>
+            <tr><td>valor_medida</td><td>NUMERIC</td><td>NN</td><td>Valor numérico de la medida</td></tr>
+            <tr><td>id_unidad_medida</td><td>INTEGER</td><td>NN, FK → tab_unidades_medida</td><td>Unidad de medida (g, kg, mm, etc.)</td></tr>
+            <tr><td>cant_mat_prima</td><td>INTEGER</td><td>NN</td><td>Cantidad disponible del proveedor</td></tr>
+        </table>
+
+        <!-- ═══ GRUPO 6: PRODUCTOS Y VENTAS ═══ -->
+        <h4 style="color:#2c5282; border-bottom:1px solid #2c5282; padding-bottom:4px;">💰 Grupo 6: Productos, Facturación y Ventas</h4>
+
+        <h4>tab_productos — Productos de Venta (Catálogo)</h4>
+        <table>
+            <tr><th>Campo</th><th>Tipo</th><th>Restricción</th><th>Descripción</th></tr>
+            <tr><td>id_producto</td><td>SERIAL</td><td>PK</td><td>Identificador del producto</td></tr>
+            <tr><td>id_instrumento</td><td>INTEGER</td><td>NN, FK → tab_instrumentos (nullable)</td><td>Instrumento vinculado (si es producto individual)</td></tr>
+            <tr><td>id_kit</td><td>INTEGER</td><td>NN, FK → tab_kits (nullable)</td><td>Kit vinculado (si es producto tipo kit)</td></tr>
+            <tr><td>nombre_producto</td><td>VARCHAR</td><td>NN</td><td>Nombre comercial del producto</td></tr>
+            <tr><td>precio_producto</td><td>NUMERIC</td><td>NN</td><td>Precio de venta (COP)</td></tr>
+            <tr><td>img_url</td><td>VARCHAR</td><td>NN</td><td>URL de la imagen del producto</td></tr>
+        </table>
+
+        <h4>tab_facturas — Facturas de Venta</h4>
+        <table>
+            <tr><th>Campo</th><th>Tipo</th><th>Restricción</th><th>Descripción</th></tr>
+            <tr><td>id_factura</td><td>SERIAL</td><td>PK</td><td>Número consecutivo de factura</td></tr>
+            <tr><td>id_cliente</td><td>INTEGER</td><td>NN, FK → tab_clientes</td><td>Cliente que realiza la compra</td></tr>
+            <tr><td>id_estado_fact</td><td>INTEGER</td><td>NN, FK → tab_estado_fact</td><td>Estado: 1=Pagada, 2=Pendiente, 3=Anulada, 4=Devuelta</td></tr>
+            <tr><td>ind_forma_pago</td><td>INTEGER</td><td>NN</td><td>Forma de pago: 1=Efectivo, 2=Transferencia, 3=Mixto</td></tr>
+            <tr><td>fecha_venta</td><td>TIMESTAMP</td><td>NN</td><td>Fecha y hora de la venta</td></tr>
+            <tr><td>val_tot_fact</td><td>NUMERIC</td><td>NN</td><td>Valor total de la factura (con descuento aplicado)</td></tr>
+        </table>
+
+        <h4>tab_detalle_facturas — Detalle de Productos por Factura</h4>
+        <table>
+            <tr><th>Campo</th><th>Tipo</th><th>Restricción</th><th>Descripción</th></tr>
+            <tr><td>id_detalle_factura</td><td>SERIAL</td><td>PK</td><td>Identificador del detalle</td></tr>
+            <tr><td>id_factura</td><td>INTEGER</td><td>NN, FK → tab_facturas</td><td>Factura a la que pertenece</td></tr>
+            <tr><td>id_producto</td><td>INTEGER</td><td>NN, FK → tab_productos</td><td>Producto vendido</td></tr>
+            <tr><td>cantidad</td><td>INTEGER</td><td>NN</td><td>Cantidad vendida</td></tr>
+            <tr><td>precio_unitario</td><td>NUMERIC</td><td>NN</td><td>Precio unitario al momento de la venta</td></tr>
+            <tr><td>val_descuento</td><td>NUMERIC</td><td>NN, D: 0</td><td>Descuento aplicado a esta línea</td></tr>
+            <tr><td>val_bruto</td><td>NUMERIC</td><td>NN</td><td>Valor bruto (cantidad × precio)</td></tr>
+            <tr><td>val_neto</td><td>NUMERIC</td><td>NN</td><td>Valor neto (bruto − descuento)</td></tr>
+        </table>
+
+        <h4>tab_dev — Devoluciones (Cabecera)</h4>
+        <table>
+            <tr><th>Campo</th><th>Tipo</th><th>Restricción</th><th>Descripción</th></tr>
+            <tr><td>id_factura</td><td>INTEGER</td><td>PK, FK → tab_facturas</td><td>Factura devuelta</td></tr>
+            <tr><td>ind_observaciones</td><td>VARCHAR</td><td>NN</td><td>Motivo de la devolución</td></tr>
+        </table>
+
+        <h4>tab_devol_reparable — Gestión de Devoluciones Pendientes</h4>
+        <table>
+            <tr><th>Campo</th><th>Tipo</th><th>Restricción</th><th>Descripción</th></tr>
+            <tr><td>id_devol_reparable</td><td>INTEGER</td><td>PK</td><td>Identificador único de la gestión</td></tr>
+            <tr><td>id_factura</td><td>INTEGER</td><td>NN, FK → tab_facturas</td><td>Factura de origen</td></tr>
+            <tr><td>id_producto</td><td>INTEGER</td><td>NN, FK → tab_productos</td><td>Producto devuelto</td></tr>
+            <tr><td>cantidad</td><td>DECIMAL(3,0)</td><td>NN</td><td>Cantidad de unidades devueltas</td></tr>
+            <tr><td>id_estado_devol</td><td>INTEGER</td><td>NN, D: 1</td><td>Estado: 1=Pendiente, 2=Reparado (vuelve a stock), 3=Desechado (baja definitiva)</td></tr>
+        </table>
+
+        <!-- ═══ GRUPO 7: BODEGA Y PRODUCCIÓN ═══ -->
+        <h4 style="color:#2c5282; border-bottom:1px solid #2c5282; padding-bottom:4px;">🏭 Grupo 7: Bodega, Producción y Kardex</h4>
+
+        <h4>tab_bodega — Movimientos de Bodega (Ingreso de Materia Prima)</h4>
+        <table>
+            <tr><th>Campo</th><th>Tipo</th><th>Restricción</th><th>Descripción</th></tr>
+            <tr><td>id_movimiento</td><td>SERIAL</td><td>PK</td><td>Identificador del movimiento</td></tr>
+            <tr><td>id_prov</td><td>INTEGER</td><td>NN, FK → tab_proveedores</td><td>Proveedor que entrega</td></tr>
+            <tr><td>id_mat_prima</td><td>INTEGER</td><td>NN, FK → tab_materias_primas</td><td>Materia prima ingresada</td></tr>
+            <tr><td>fec_ingreso</td><td>TIMESTAMP</td><td>NN</td><td>Fecha/hora de ingreso a bodega</td></tr>
+            <tr><td>fec_salida</td><td>TIMESTAMP</td><td>NN</td><td>Fecha/hora de salida (NULL = aún en bodega)</td></tr>
+        </table>
+
+        <h4>tab_producc — Movimientos de Producción</h4>
+        <table>
+            <tr><th>Campo</th><th>Tipo</th><th>Restricción</th><th>Descripción</th></tr>
+            <tr><td>id_producc</td><td>SERIAL</td><td>PK</td><td>Identificador de la producción</td></tr>
+            <tr><td>id_movimiento</td><td>INTEGER</td><td>NN, FK → tab_bodega</td><td>Movimiento de bodega origen</td></tr>
+            <tr><td>fec_ingreso</td><td>TIMESTAMP</td><td>NN</td><td>Fecha/hora de ingreso a producción</td></tr>
+        </table>
+
+        <h4>tab_kardex_mat_prima — Kardex de Materia Prima</h4>
+        <table>
+            <tr><th>Campo</th><th>Tipo</th><th>Restricción</th><th>Descripción</th></tr>
+            <tr><td>id_kardex_mat_prima</td><td>SERIAL</td><td>PK</td><td>Identificador del movimiento kardex</td></tr>
+            <tr><td>id_materia_prima</td><td>INTEGER</td><td>NN, FK → tab_materias_primas</td><td>Materia prima afectada</td></tr>
+            <tr><td>id_unidad_medida</td><td>INTEGER</td><td>NN, FK → tab_unidades_medida</td><td>Unidad de medida del movimiento</td></tr>
+            <tr><td>valor_medida</td><td>NUMERIC</td><td>NN</td><td>Valor numérico de la medida</td></tr>
+            <tr><td>tipo_movimiento</td><td>INTEGER</td><td>NN</td><td>1=Entrada, 2=Salida, 3=Ajuste</td></tr>
+            <tr><td>cantidad</td><td>NUMERIC</td><td>NN</td><td>Cantidad del movimiento</td></tr>
+            <tr><td>fecha_movimiento</td><td>TIMESTAMP</td><td>NN</td><td>Fecha/hora del movimiento</td></tr>
+            <tr><td>observaciones</td><td>VARCHAR</td><td>NN</td><td>Descripción del movimiento</td></tr>
+        </table>
+
+        <h4>tab_kardex_productos — Kardex de Instrumentos y Kits</h4>
+        <table>
+            <tr><th>Campo</th><th>Tipo</th><th>Restricción</th><th>Descripción</th></tr>
+            <tr><td>id_kardex_producto</td><td>SERIAL</td><td>PK</td><td>Identificador del movimiento</td></tr>
+            <tr><td>id_instrumento</td><td>INTEGER</td><td>NN, FK → tab_instrumentos (nullable)</td><td>Instrumento afectado</td></tr>
+            <tr><td>id_kit</td><td>INTEGER</td><td>NN, FK → tab_kits (nullable)</td><td>Kit afectado</td></tr>
+            <tr><td>tipo_movimiento</td><td>INTEGER</td><td>NN</td><td>1=Entrada (producción), 2=Salida (venta), 3=Ajuste</td></tr>
+            <tr><td>cantidad</td><td>NUMERIC</td><td>NN</td><td>Cantidad del movimiento</td></tr>
+            <tr><td>fecha_movimiento</td><td>TIMESTAMP</td><td>NN</td><td>Fecha/hora del movimiento</td></tr>
+            <tr><td>observaciones</td><td>VARCHAR</td><td>NN</td><td>Descripción del movimiento</td></tr>
+        </table>
+
+        <h4>tab_historico_mat_prima — Histórico de Precios de Materia Prima</h4>
+        <table>
+            <tr><th>Campo</th><th>Tipo</th><th>Restricción</th><th>Descripción</th></tr>
+            <tr><td>id_historico</td><td>SERIAL</td><td>PK</td><td>Identificador del registro histórico</td></tr>
+            <tr><td>id_materia_prima</td><td>INTEGER</td><td>NN, FK → tab_materias_primas</td><td>Materia prima cuyo precio cambió</td></tr>
+            <tr><td>id_proveedor</td><td>INTEGER</td><td>NN, FK → tab_proveedores</td><td>Proveedor involucrado</td></tr>
+            <tr><td>precio_anterior</td><td>NUMERIC</td><td>NN</td><td>Precio antes del cambio</td></tr>
+            <tr><td>precio_nuevo</td><td>NUMERIC</td><td>NN</td><td>Precio después del cambio</td></tr>
+            <tr><td>fecha_cambio</td><td>TIMESTAMP</td><td>NN</td><td>Fecha/hora del cambio de precio</td></tr>
+            <tr><td>motivo</td><td>VARCHAR</td><td>NN</td><td>Motivo del ajuste de precio</td></tr>
+        </table>
+
+        <h4>Funciones SQL Almacenadas</h4>
+        <p>El sistema utiliza <strong>más de 100 funciones PL/pgSQL</strong> organizadas en las siguientes categorías:</p>
+        <table>
+            <tr><th>Categoría</th><th>Cantidad</th><th>Convención de Nombres</th><th>Ejemplo / Recientes</th></tr>
+            <tr><td>Inserción</td><td>28</td><td><code>fun_insert_[entidad]</code></td><td><code>fun_insert_empleados()</code></td></tr>
+            <tr><td>Actualización</td><td>34</td><td><code>fun_update_[entidad]</code></td><td><code>fun_update_instrumentos()</code></td></tr>
+            <tr><td>Eliminación (lógica)</td><td>34</td><td><code>fun_delete_[entidad]</code></td><td><code>fun_delete_kit()</code></td></tr>
+            <tr><td>Consultas</td><td>5</td><td><code>fun_obtener_[dato]</code></td><td><code>fun_obtener_stats()</code></td></tr>
+            <tr><td>Transaccionales</td><td>10</td><td><code>fun_[proceso]</code></td><td><code>fun_resolver_devolucion()</code>, <code>fun_registrar_devolucion_multiple()</code></td></tr>
+            <tr><td>Validación</td><td>4</td><td><code>fun_valida_[entidad]</code></td><td><code>fun_valida_stock()</code></td></tr>
+            <tr><td>Auditoría</td><td>Triggers (Global)</td><td><code>audit_[tabla]_trigger</code></td><td><code>fun_audit_trail.sql</code></td></tr>
+        </table>
+    </div>
+
+    <!-- 6.2.5 Funcionalidad y Servicios -->
+    <div id="s6-2-5" class="page-break">
+        <h3>6.2.5 Funcionalidad y Servicios Ofrecidos</h3>
+
+        <h4>Módulos del Sistema</h4>
+        <table>
+            <tr><th>#</th><th>Módulo</th><th>Frontend (JS)</th><th>Backend (PHP)</th><th>Descripción</th></tr>
+            <tr><td>1</td><td>🔐 Autenticación</td><td><code>inicio_sesion.js</code></td><td><code>validar.php</code>, <code>jwt.php</code>, <code>registrar.php</code></td><td>Login JWT, registro, recuperación de contraseña, cierre de sesión seguro</td></tr>
+            <tr><td>2</td><td>📊 Dashboard</td><td><code>dashboard_controller.js</code></td><td><code>api_dashboard_controller.php</code></td><td>Tarjetas de estadísticas, alertas de stock, métricas en tiempo real</td></tr>
+            <tr><td>3</td><td>🦷 Instrumental</td><td><code>instrumental_controller.js</code></td><td><code>api_instrumental_controller.php</code></td><td>CRUD de instrumentos y kits, kit builder, movimientos de inventario</td></tr>
+            <tr><td>4</td><td>📦 Materia Prima</td><td><code>mat_prim_controller.js</code></td><td><code>api_mat_prim_controller.php</code></td><td>CRUD materia prima, categorías, relaciones con proveedores</td></tr>
+            <tr><td>5</td><td>📜 Historial/Kardex</td><td><code>historial_controller.js</code></td><td><code>api_historial_controller.php</code></td><td>Kardex de instrumentos/kits, ventas, devoluciones</td></tr>
+            <tr><td>6</td><td>🏭 Bodega/Producción</td><td><code>bodega_produccion.js</code></td><td><code>api_bodega_produccion.php</code></td><td>Flujo: Materia prima → Bodega → Producción → Instrumental listo</td></tr>
+            <tr><td>7</td><td>💰 Facturación</td><td>(integrado en historial)</td><td><code>fun_fact.sql</code>, <code>imprimir_factura.php</code></td><td>Facturación, impresión PDF, cierre de caja</td></tr>
+            <tr><td>8</td><td>🛒 Tienda Cliente</td><td><code>menu_cliente.js</code></td><td><code>menuCliente.php</code>, <code>api_productos.php</code></td><td>Catálogo, búsqueda, carrito de compras</td></tr>
+            <tr><td>9</td><td>🔍 Auditoría</td><td>(consulta en historial)</td><td><code>fun_audit_trail.sql</code></td><td>Trazabilidad automática de todas las operaciones en BD</td></tr>
+            <tr><td>10</td><td>🌐 Landing Page</td><td><code>index.js</code></td><td><code>api_productos.php</code></td><td>Página pública con catálogo, consentimiento de cookies</td></tr>
+        </table>
+
+        <h4>Flujo de Datos: Ejemplo CRUD de Instrumentos</h4>
+        <p>El siguiente diagrama ilustra el flujo completo de una operación de creación de instrumento:</p>
+        <ol>
+            <li><strong>Usuario (Browser):</strong> Clic en "Crear Instrumento" → se abre el formulario modal.</li>
+            <li><strong>instrumental_controller.js:</strong> Captura los datos del formulario y los envía vía <code>POST</code> con <code>fetch()</code>.</li>
+            <li><strong>api_gestion.php:</strong> Verifica sesión activa y rol de administrador. Instancia <code>CQuerys</code> y delega al controlador.</li>
+            <li><strong>ApiInstrumentalController:</strong> Valida los datos de entrada, extrae y procesa el archivo de imagen si existe.</li>
+            <li><strong>querys.php → insertInstrumento():</strong> Ejecuta la consulta <code>SELECT fun_insert_instrumentos(...)</code>.</li>
+            <li><strong>PostgreSQL → fun_insert_instrumentos():</strong> Valida unicidad, rango de stock, y realiza el INSERT. Los triggers de audit trail registran la operación.</li>
+            <li><strong>Respuesta JSON:</strong> <code>{"success": true, "message": "Creado correctamente"}</code></li>
+            <li><strong>JavaScript:</strong> Muestra un SweetAlert2 de éxito y recarga la tabla de instrumentos.</li>
+        </ol>
+
+        <h4>API RESTful — Endpoints Principales</h4>
+        <p>Todas las peticiones administrativas se canalizan a través de <code>api_gestion.php</code>:</p>
+        <table>
+            <tr><th>Método</th><th>URL</th><th>Parámetros</th><th>Descripción</th></tr>
+            <tr><td>GET</td><td><code>/api_gestion.php?tipo=stats</code></td><td>—</td><td>Obtener estadísticas del dashboard</td></tr>
+            <tr><td>GET</td><td><code>/api_gestion.php?tipo=instrumentos</code></td><td>—</td><td>Listar instrumentos activos</td></tr>
+            <tr><td>GET</td><td><code>/api_gestion.php?tipo=kits</code></td><td>—</td><td>Listar kits activos</td></tr>
+            <tr><td>GET</td><td><code>/api_gestion.php?tipo=empleados</code></td><td>—</td><td>Listar empleados activos</td></tr>
+            <tr><td>GET</td><td><code>/api_gestion.php?tipo=clientes</code></td><td>—</td><td>Listar clientes activos</td></tr>
+            <tr><td>GET</td><td><code>/api_gestion.php?tipo=proveedores</code></td><td>—</td><td>Listar proveedores activos</td></tr>
+            <tr><td>POST</td><td><code>/api_gestion.php</code></td><td><code>accion=create, tipo, data{}</code></td><td>Crear nuevo registro (cualquier tipo)</td></tr>
+            <tr><td>POST</td><td><code>/api_gestion.php</code></td><td><code>accion=update, tipo, id, data{}</code></td><td>Actualizar registro existente</td></tr>
+            <tr><td>POST</td><td><code>/api_gestion.php</code></td><td><code>accion=delete, tipo, id</code></td><td>Eliminar registro (soft delete)</td></tr>
+            <tr><td>POST</td><td><code>/api_gestion.php</code></td><td><code>accion=restore, tipo, id</code></td><td>Restaurar registro eliminado</td></tr>
+            <tr><td>POST</td><td><code>/api_gestion.php</code></td><td><code>accion=resolver, tipo=historial, id, estado</code></td><td>Resolver devolución pendiente (Reparado/Desechado)</td></tr>
+        </table>
+
+        <div class="note">
+            <strong>Actualización V2.1 — Refactorización de Devoluciones:</strong> 
+            Se ha implementado un sistema de gestión en dos pasos para las devoluciones de productos. 
+            1. <strong>Registro:</strong> El producto ingresa a <code>tab_devol_reparable</code> con estado <em>Pendiente</em>. 
+            2. <strong>Resolución:</strong> El administrador decide si el producto es <em>Reparado</em> (reingresa al stock físico y Kardex con tipo 5) o <em>Desechado</em> (se registra la baja sin afectar el stock disponible). 
+            Este flujo garantiza que solo los productos aptos vuelvan a estar disponibles para la venta.
+        </div>
+    </div>
+    </div>
+</div>
+
+<!-- ─── 6.3 DESPLIEGUE Y CONFIGURACIÓN ─── -->
+<div class="section page-break" id="s6-3">
+    <h2>6.3 Despliegue y Configuración de Componentes</h2>
+
+    <!-- 6.3.1 Organización -->
+    <div id="s6-3-1">
+        <h3>6.3.1 Organización de Componentes</h3>
+        <p>La estructura de directorios del proyecto se organiza de la siguiente manera:</p>
+
+        <div class="dir-tree">Front y Logica/
+├── index.html                              # Landing page pública
+├── .gitignore                              # Archivos excluidos del repositorio
+│
+├── html/                                   # Páginas HTML estáticas
+│   ├── InicioSesion.html                   # Formulario de login con JWT
+│   ├── logout.php                          # Cierre de sesión (redirect)
+│   ├── menuCliente.php                     # Redirect → src/php/menuCliente.php
+│   ├── menuPrincipal.php                   # Redirect → src/php/menuPrincipal.php
+│   └── terminos.html                       # Términos y condiciones
+│
+├── styles/                                 # Hojas de estilo CSS
+│   ├── index.css                           # Estilos landing page
+│   ├── estilos_inicio_sesion.css           # Estilos formulario login
+│   ├── estilos_menuPrincipal.css           # Estilos panel administrador
+│   ├── menu_clientes.css                   # Estilos tienda del cliente
+│   ├── estilos_terminos.css                # Estilos términos y condiciones
+│   └── validation.css                      # Estilos de validación de formularios
+│
+├── images/                                 # Recursos gráficos
+│   ├── instrum/                            # Fotos de instrumentos (uploads)
+│   ├── kit/                                # Fotos de kits (uploads)
+│   ├── mat_prima/                          # Fotos de materia prima (uploads)
+│   ├── prod/                               # Fotos de productos (uploads)
+│   └── *.png                               # Logos y recursos estáticos
+│
+├── src/
+│   ├── .env                                # Variables de entorno (credenciales)
+│   │
+│   ├── JavaScript/                         # Lógica del frontend
+│   │   ├── core/                           # Módulos reutilizables
+│   │   │   ├── api_service.js              # Servicio HTTP centralizado (fetch)
+│   │   │   ├── ui_components.js            # Componentes UI reutilizables
+│   │   │   └── validadores_base.js         # Validaciones de formularios
+│   │   │
+│   │   ├── controllers/                    # Controladores especializados
+│   │   │   ├── dashboard_controller.js     # Lógica del dashboard
+│   │   │   ├── instrumental_controller.js  # CRUD instrumentos y kits (58KB)
+│   │   │   ├── mat_prim_controller.js      # CRUD materia prima (46KB)
+│   │   │   └── historial_controller.js     # Kardex + ventas/devoluciones (54KB)
+│   │   │
+│   │   ├── logica.js                       # CRUD genérico, modales, formularios
+│   │   ├── inicio_sesion.js                # Lógica del login (JWT)
+│   │   ├── index.js                        # Lógica de la landing page
+│   │   ├── menuPrincipal.js                # Inicialización del panel admin
+│   │   ├── menu_cliente.js                 # Catálogo, carrito, búsqueda
+│   │   ├── navigation.js                   # Navegación SPA (hash-based)
+│   │   ├── bodega_produccion.js            # Gestión bodega → producción
+│   │   ├── cookies.js                      # Gestión cookies/consentimiento
+│   │   ├── activity_tracker.js             # Tracking de actividad del usuario
+│   │   └── security.js                     # Protección DevTools + seguridad
+│   │
+│   └── php/                                # Backend PHP
+│       ├── conexion.php                    # Conexión PDO (Singleton)
+│       ├── load_env.php                    # Cargador de variables .env
+│       ├── querys.php                      # ★ CAPA DE DATOS (1480+ líneas)
+│       ├── jwt.php                         # Generación/validación JWT
+│       ├── security_headers.php            # Cabeceras HTTP de seguridad
+│       │
+│       ├── validar.php                     # Endpoint de login
+│       ├── registrar.php                   # Endpoint de registro
+│       ├── recuperar.php                   # Recuperación de contraseña
+│       ├── logout.php                      # Cierre de sesión seguro
+│       ├── refrescar_sesion.php            # Renovación de sesión/token
+│       ├── actualizarPerfil.php            # Actualización de perfil
+│       │
+│       ├── api_gestion.php                 # ★ ENRUTADOR API CENTRAL
+│       ├── api_productos.php               # API de productos (cliente)
+│       ├── imprimir_factura.php            # Generación de facturas PDF
+│       │
+│       ├── menuPrincipal.php               # Vista principal admin (MVC)
+│       ├── menuCliente.php                 # Vista principal cliente (MVC)
+│       │
+│       ├── controllers/                    # Controladores PHP por módulo
+│       │   ├── api_dashboard_controller.php
+│       │   ├── api_instrumental_controller.php
+│       │   ├── api_mat_prim_controller.php
+│       │   ├── api_productos_controller.php
+│       │   ├── api_historial_controller.php
+│       │   └── api_bodega_produccion.php
+│       │
+│       └── includes/                       # Componentes de vista
+│           ├── header.php                  # Cabecera HTML + librerías
+│           ├── sidebar.php                 # Menú lateral de navegación
+│           └── footer.php                  # Modales globales + scripts
+│
+└── sql/                                    # Funciones SQL (PostgreSQL)
+    ├── inserts_instalacion.sql             # Script de datos iniciales
+    ├── script_instalacion_audit_trail.sql  # Script de triggers de auditoría
+    ├── Consultas/                          # 4 funciones de consulta
+    ├── Fun_insert/                         # 27 funciones de inserción
+    ├── fun_update/                         # 33 funciones de actualización
+    ├── fun_delete/                         # 34 funciones de eliminación
+    ├── fun_transaccionales/                # 8 funciones de negocio
+    └── fun_audit_trail/                    # Triggers de auditoría</div>
+    </div>
+
+    <!-- 6.3.2 Instalación -->
+    <div id="s6-3-2" class="page-break">
+        <h3>6.3.2 Instalación</h3>
+
+        <h4>Paso 1: Prerequisitos de Software</h4>
+        <ol>
+            <li>Instalar <strong>XAMPP</strong> (o equivalente) con Apache y PHP 8.0+.</li>
+            <li>Instalar <strong>PostgreSQL 13+</strong> (descargar de <a href="https://www.postgresql.org/download/">postgresql.org</a>).</li>
+            <li>Verificar que la extensión <code>pdo_pgsql</code> esté habilitada en <code>php.ini</code>.
+                <pre><code>; Descomentar la siguiente línea en php.ini:
+extension=pdo_pgsql</code></pre>
+            </li>
+            <li>Reiniciar Apache después de modificar <code>php.ini</code>.</li>
+        </ol>
+
+        <h4>Paso 2: Configuración de la Base de Datos</h4>
+        <ol>
+            <li>Abrir <strong>pgAdmin</strong> o conectar vía consola <code>psql</code>.</li>
+            <li>Crear la base de datos:
+                <pre><code>CREATE DATABASE specialized_dental
+    WITH ENCODING = 'UTF8'
+    LC_COLLATE = 'es_CO.UTF-8'
+    LC_CTYPE = 'es_CO.UTF-8';</code></pre>
+            </li>
+            <li>Crear las tablas según el modelo relacional. (El script DDL no está incluido en este repositorio; se debe crear a partir del modelo ER V2.0.)</li>
+            <li>Ejecutar las funciones SQL en el siguiente orden:
+                <pre><code>-- 1. Funciones de Inserción
+\i sql/Fun_insert/*.sql
+
+-- 2. Funciones de Actualización
+\i sql/fun_update/*.sql
+
+-- 3. Funciones de Eliminación
+\i sql/fun_delete/*.sql
+
+-- 4. Funciones de Consulta
+\i sql/Consultas/*.sql
+
+-- 5. Funciones Transaccionales
+\i sql/fun_transaccionales/*.sql
+
+-- 6. Sistema de Auditoría (Triggers)
+\i sql/script_instalacion_audit_trail.sql
+
+-- 7. Datos Iniciales de Catálogo
+\i sql/inserts_instalacion.sql</code></pre>
+            </li>
+        </ol>
+
+        <h4>Paso 3: Despliegue del Código Fuente</h4>
+        <ol>
+            <li>Copiar la carpeta <code>Front y Logica/</code> al directorio raíz del servidor web:
+                <pre><code>-- En XAMPP (Windows):
+C:\xampp\htdocs\specialized\
+
+-- En Apache (Linux):
+/var/www/html/specialized/</code></pre>
+            </li>
+            <li>Asegurar que los permisos de escritura estén configurados para las carpetas de carga de imágenes:
+                <pre><code>chmod -R 777 images/instrum/
+chmod -R 777 images/kit/
+chmod -R 777 images/mat_prima/
+chmod -R 777 images/prod/</code></pre>
+            </li>
+        </ol>
+
+        <h4>Paso 4: Verificación de la Instalación</h4>
+        <ol>
+            <li>Abrir el navegador y navegar a: <code>http://localhost/specialized/</code></li>
+            <li>Verificar que la landing page cargue correctamente.</li>
+            <li>Intentar iniciar sesión con las credenciales por defecto:
+                <table>
+                    <tr><th>Usuario</th><th>Contraseña</th><th>Rol</th></tr>
+                    <tr><td><code>admin</code></td><td><code>admin123</code></td><td>Administrador</td></tr>
+                </table>
+            </li>
+            <li>Verificar que el dashboard cargue con las tarjetas de estadísticas.</li>
+        </ol>
+
+        <div class="important">
+            Las credenciales por defecto (<code>admin/admin123</code>) deben cambiarse inmediatamente en un entorno de producción.
+            El sistema detecta contraseñas en texto plano y las convierte automáticamente a hash en el primer inicio de sesión.
+        </div>
+    </div>
+
+    <!-- 6.3.3 Configuración -->
+    <div id="s6-3-3" class="page-break">
+        <h3>6.3.3 Configuración</h3>
+
+        <h4>Archivo de Variables de Entorno (<code>.env</code>)</h4>
+        <p>
+            El archivo <code>src/.env</code> contiene las credenciales y configuraciones sensibles. Este archivo
+            <strong>nunca debe subirse al repositorio</strong> (está incluido en el <code>.gitignore</code>).
+        </p>
+
+        <pre><code># ══════════════════════════════════════
+# CONFIGURACIÓN DE BASE DE DATOS
+# ══════════════════════════════════════
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=specialized_dental
+DB_USER=postgres
+DB_PASSWORD=tu_contraseña_segura
+
+# ══════════════════════════════════════
+# CONFIGURACIÓN DE JWT
+# ══════════════════════════════════════
+JWT_SECRET=clave-secreta-cambiar-en-produccion-mínimo-32-caracteres
+
+# ══════════════════════════════════════
+# CONFIGURACIÓN DE CORREO (Recuperación)
+# ══════════════════════════════════════
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USER=tu_correo@gmail.com
+MAIL_PASS=tu_app_password</code></pre>
+
+        <h4>Configuración de PHP (<code>php.ini</code>)</h4>
+        <p>Los siguientes parámetros deben verificarse/ajustarse:</p>
+        <table>
+            <tr><th>Parámetro</th><th>Valor Recomendado</th><th>Propósito</th></tr>
+            <tr><td><code>upload_max_filesize</code></td><td><code>10M</code></td><td>Tamaño máximo de imágenes cargadas</td></tr>
+            <tr><td><code>post_max_size</code></td><td><code>12M</code></td><td>Tamaño máximo del cuerpo POST (debe ser ≥ upload_max_filesize)</td></tr>
+            <tr><td><code>max_execution_time</code></td><td><code>60</code></td><td>Tiempo máximo de ejecución de scripts PHP</td></tr>
+            <tr><td><code>session.cookie_httponly</code></td><td><code>1</code></td><td>Previene acceso a cookies de sesión desde JavaScript</td></tr>
+            <tr><td><code>session.cookie_samesite</code></td><td><code>Strict</code></td><td>Previene envío de cookies en peticiones cross-site</td></tr>
+            <tr><td><code>extension=pdo_pgsql</code></td><td>(descomentado)</td><td>Driver de PostgreSQL para PDO</td></tr>
+        </table>
+
+        <h4>Configuración de Parámetros del Sistema (<code>tab_parametros</code>)</h4>
+        <p>Los parámetros de negocio se gestionan desde la tabla <code>tab_parametros</code>:</p>
+        <table>
+            <tr><th>Parámetro</th><th>Valor Actual</th><th>Descripción</th></tr>
+            <tr><td><code>nom_empresa</code></td><td>Specialized Instrumental Dental</td><td>Nombre de la empresa (aparece en facturas)</td></tr>
+            <tr><td><code>dir_empresa</code></td><td>Cl. 45 #28-15, Bucaramanga</td><td>Dirección (aparece en facturas)</td></tr>
+            <tr><td><code>val_pordesc</code></td><td>15</td><td>% de descuento global aplicado a facturas</td></tr>
+            <tr><td><code>val_inifact</code></td><td>1000</td><td>Número inicial del rango de facturación</td></tr>
+            <tr><td><code>val_finfact</code></td><td>9999</td><td>Número final del rango de facturación</td></tr>
+            <tr><td><code>val_actfact</code></td><td>1500</td><td>Próximo número de factura a generar</td></tr>
+            <tr><td><code>ind_idle</code></td><td>30</td><td>Minutos de inactividad antes de expirar sesión</td></tr>
+            <tr><td><code>ind_salario</code></td><td>1,423,500.00</td><td>Salario mínimo para validación de empleados</td></tr>
+            <tr><td><code>reg_invima</code></td><td>INVIMA-2024-GLOBAL</td><td>Registro sanitario INVIMA</td></tr>
+        </table>
+    </div>
+
+    <!-- 6.3.4 Despliegue -->
+    <div id="s6-3-4" class="page-break">
+        <h3>6.3.4 Despliegue</h3>
+
+        <h4>Ambiente de Desarrollo</h4>
+        <ol>
+            <li>Clonar el repositorio Git en la carpeta del servidor web local.</li>
+            <li>Crear el archivo <code>src/.env</code> con las credenciales locales.</li>
+            <li>Ejecutar los scripts SQL en PostgreSQL (ver sección 6.3.2).</li>
+            <li>Acceder a <code>http://localhost/specialized/</code>.</li>
+        </ol>
+
+        <h4>Ambiente de Producción</h4>
+        <div class="warning">
+            Antes de desplegar en producción, asegurar los siguientes cambios de seguridad:
+        </div>
+        <ol>
+            <li><strong>Cambiar todas las contraseñas por defecto</strong> (usuarios de BD, cuentas del sistema, JWT_SECRET).</li>
+            <li><strong>Activar HTTPS</strong> y cambiar <code>session.cookie_secure</code> a <code>1</code> en <code>security_headers.php</code>.</li>
+            <li><strong>Desactivar errores en pantalla:</strong>
+                <pre><code>; En php.ini de producción:
+display_errors = Off
+log_errors = On
+error_log = /var/log/php/specialized_errors.log</code></pre>
+            </li>
+            <li><strong>Configurar el firewall</strong> para permitir solo los puertos 80 (HTTP) y 443 (HTTPS).</li>
+            <li><strong>Configurar respaldos automáticos</strong> de la base de datos PostgreSQL:
+                <pre><code># Backup diario con pg_dump
+pg_dump -U postgres -h localhost specialized_dental > backup_$(date +%Y%m%d).sql</code></pre>
+            </li>
+            <li><strong>Revisar las cabeceras CSP</strong> en <code>security_headers.php</code> y restringir dominios CDN solo a los necesarios.</li>
+        </ol>
+
+        <h4>Checklist de Despliegue</h4>
+        <table>
+            <tr><th>#</th><th>Verificación</th><th>Estado</th></tr>
+            <tr><td>1</td><td>PHP 8.0+ instalado con pdo_pgsql</td><td>☐</td></tr>
+            <tr><td>2</td><td>PostgreSQL 13+ con base de datos creada</td><td>☐</td></tr>
+            <tr><td>3</td><td>Funciones SQL ejecutadas (insert, update, delete, consultas, transaccionales)</td><td>☐</td></tr>
+            <tr><td>4</td><td>Triggers de auditoría instalados</td><td>☐</td></tr>
+            <tr><td>5</td><td>Datos iniciales cargados (inserts_instalacion.sql)</td><td>☐</td></tr>
+            <tr><td>6</td><td>Archivo .env configurado con credenciales correctas</td><td>☐</td></tr>
+            <tr><td>7</td><td>Permisos de escritura en carpetas images/</td><td>☐</td></tr>
+            <tr><td>8</td><td>Contraseñas por defecto cambiadas</td><td>☐</td></tr>
+            <tr><td>9</td><td>HTTPS habilitado (producción)</td><td>☐</td></tr>
+            <tr><td>10</td><td>Errores de pantalla desactivados (producción)</td><td>☐</td></tr>
+            <tr><td>11</td><td>Login funcional → Dashboard carga estadísticas</td><td>☐</td></tr>
+            <tr><td>12</td><td>CRUD de instrumentos/kits funcional con carga de imágenes</td><td>☐</td></tr>
+        </table>
+    </div>
+</div>
+
+<!-- ─── 6.4 RESOLUCIÓN DE PROBLEMAS ─── -->
+<div class="section page-break" id="s6-4">
+    <h2>6.4 Resolución de Problemas</h2>
+
+    <div id="s6-4-1">
+        <h3>6.4.1 Errores Técnicos Más Comunes y su Solución</h3>
+
+        <table>
+            <tr>
+                <th style="width:50px;">#</th>
+                <th style="width:220px;">Error / Síntoma</th>
+                <th style="width:170px;">Causa Probable</th>
+                <th>Solución</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>Pantalla en blanco al cargar el sistema</td>
+                <td>La extensión <code>pdo_pgsql</code> no está habilitada</td>
+                <td>Descomentar <code>extension=pdo_pgsql</code> en <code>php.ini</code> y reiniciar Apache. Verificar con <code>phpinfo()</code>.</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td><code>Error de conexión PostgreSQL</code> en el log del servidor</td>
+                <td>Credenciales incorrectas en <code>.env</code> o PostgreSQL no está ejecutándose</td>
+                <td>Verificar que PostgreSQL esté corriendo (<code>pg_isready</code>). Comprobar las variables DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASSWORD en <code>src/.env</code>.</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Login falla con <code>{"error":"No autorizado"}</code></td>
+                <td>Sesión PHP no se inició correctamente o cookies bloqueadas</td>
+                <td>Verificar que <code>session_start()</code> se ejecute antes de cualquier output. Comprobar que las cookies no estén bloqueadas en el navegador.</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td><code>Error al crear registro: La base de datos retornó falso</code></td>
+                <td>La función SQL devolvió <code>false</code> por validación interna</td>
+                <td>Revisar los <code>RAISE NOTICE</code> en los logs de PostgreSQL. La función SQL probablemente rechazó los datos por: duplicados, rangos inválidos, o dependencias faltantes.</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>Las imágenes no se cargan al crear instrumentos/kits</td>
+                <td><code>post_max_size</code> o <code>upload_max_filesize</code> insuficiente</td>
+                <td>Aumentar <code>upload_max_filesize</code> a 10M y <code>post_max_size</code> a 12M en <code>php.ini</code>. Verificar permisos de escritura en <code>images/</code>.</td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>Dashboard no muestra estadísticas (tarjetas vacías)</td>
+                <td>La función <code>fun_obtener_stats()</code> no existe o tiene errores</td>
+                <td>Ejecutar los scripts de <code>sql/Consultas/</code> en PostgreSQL. Verificar en pgAdmin que la función exista.</td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td><code>Acceso denegado: No tienes permisos de administrador</code></td>
+                <td>El usuario no tiene <code>id_menu = 1</code></td>
+                <td>Verificar en <code>tab_users_menu</code> que el usuario tenga asignado el menú 1 (Gestión de Usuarios). Ajustar la asignación si es necesario.</td>
+            </tr>
+            <tr>
+                <td>8</td>
+                <td>Error 413 al subir archivos grandes</td>
+                <td>El tamaño del POST excede <code>post_max_size</code></td>
+                <td>Incrementar <code>post_max_size</code> en <code>php.ini</code>. El sistema detecta este error y muestra: "El archivo es demasiado grande".</td>
+            </tr>
+            <tr>
+                <td>9</td>
+                <td>Los triggers de auditoría no registran cambios</td>
+                <td>No se ejecutó <code>script_instalacion_audit_trail.sql</code></td>
+                <td>Ejecutar el script completo de auditoría. Verificar que los triggers estén activos con <code>SELECT * FROM pg_trigger</code>.</td>
+            </tr>
+            <tr>
+                <td>10</td>
+                <td>Error <code>"Validación BD"</code> al actualizar empleado</td>
+                <td>La función <code>fun_update_empleados()</code> rechazó datos por validaciones</td>
+                <td>Las validaciones comunes son: documento duplicado, salario por debajo del mínimo, campos obligatorios vacíos. Revisar los mensajes de <code>RAISE NOTICE</code> en el log de PostgreSQL.</td>
+            </tr>
+            <tr>
+                <td>11</td>
+                <td>Los números decimales (peso, altura) causan errores</td>
+                <td>Conflicto de locale: la coma se interpreta como separador de miles</td>
+                <td>El sistema ejecuta <code>SET lc_numeric = 'C'</code> al conectarse. Verificar que <code>querys.php</code> incluya esta sentencia en el constructor.</td>
+            </tr>
+            <tr>
+                <td>12</td>
+                <td>Sesión expira prematuramente</td>
+                <td>Parámetro <code>ind_idle</code> configurado con un valor bajo</td>
+                <td>Actualizar el campo <code>ind_idle</code> en <code>tab_parametros</code>. El valor está en minutos (por defecto: 30).</td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<!-- ╔══════════════════════════════════════════════════════════════╗ -->
+<!-- ║                      MÉTRICAS DEL PROYECTO                   ║ -->
+<!-- ╚══════════════════════════════════════════════════════════════╝ -->
+<div class="section page-break">
+    <h1>ANEXO A: Métricas del Proyecto</h1>
+    <table>
+        <tr><th>Métrica</th><th>Valor</th></tr>
+        <tr><td>Archivos JavaScript</td><td>~15 archivos (~280KB total)</td></tr>
+        <tr><td>Archivos PHP</td><td>~22 archivos</td></tr>
+        <tr><td>Archivos CSS</td><td>6 archivos</td></tr>
+        <tr><td>Funciones SQL INSERT</td><td>27</td></tr>
+        <tr><td>Funciones SQL UPDATE</td><td>33</td></tr>
+        <tr><td>Funciones SQL DELETE</td><td>34</td></tr>
+        <tr><td>Funciones SQL Transaccionales</td><td>8</td></tr>
+        <tr><td>Funciones SQL Consulta</td><td>4</td></tr>
+        <tr><td>Funciones SQL Validación</td><td>4</td></tr>
+        <tr><td>Total de Funciones SQL</td><td><strong>110+</strong></td></tr>
+        <tr><td>Tablas en la Base de Datos</td><td>20+</td></tr>
+        <tr><td>Archivo más grande (Frontend)</td><td><code>logica.js</code> (69KB, 1515 líneas)</td></tr>
+        <tr><td>Capa de datos</td><td><code>querys.php</code> (73KB, 1481 líneas)</td></tr>
+    </table>
+</div>
+
+<!-- ╔══════════════════════════════════════════════════════════════╗ -->
+<!-- ║                      PIE DE DOCUMENTO                        ║ -->
+<!-- ╚══════════════════════════════════════════════════════════════╝ -->
+<div class="doc-footer">
+    <p><strong>Specialized Instrumental Dental</strong> — Manual Técnico y de Operación del Sistema — V2.0</p>
+    <p>Documento generado el 21 de abril de 2026 | Programa ADSO — SENA</p>
+    <p style="margin-top: 10px; font-size: 8pt; color: #a0aec0;">
+        Este documento es propiedad del equipo de desarrollo del proyecto Specialized Instrumental Dental.
+        Cualquier reproducción parcial o total debe contar con autorización escrita.
+    </p>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,147 @@
+:root {
+    --primary: #36498f;
+    --secondary: #087d4e;
+    --bg-gradient: linear-gradient(135deg, #36498f, #087d4e);
+    --text-color: #333;
+    --light-bg: #f8f9ff;
+    --white: #ffffff;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background: var(--bg-gradient);
+    color: var(--text-color);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+}
+
+.terms-card {
+    background: var(--white);
+    max-width: 850px;
+    width: 100%;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    animation: fadeIn 0.6s ease-out;
+}
+
+.terms-header {
+    background: var(--primary);
+    color: var(--white);
+    padding: 40px;
+    text-align: center;
+    position: relative;
+}
+
+.terms-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.terms-header p {
+    opacity: 0.8;
+    font-size: 0.9rem;
+}
+
+.terms-content {
+    padding: 40px;
+    max-height: 60vh;
+    overflow-y: auto;
+    line-height: 1.6;
+    text-align: justify;
+}
+
+.terms-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.terms-content::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.terms-content::-webkit-scrollbar-thumb {
+    background: var(--primary);
+    border-radius: 10px;
+}
+
+.terms-section {
+    margin-bottom: 30px;
+}
+
+.terms-section h2 {
+    color: var(--primary);
+    margin-bottom: 15px;
+    border-left: 4px solid var(--secondary);
+    padding-left: 15px;
+    font-size: 1.4rem;
+}
+
+.terms-section p {
+    margin-bottom: 15px;
+}
+
+.terms-footer {
+    padding: 30px 40px;
+    background: var(--light-bg);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #eee;
+}
+
+.btn-back {
+    background: var(--primary);
+    color: var(--white);
+    text-decoration: none;
+    padding: 12px 30px;
+    border-radius: 30px;
+    font-weight: bold;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-back:hover {
+    background: var(--secondary);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.law-badge {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.badge {
+    background: white;
+    border: 1px solid #ddd;
+    padding: 5px 12px;
+    border-radius: 5px;
+    font-size: 0.75rem;
+    color: #666;
+    font-weight: bold;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 600px) {
+    .terms-header h1 { font-size: 1.8rem; }
+    .terms-footer { flex-direction: column; gap: 20px; text-align: center; }
+}
