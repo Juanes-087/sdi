@@ -1,6 +1,7 @@
 <?php
 /**
  * Redirección a menuCliente.php en carpeta php/
- * Mantiene compatibilidad con rutas antiguas
+ * Mantiene compatibilidad con rutas antiguas usando redirección HTTP
  */
-require_once __DIR__ . '/../src/php/menuCliente.php';
+header("Location: ../src/php/menuCliente.php");
+exit;

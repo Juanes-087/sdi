@@ -1,6 +1,7 @@
 <?php
 /**
  * Redirección a menuPrincipal.php en carpeta php/
- * Mantiene compatibilidad con rutas antiguas
+ * Mantiene compatibilidad con rutas antiguas usando redirección HTTP
  */
-require_once __DIR__ . '/../src/php/menuPrincipal.php';
+header("Location: ../src/php/menuPrincipal.php");
+exit;

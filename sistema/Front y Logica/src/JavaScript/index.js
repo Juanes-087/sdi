@@ -242,6 +242,14 @@
 
 
 
+        // Inicializar animaciones AOS
+        if (typeof AOS !== 'undefined') {
+            AOS.init({
+                once: true, // Animar solo la primera vez que se hace scroll
+                offset: 50, // Píxeles de margen antes de activar la animación
+            });
+        }
+
         // Carga inicial
         cargarProductos();
         initBestSellersCarousel();
@@ -254,9 +262,6 @@
 // ========== CARRUSEL DE PRODUCTOS MÁS VENDIDOS ==========
 async function initBestSellersCarousel() {
     const track = document.getElementById('best-sellers-track');
-    const dotsContainer = document.getElementById('carousel-dots');
-    const prevBtn = document.querySelector('.carousel-btn.prev');
-    const nextBtn = document.querySelector('.carousel-btn.next');
 
     if (!track) return;
 
@@ -265,23 +270,53 @@ async function initBestSellersCarousel() {
         const result = await response.json();
 
         if (result.success && result.data.length > 0) {
-            renderBestSellers(result.data, track, dotsContainer);
-            setupCarouselBehavior(track, dotsContainer, prevBtn, nextBtn);
+            renderBestSellers(result.data, track);
+            
+            // Inicializar Swiper
+            new Swiper('.mySwiper', {
+                slidesPerView: 1,
+                spaceBetween: 20,
+                loop: true,
+                autoplay: {
+                    delay: 2500, // Un poco más rápido para que se sienta dinámico
+                    disableOnInteraction: false,
+                },
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                },
+                breakpoints: {
+                    600: {
+                        slidesPerView: 2,
+                        spaceBetween: 20,
+                    },
+                    800: {
+                        slidesPerView: 3,
+                        spaceBetween: 20,
+                    },
+                    1024: {
+                        slidesPerView: 3,
+                        spaceBetween: 30, // 3 por fila como estaba antes
+                    },
+                }
+            });
         } else {
-            track.innerHTML = '<p>No hay productos destacados en este momento.</p>';
+            track.innerHTML = '<div style="width:100%; text-align:center;"><p>No hay productos destacados en este momento.</p></div>';
         }
     } catch (error) {
-        console.error('Error cargando carrusel:', error);
-        track.innerHTML = '<p>Error al cargar productos.</p>';
+        console.error('Error cargando carrusel detallado:', error);
+        track.innerHTML = `<div style="width:100%; text-align:center; color:red; padding:20px;">
+            <p>Error al cargar productos.</p>
+            <p style="font-size:12px; font-family:monospace;">Detalle: ${error.message}</p>
+        </div>`;
     }
 }
 
-function renderBestSellers(products, track, dotsContainer) {
+function renderBestSellers(products, track) {
     track.innerHTML = '';
-    dotsContainer.innerHTML = '';
 
-    products.forEach((product, index) => {
-        // Fix path for index.html (DB stores '../images/...', but index.html needs './images/...')
+    products.forEach((product) => {
+        // Fix path for index.html
         let imgSrc = product.img_url;
         if (imgSrc && imgSrc.startsWith('../../')) {
             imgSrc = imgSrc.substring(6);
@@ -290,79 +325,20 @@ function renderBestSellers(products, track, dotsContainer) {
         }
         if (!imgSrc) imgSrc = './images/placeholder.png';
 
-        // Crear Slide
-        const slide = document.createElement('li');
-        slide.className = 'carousel-slide';
+        // Crear Slide de Swiper
+        const slide = document.createElement('div');
+        slide.className = 'swiper-slide';
+        
+        // Envolvemos el contenido original en un div para mantener los estilos
         slide.innerHTML = `
-            <div class="slide-img-container">
-                <img src="${imgSrc}" alt="${product.titulo}" onerror="this.src='./images/placeholder.png'">
+            <div class="carousel-slide-content">
+                <div class="slide-img-container">
+                    <img src="${imgSrc}" alt="${product.titulo}" onerror="this.src='./images/placeholder.png'">
+                </div>
+                <h3 class="slide-title">${product.titulo}</h3>
+                <p class="slide-price">$${parseFloat(product.precio).toLocaleString('es-CO')}</p>
             </div>
-            <h3 class="slide-title">${product.titulo}</h3>
-            <p class="slide-price">$${parseFloat(product.precio).toLocaleString('es-CO')}</p>
-            <button class="slide-btn">Ver Detalle</button>
         `;
         track.appendChild(slide);
-
-        // Crear Dot
-        const dot = document.createElement('button');
-        dot.className = `carousel-dot ${index === 0 ? 'active' : ''}`;
-        dot.setAttribute('aria-label', `Ir al producto ${index + 1}`);
-        dotsContainer.appendChild(dot);
     });
 }
-
-function setupCarouselBehavior(track, dotsContainer, prevBtn, nextBtn) {
-    const slides = Array.from(track.children);
-    const dots = Array.from(dotsContainer.children);
-    let currentIndex = 0;
-
-    const updateCarousel = (index) => {
-        const slideWidth = slides[0].getBoundingClientRect().width;
-        const gap = 30; // Coincide con el gap en CSS
-        track.style.transform = `translateX(-${index * (slideWidth + gap)}px)`;
-        
-        // Actualizar dots
-        dots.forEach(d => d.classList.remove('active'));
-        dots[index].classList.add('active');
-        currentIndex = index;
-    };
-
-    nextBtn.addEventListener('click', () => {
-        const itemsVisible = window.innerWidth > 992 ? 3 : (window.innerWidth > 600 ? 2 : 1);
-        const maxIndex = slides.length - itemsVisible;
-        if (currentIndex < maxIndex) {
-            updateCarousel(currentIndex + 1);
-        } else {
-            updateCarousel(0); // Reset
-        }
-    });
-
-    prevBtn.addEventListener('click', () => {
-        if (currentIndex > 0) {
-            updateCarousel(currentIndex - 1);
-        } else {
-            const itemsVisible = window.innerWidth > 992 ? 3 : (window.innerWidth > 600 ? 2 : 1);
-            updateCarousel(slides.length - itemsVisible); // Ir al final
-        }
-    });
-
-    dots.forEach((dot, index) => {
-        dot.addEventListener('click', () => updateCarousel(index));
-    });
-
-    // Auto-play opcional
-    setInterval(() => {
-        const itemsVisible = window.innerWidth > 992 ? 3 : (window.innerWidth > 600 ? 2 : 1);
-        const maxIndex = slides.length - itemsVisible;
-        if (currentIndex < maxIndex) {
-            updateCarousel(currentIndex + 1);
-        } else {
-            updateCarousel(0);
-        }
-    }, 5000);
-}
-
-// Inicializar al cargar el DOM
-document.addEventListener('DOMContentLoaded', () => {
-    // initBestSellersCarousel(); // Ya llamado arriba
-});
