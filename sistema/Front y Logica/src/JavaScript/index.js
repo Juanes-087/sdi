@@ -142,6 +142,20 @@
                         descDiv.className = 'image-description';
                         descDiv.textContent = prod.descripcion || 'Producto de alta calidad';
 
+                        // Añadir badge "Nuevo" si fue creado en las últimas 2 semanas
+                        if (prod.fec_insert) {
+                            const createdDate = new Date(prod.fec_insert + 'T00:00:00');
+                            const twoWeeksAgo = new Date();
+                            twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
+                            if (createdDate >= twoWeeksAgo) {
+                                imgContainer.style.position = 'relative';
+                                const badgeNew = document.createElement('span');
+                                badgeNew.innerHTML = '✦ Nuevo';
+                                badgeNew.style.cssText = 'position:absolute; top:10px; right:10px; background:linear-gradient(135deg,#087d4e,#00d2ff); color:white; padding:4px 12px; border-radius:12px; font-size:0.7rem; font-weight:bold; z-index:2; letter-spacing:0.5px; box-shadow:0 2px 8px rgba(8,125,78,0.4);';
+                                imgContainer.appendChild(badgeNew);
+                            }
+                        }
+
                         card.appendChild(imgContainer);
                         card.appendChild(titleDiv);
                         card.appendChild(descDiv);

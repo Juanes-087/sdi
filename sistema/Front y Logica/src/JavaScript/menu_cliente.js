@@ -208,6 +208,15 @@ async function fetchProducts(query = '') {
             const priceVal = item.precio || item.precio_producto || item.costo || item.valor || 0;
             const categoryVal = item.categoria || item.tipo_producto || 'general';
 
+            // Determinar si el producto es "Nuevo" (creado en las últimas 2 semanas)
+            let isNew = false;
+            if (item.fec_insert) {
+                const createdDate = new Date(item.fec_insert + 'T00:00:00');
+                const twoWeeksAgo = new Date();
+                twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
+                isNew = createdDate >= twoWeeksAgo;
+            }
+
             return {
                 id: item.id || item.id_producto || item.id_instrumento || item.id_kit, // Try multiple ID fields
                 name: item.nombre_producto || item.nombre || item.nom_instrumento || item.nom_kit || 'Producto sin nombre',
@@ -216,13 +225,13 @@ async function fetchProducts(query = '') {
                 categoryNorm: normalizeStr(categoryVal),
                 price: parseFloat(priceVal),
                 description: item.descripcion || item.detalle_extra || 'Sin descripción disponible',
+                isNew: isNew,
                 image: (function () {
                     let img = item.img_url || item.imagen || '../../images/logo central solo.png';
                     // Fix: If path is "images/foo.jpg" (relative to specialized/), make it "../images/foo.jpg" (relative to specialized/php/)
                     if (img && !img.startsWith('../') && !img.startsWith('../../') && !img.startsWith('http') && !img.startsWith('/')) {
                         img = '../../' + img;
                     }
-                    // console.log(`Debug Image: Origin="${item.img_url || item.imagen}", Final="${img}"`);
                     return img;
                 })()
             };
@@ -254,8 +263,9 @@ function renderProducts() {
 
     grid.innerHTML = filtered.map(product => `
         <div class="product-card">
-            <div class="card-image-container" style="background-color: #f5f5f5; height: 200px; display: flex; align-items: center; justify-content: center;">
+            <div class="card-image-container" style="background-color: #f5f5f5; height: 200px; display: flex; align-items: center; justify-content: center; position: relative;">
                 <span class="card-badge">${product.category}</span>
+                ${product.isNew ? '<span style="position:absolute; top:15px; right:15px; background:linear-gradient(135deg,#087d4e,#00d2ff); color:white; padding:5px 14px; border-radius:15px; font-size:0.75rem; font-weight:bold; z-index:2; letter-spacing:0.5px; box-shadow:0 2px 8px rgba(8,125,78,0.4);"><i class="fa-solid fa-certificate" style="margin-right:3px;"></i>Nuevo</span>' : ''}
                 <img src="${product.image}" alt="${product.name}" class="card-image" 
                     loading="lazy"
                     style="max-width: 100%; max-height: 100%; object-fit: contain;"

@@ -340,7 +340,8 @@ class CQuerys
                        p.precio_producto as precio,
                        p.img_url,
                        e.nom_espec as categoria,
-                       'Instrumental odontológico de alta calidad para profesionales.' as descripcion
+                       'Instrumental odontológico de alta calidad para profesionales.' as descripcion,
+                       TO_CHAR(p.fec_insert, 'YYYY-MM-DD') as fec_insert
                 FROM tab_productos p
                 JOIN tab_instrumentos i ON p.id_instrumento = i.id_instrumento
                 JOIN tab_tipo_especializacion e ON i.id_especializacion = e.id_especializacion
@@ -357,7 +358,8 @@ class CQuerys
                        p.precio_producto as precio,
                        p.img_url,
                        e.nom_espec || ' kit' as categoria,
-                       'Instrumental odontológico de alta calidad para profesionales.' as descripcion
+                       'Instrumental odontológico de alta calidad para profesionales.' as descripcion,
+                       TO_CHAR(p.fec_insert, 'YYYY-MM-DD') as fec_insert
                 FROM tab_productos p
                 JOIN tab_kits k ON p.id_kit = k.id_kit
                 JOIN tab_tipo_especializacion e ON k.id_especializacion = e.id_especializacion

@@ -1,0 +1,217 @@
+========================================================================
+             REQUERIMIENTOS NO FUNCIONALES - SISTEMA SPECIALIZED
+========================================================================
+Versión: 1.7
+Módulos: Landing Page y Menú Cliente
+------------------------------------------------------------------------
+
+PARTE 1: REQUERIMIENTOS DEL MENÚ DE CLIENTE (85 REQUERIMIENTOS)
+
+A. Barra de Navegación Superior (Navbar)
+- RNF-MC01: Posición Navbar - La barra de navegación debe estar fija en la parte superior (position: fixed) con un z-index de 1000 para no perderla al hacer scroll.
+- RNF-MC02: Altura Navbar - La altura de la barra de navegación debe ser exactamente 80px (definida como variable CSS --nav-height).
+- RNF-MC03: Degradado Navbar - El fondo debe ser un degradado lineal de 135deg entre azul institucional (#36498f) y verde esmeralda (#087d4e).
+- RNF-MC04: Sombra Navbar - La barra debe proyectar una sombra de 0 4px 12px rgba(0, 0, 0, 0.15) para generar profundidad.
+- RNF-MC05: Logo - La imagen del logo debe tener una altura de 50px con un efecto de drop-shadow (sombra proyectada).
+- RNF-MC06: Título Marca - El texto "Specialized" debe ser blanco, peso tipográfico de 700, tamaño de 1.5rem y un espaciado entre letras (letter-spacing) de 0.5px.
+- RNF-MC07: Iconos SVG - Todos los iconos de la barra (Carrito, Usuario, Logout) deben ser SVGs inline de 24x24px, color blanco (stroke: currentColor).
+- RNF-MC08: Hover Botones - Al pasar el cursor sobre cualquier botón de la barra, este debe subir 2px usando una transformación CSS (translateY(-2px)).
+
+B. Barra de Búsqueda
+- RNF-MC09: Forma - La barra de búsqueda debe tener bordes completamente redondeados mediante border-radius: 50px.
+- RNF-MC10: Fondo - El fondo debe ser blanco con opacidad del 90% (rgba(255,255,255,0.9)) para integrarse estéticamente con el degradado del fondo.
+- RNF-MC11: Focus - Al hacer foco en el campo, la barra debe escalar ligeramente en tamaño (scale(1.02)) y aumentar su sombra a 0 4px 12px para destacar.
+- RNF-MC12: Responsividad - La barra de búsqueda debe ocultarse en pantallas menores a 768px de ancho, permaneciendo visible solo en versiones de escritorio.
+- RNF-MC13: Debounce - La búsqueda dinámica debe aplicar un retardo (debounce) de 500ms después de que el usuario deja de presionar teclas antes de enviar la petición.
+- RNF-MC14: Ancho Máximo - El campo de búsqueda no debe exceder en ningún caso los 500px de ancho total.
+
+C. Badge del Carrito
+- RNF-MC15: Color Badge - El contador de productos debe usar un color de fondo rojo coral (#ff4757) con el texto del número en color blanco.
+- RNF-MC16: Tamaño Badge - Debe ser un círculo perfecto de 20x20px con una fuente legible de 0.75rem y peso tipográfico bold.
+- RNF-MC17: Animación (Aparecer) - Al pasar de 0 a 1 o más productos, el badge debe aparecer con una animación de escala basada en cubic-bezier(0.175, 0.885, 0.32, 1.275) para lograr un efecto rebote.
+- RNF-MC18: Posición - El badge debe estar posicionado absolutamente sobre el icono del carrito en top: -8px; right: -8px.
+
+D. Banner Principal (Hero)
+- RNF-MC19: Fondo Hero - El banner debe usar un degradado muy suave entre azul institucional y verde esmeralda con una opacidad reducida al 5% (rgba(54,73,143,0.05)).
+- RNF-MC20: Título Hero - El texto principal "Instrumental Dental Premium" debe tener un tamaño de 2.5rem y color azul institucional (#36498f).
+- RNF-MC21: Subtítulo Hero - El texto descriptivo debe ser gris neutro (#666), tamaño de 1.2rem, con un ancho de línea máximo de 800px y alineación centrada.
+- RNF-MC22: Responsividad Hero - En pantallas móviles menores a 576px, el título principal reduce su tamaño automáticamente a 2rem.
+
+E. Filtros por Categoría (Tabs)
+- RNF-MC23: Forma Tabs - Cada pestaña de filtrado debe tener forma de cápsula (border-radius: 50px) aplicando un padding interno de 10px 25px.
+- RNF-MC24: Tab Inactivo - Debe mostrar fondo blanco, texto gris (#666), borde transparente y una sombra sutil (0 2px 5px rgba(0,0,0,0.05)).
+- RNF-MC25: Tab Activo - Debe mostrar fondo verde esmeralda (#087d4e), texto en color blanco y una sombra verde difuminada (0 5px 15px rgba(8,125,78,0.3)).
+- RNF-MC26: Hover Tab - Al pasar el cursor sobre una pestaña inactiva, esta debe elevarse 2px mediante transformaciones y aumentar el radio de su sombra.
+- RNF-MC27: Categorías Disponibles - La barra debe listar dinámicamente: Todos, Estética, Esterilización, Endodoncia, Periodoncia y Kits.
+- RNF-MC28: Wrap Responsivo - Los botones deben permitir el salto de línea (flex-wrap: wrap) para evitar desbordamientos horizontales en teléfonos.
+
+F. Tarjetas de Producto (Grid)
+- RNF-MC29: Grid Adaptativo - El contenedor de productos debe implementar CSS Grid usando repeat(auto-fill, minmax(280px, 1fr)) con una separación (gap) de 30px.
+- RNF-MC30: Ancho Máximo - El contenedor general de productos no debe superar los 1400px de ancho y debe estar centrado horizontalmente.
+- RNF-MC31: Fondo Card - Las tarjetas deben usar fondo completamente blanco, esquinas redondeadas de 20px de radio y sombras suaves al ojo.
+- RNF-MC32: Hover Card - Al posar el cursor encima, la tarjeta debe subir 10px (translateY(-10px)) y su sombra proyectada aumenta a 0 15px 40px.
+- RNF-MC33: Área de Imagen - El contenedor superior de la imagen debe tener fondo gris claro neutro (#f8f9fa) y una altura fija y estándar de 200px.
+- RNF-MC34: Zoom de Imagen - Al hacer hover sobre la tarjeta, la imagen del producto escalará al 110% (scale(1.1)) usando una transición fluida de 0.5 segundos.
+- RNF-MC35: Badge Categoría - El nombre de la categoría del producto se muestra como una etiqueta flotante en la esquina superior izquierda con fondo cian (#00d2ff).
+- RNF-MC36: Badge Nuevo - Los productos cuya fecha de creación sea menor a 14 días mostrarán un indicador flotante "Nuevo" en la esquina superior derecha con degradado verde/cian.
+- RNF-MC37: Nombre Producto - Utilizará una fuente con tamaño estándar de 1.2rem, peso visual de 700 y color oscuro neutro (#333).
+- RNF-MC38: Descripción - Letra pequeña de 0.9rem, color gris mate (#666), con un límite físico truncado a 60 caracteres terminando en puntos suspensivos (...).
+- RNF-MC39: Precio - Letra destacada de 1.3rem, peso visual extra negrita de 800, color azul institucional (#36498f) aplicando formato local de moneda de Colombia.
+- RNF-MC40: Botón Agregar - Elemento interactivo circular de 40x40px, fondo verde esmeralda institucional y un icono SVG de símbolo "+" en blanco.
+- RNF-MC41: Hover Botón + - Al pasar el cursor sobre el botón de añadir, el color oscurecerá a un tono esmeralda profundo (#065f3b) y el icono "+" rotará 90 grados.
+- RNF-MC42: Feedback Agregar - Una vez presionado el botón "+", este alternará temporalmente su icono a un checkmark (✓) con fondo verde plano durante exactamente 1000ms.
+- RNF-MC43: Responsivo Móvil - Para dispositivos de pantalla pequeña (< 576px), el grid forzará la visualización apilada en 1 sola columna vertical completa (1fr).
+
+G. Panel Lateral de Carrito (Drawer)
+- RNF-MC44: Posición Drawer - El panel debe permanecer oculto fuera de pantalla (right: -100%) y deslizarse suavemente hacia adentro (right: 0) al activarse.
+- RNF-MC45: Animación Drawer - La transición lateral empleará una función de tiempo cubic-bezier(0.19, 1, 0.22, 1) con una duración controlada de 0.4s.
+- RNF-MC46: Ancho Drawer - Tendrá una anchura máxima de 400px en monitores grandes, mientras que en smartphones ocupará el 100% de la pantalla útil disponible.
+- RNF-MC47: Cabecera Drawer - Fondo azul institucional sólido (#36498f), textos en blanco contrastante y un título de sección "Tu Carrito" ajustado a 1.4rem.
+- RNF-MC48: Botón Cerrar - Icono interactivo en forma de equis ("X") en formato SVG de 24x24px, sin bordes ni colores de fondo adicionales.
+- RNF-MC49: Imagen Item - Las imágenes de productos añadidos al carrito se reducirán proporcionalmente a un tamaño cuadrado compacto de 70x70px con esquinas de 10px.
+- RNF-MC50: Precio Item - El valor monetario por unidad se pintará en verde esmeralda (#087d4e) con un grosor tipográfico intermedio de 600.
+- RNF-MC51: Botones +/- - Pequeños selectores circulares de 25x25px con borde perimetral gris claro de 1px y fondo blanco interactivo.
+- RNF-MC52: Botón Eliminar - Representado mediante un icono de papelera de reciclaje SVG coloreado en tono de advertencia rojo coral (#ff4757).
+- RNF-MC53: Animación Items - Al ingresar nuevos productos a la vista del carrito, estos se dibujarán mediante un fundido suave (fadeIn) y un desplazamiento vertical de 10px.
+- RNF-MC54: Carrito Vacío - De no haber registros, se pintará un icono ilustrativo de carrito de 64px de alto en color gris claro acompañado de un botón "Ver Productos".
+- RNF-MC55: Footer Total - El resumen de costos total del pedido usará una tipografía de 1.3rem con peso visual máximo (800) sobre fondo ligeramente grisáceo (#f9f9f9).
+- RNF-MC56: Botón Checkout - "Proceder al Pago": Bloque verde esmeralda llamativo de ancho completo, bordes de 10px, texto bold y elevación de 2px al posicionar el cursor.
+- RNF-MC57: Overlay - Se oscurecerá la sección principal del sitio mediante un telón translúcido (rgba(0,0,0,0.5)) que cerrará el menú del carrito al ser pulsado directamente.
+
+H. Modales (Perfil y Contraseña)
+- RNF-MC58: Fondo Modal - El fondo bloqueante (overlay) utilizará un tono oscuro traslúcido (rgba(0,0,0,0.5)) animando su visibilidad gradualmente en 0.3 segundos.
+- RNF-MC59: Cabecera Modal Perfil - Utiliza un fondo degradado institucional fluido (#36498f -> #087d4e) junto a esquinas superiores redondeadas de 20px de radio.
+- RNF-MC60: Cabecera Modal Contraseña - Conservará exactamente la misma paleta e inclinación de degradado para unificar la línea estética del sistema.
+- RNF-MC61: Inputs de Formulario - Las cajas de texto tendrán espaciado interno de 12px, bordes limpios en gris neutro de 1px y esquinas suaves de 8px.
+- RNF-MC62: Botón Guardar - Pintado con el gradiente de marca, implementando un efecto visual metálico o de brillo continuo que lo recorre transversalmente.
+- RNF-MC63: Efecto Shine - Realizado puramente vía CSS mediante un pseudo-elemento ::before animado que viaja de left: -100% a left: 100% en medio segundo.
+- RNF-MC64: Ojo de Contraseña - Icono interactivo fa-eye posicionado a la derecha del input de clave que permite alternar su visibilidad cambiando a fa-eye-slash.
+- RNF-MC65: Validación en Tiempo Real - Mostrará advertencias visuales dinámicas de cumplimiento (longitud, caracteres especiales, mayúsculas) mediante texto rojo/verde.
+- RNF-MC66: Validación de Coincidencia - Comprobación visual instantánea entre la clave nueva y su repetición (texto verde para éxito, rojo si difieren).
+
+I. Alertas y Feedback (SweetAlert2)
+- RNF-MC67: Éxito de Perfil - Despliegue de modal flotante SweetAlert2 con icono verde de verificación, barra de carga de tiempo (3000ms) y botón de cierre estándar.
+- RNF-MC68: Error de Perfil - Despliegue SweetAlert2 de fallo crítico que, una vez cerrado por el usuario, reabre de forma automática el modal de perfil previo.
+- RNF-MC69: Éxito de Contraseña - Pantalla emergente SweetAlert2 con idénticos parámetros temporales y estéticos que el guardado de datos de perfil.
+- RNF-MC70: Error de Contraseña - Aviso SweetAlert2 de rechazo que redirige el flujo directamente de vuelta hacia el formulario de modificación de clave.
+
+J. Seguridad y Sesión
+- RNF-MC71: Limpieza de URL - Remoción programática mediante Javascript de tokens JWT visibles en la barra de direcciones del navegador tras el login.
+- RNF-MC72: Anti-Caché - Los llamados a recursos lógicos JS incluirán variables QueryString dinámicas (?v=<?php echo time(); ?>) para ignorar versiones viejas en disco.
+- RNF-MC73: Bloqueo de Retorno - Uso de listeners 'pageshow' que detectan el botón "atrás" del explorador y fuerzan el redireccionamiento hacia el portal de login.
+- RNF-MC74: Logout con Confirmación - Bloqueo de sesión mediante advertencia previa por modal antes de invalidar el JWT y borrar variables locales del equipo cliente.
+- RNF-MC75: Spinner de Logout - Mientras el servidor procesa la desvinculación, se interpondrá una capa completa con un spinner circular animado.
+
+K. Menú Móvil (Hamburguesa)
+- RNF-MC76: Icono Hamburguesa - Tres franjas horizontales apiladas de 3px de grosor, 30px de ancho y bordes redondeados en las puntas.
+- RNF-MC77: Panel Lateral - Desplegable desde la derecha cubriendo hasta 300px máximos, fondo completamente blanco y sombra proyectada hacia la izquierda.
+- RNF-MC78: Links Móviles - Listado de accesos con generoso padding de 15px por fila, esquinas redondeadas en bloques y separación de 15px respecto a sus iconos.
+- RNF-MC79: Cerrar Sesión Móvil - El enlace de finalización de sesión se pintará en un tono distintivo rojo coral (#ff4757) para alertar su acción.
+
+L. Extensiones de Requerimientos - Nuevos Badges
+- RNF-MC80: Criterio de Nuevo - El sistema comprobará si la fecha actual menos la fecha de inserción (fec_insert) es menor o igual a un margen estricto de 14 días.
+- RNF-MC81: Posición Badge - Se ubica absolutamente mediante coordenadas top: 15px y right: 15px sobre la cabecera del elemento.
+- RNF-MC82: Fondo Badge - Degradado lineal con ángulo estándar de 135deg mezclando verde esmeralda institucional (#087d4e) con cian brillante (#00d2ff).
+- RNF-MC83: Texto Badge - Cadena literal "Nuevo" antecedida por el icono gráfico fa-certificate, todo en color blanco mate.
+- RNF-MC84: Forma Badge - Recortado en elipses o cápsulas simétricas mediante border-radius de 15px.
+- RNF-MC85: Persistencia - La propiedad lógica es dinámica: transcurridas las 2 semanas reglamentarias el backend omitirá el envío del atributo al front.
+
+------------------------------------------------------------------------
+
+PARTE 2: REQUERIMIENTOS DE LA LANDING PAGE (74 REQUERIMIENTOS)
+
+A. Header / Barra Superior
+- RNF-LP01: Altura Header - El encabezado debe poseer una altura inamovible de 120px en la vista nativa de equipos de escritorio.
+- RNF-LP02: Degradado Header - Fondo construido en gradiente de izquierda a derecha uniendo el azul institucional (#36498f) y el verde esmeralda (#087d4e).
+- RNF-LP03: Logo Escudo - Imagen gráfica del isotipo limitada estrictamente a una altura fija de 100px con relleno interno equilibrado.
+- RNF-LP04: Logo Texto - Logotipo "Specialized" acoplado a una altura de 60px y una separación inferior holgada de 20px.
+- RNF-LP05: Contenedor del Logo - Caja agrupadora de color blanco puro, altura de 90px y esquinas redondeadas de 10px.
+- RNF-LP06: Z-index Header - Capa prioritaria seteada con z-index: 1000 que asegura su visibilidad sobre componentes adyacentes.
+
+B. Barra de Búsqueda
+- RNF-LP07: Ancho Buscador - Campo de entrada definido con 500px de ancho estático y 40px de altura para una cómoda legibilidad.
+- RNF-LP08: Bordes Buscador - Formato de píldora continua aplicando border-radius perimetral de 20px.
+- RNF-LP09: Sombra Buscador - Elevación inicial leve (rgba(0,0,0,0.1)) que se duplica visualmente en intensidad al interactuar (focus).
+- RNF-LP10: Debounce de Búsqueda - El mecanismo aguarda 400ms tras la última pulsación para prevenir colapsos por peticiones concurrentes.
+- RNF-LP11: Responsividad - Modificación por MediaQueries para ocultar permanentemente el input en pantallas telefónicas (< 768px).
+
+C. Botón "Ingresar"
+- RNF-LP12: Estilo Botón - Fondo blanco mate, texto principal oscuro (#1f1c2c) y bordes de radio pequeño (5px).
+- RNF-LP13: Hover Botón - Transición de color hacia un gris tenue (rgb(214,211,211)) acompañado de un escalamiento del 1.05.
+- RNF-LP14: Enlace - Redireccionamiento explícito hacia el portal InicioSesion.html forzando su apertura en pestañas independientes (target="_blank").
+
+D. Pestañas de Categorías
+- RNF-LP15: Barra de Pestañas - Fila de navegación horizontal inmersa en una franja con degradado gemelo al del header superior.
+- RNF-LP16: Pestaña Inactiva - Elementos con fondo blanco liso, tipografía oscura (#333) y diseño superior redondeado (8px).
+- RNF-LP17: Hover Pestaña - Reacción visual iluminando el fondo en tono menta (#f0f8f0) y la tipografía en verde (#087d4e).
+- RNF-LP18: Pestaña Activa - Delimitada físicamente mediante bordes gruesos de 2px de color negro en sus caras laterales y superior.
+- RNF-LP19: Panel Desplegable - Contenedor fijado absolutamente (top 175px) que emerge usando animaciones Bezier sumamente elásticas.
+- RNF-LP20: Cabecera del Panel - Encabezado interno tintado con degradado inverso (verde -> azul) y textos formateados a 28px de tamaño.
+- RNF-LP21: Categorías Disponibles - Acceso directo a las familias Estética, Esterilización, Endodoncia y Periodoncia.
+- RNF-LP22: Comportamiento Toggle - La apertura se conmuta automáticamente si la sección ya estaba desplegada o si se detectan clics en el vacío.
+
+E. Tarjetas de Producto
+- RNF-LP23: Grid Productos - Formación en columnas automáticas con un suelo mínimo de anchura de 250px por tarjeta.
+- RNF-LP24: Fondo Tarjeta - Bloques blancos de puntas curvas (15px) que arrojan sombras envolventes de intensidad media.
+- RNF-LP25: Hover Tarjeta - Elevación vertical de 10px y cambio del color del borde a un verde institucional muy marcado (#087d4e).
+- RNF-LP26: Área de Imagen - Espacio estricto de 200px de altura vertical donde la imagen se encajará sin deformarse (object-fit: cover).
+- RNF-LP27: Placeholder sin Imagen - Sustitución por arte vectorial grisáceo e iniciales flotantes en casos donde la BD carezca de imágenes.
+- RNF-LP28: Título Producto - Encabezado centrado con tipografía bold de 16px coloreada en gris oscuro (#333).
+- RNF-LP29: Descripción - Párrafo informativo secundario de 14px en gris opaco (#666).
+- RNF-LP30: Clic en Tarjeta - Micro-interacción simulando pulsación física mediante compresión elástica (scale(0.95)) de 150 milisegundos.
+
+F. Badge "Nuevo"
+- RNF-LP31: Criterio de Nuevo - Validación temporal estricta de 14 días corridos desde el momento exacto de la inserción inicial.
+- RNF-LP32: Posición Badge - Localización fija mediante CSS absoluto posicionada a top: 10px y right: 10px.
+- RNF-LP33: Fondo Badge - Combinación por gradiente en degradé de verde esmeralda y cian moderno.
+- RNF-LP34: Texto Badge - Visualización literal "✦ Nuevo" en fuente blanca brillante de alto contraste.
+- RNF-LP35: Forma Badge - Recorte ovalado/capsular de 12px de radio.
+- RNF-LP36: Sombra Badge - Resplandor verde exterior proyectado mediante rgba(8,125,78,0.4).
+
+G. Sección Bienvenida
+- RNF-LP37: Contenedor - Marquesina de bienvenida acolchada con 40px de padding y elevaciones sombreadas.
+- RNF-LP38: Título - Encabezado jerárquico principal de 2.5em bañado en la tonalidad corporativa azul.
+- RNF-LP39: Descripción - Texto explicativo gris de tamaño extendido (1.2em) para lecturas descansadas.
+- RNF-LP40: Animación AOS - Efecto de barrido ascendente (fade-up) que se gatilla tras avanzar 1000ms en el scroll del usuario.
+
+H. Tarjetas Informativas de Especialidades
+- RNF-LP41: Grid Informativo - Estructuración paralela basada en funciones auto-fit y separaciones físicas generosas.
+- RNF-LP42: Fondo Card - Soporte blanco de 30px de separación interna para la lectura holgada de información.
+- RNF-LP43: Hover Card - Desplazamiento sutil hacia el eje superior de 5px.
+- RNF-LP44: Título Card - Resaltado cromático verde institucional (#087d4e) escalado a dimensiones de 1.5em.
+- RNF-LP45: Animación AOS - Temporizadores escalonados de aparición para crear la ilusión de cascada fluida.
+
+I. Carrusel "Productos Más Vendidos"
+- RNF-LP46: Contenedor Carrusel - Base tintada en grises claros degradados con remates curvos extremos de 40px.
+- RNF-LP47: Título Sección - Letras gigantescas de 2.5rem en peso bold 700.
+- RNF-LP48: Subtítulo - Apoyo visual en color neutro (#666) y holguras espaciadas a 50px.
+- RNF-LP49: Animación AOS - Zoom suave expansivo de 1000 milisegundos de duración inicial.
+- RNF-LP50: Slides - Tarjetas internas blancas de diseño premium y esquinas de 20px.
+- RNF-LP51: Hover Slide - Activación de animaciones lúdicas de bamboleo y aterrizaje (jumpAndLandCarousel).
+- RNF-LP52: Imagen Slide - Reducción en miniatura a 150px con aumentos dinámicos en hover (scale(1.1)).
+- RNF-LP53: Título Slide - Dimensionamiento prudente a 1.15rem con cortes automáticos tras la segunda línea de texto.
+- RNF-LP54: Precio Slide - Identificativo de costo final renderizado en verde esmeralda (#087d4e).
+- RNF-LP55: Autoplay - Avance autónomo cíclico seteado a intervalos fijos de 2.5 segundos.
+- RNF-LP56: Breakpoints - Redimensionamiento inteligente adaptando la cantidad de slides mostrados simultáneamente según la pantalla.
+- RNF-LP57: Paginación - Puntos de control interactivos que escalan un 30% adicional cuando se encuentran activos.
+- RNF-LP58: Spinner de Carga - Animación de espera circular e infinita previa a la comunicación con la API.
+
+J. Footer
+- RNF-LP59: Aparición - Control mediante IntersectionObserver para activar visibilidad solo tras ser alcanzado físicamente.
+- RNF-LP60: Fondo Footer - Pintado en gris pálido neutro (#f0f0f0).
+- RNF-LP61: Logo Footer - Insignia gemela blanca posicionada en el pie de página con sombras de 8px de radio.
+- RNF-LP62: Redes Sociales - Sección identificativa escrita completamente en formato de caja alta (mayúsculas).
+- RNF-LP63: Icono WhatsApp - Color oficial de la marca de mensajería (#25D366).
+- RNF-LP64: Icono Instagram - Gradiente multi-cromático nativo de la red social.
+- RNF-LP65: Icono Facebook - Fondo azul cobalto estándar (#1877F2).
+- RNF-LP66: Hover Redes - Agrandamiento escalado al 1.1 al posicionarse sobre los vínculos.
+- RNF-LP67: Contacto - Listados ordenados decorados con iconografía vectorial representativa.
+- RNF-LP68: Email - Vínculo electrónico resaltado con subrayados verdes interactivos.
+- RNF-LP69: Logo INVIMA - Arte digital de cumplimiento legal fijado a 60px.
+- RNF-LP70: Línea Copyright - Barra de separación de 3px pintada en el color verde esmeralda primario.
+- RNF-LP71: Lema Copyright - Tipografía comprimida a 11px con transparencias controladas del 70%.
+
+K. Seguridad Landing
+- RNF-LP72: Limpieza de Token - Purga de variables residuales almacenadas en el búfer local de navegación.
+- RNF-LP73: Bloqueo Historial - Manipulación de estados pushState para romper la navegación secuencial hacia atrás.
+- RNF-LP74: Anti-Caché - Refrescos automáticos forzados si se cargan recursos obsoletos de memoria física.

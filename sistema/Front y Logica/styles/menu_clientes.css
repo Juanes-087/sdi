@@ -354,6 +354,28 @@ body {
     font-size: 0.8rem;
     font-weight: bold;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 2;
+}
+
+.card-badge-new {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: linear-gradient(135deg, #087d4e, #00d2ff);
+    color: white;
+    padding: 5px 14px;
+    border-radius: 15px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    box-shadow: 0 2px 8px rgba(8, 125, 78, 0.4);
+    animation: pulseNew 2s ease-in-out infinite;
+    z-index: 2;
+    letter-spacing: 0.5px;
+}
+
+@keyframes pulseNew {
+    0%, 100% { box-shadow: 0 2px 8px rgba(8, 125, 78, 0.4); }
+    50% { box-shadow: 0 4px 16px rgba(8, 125, 78, 0.7); }
 }
 
 .card-details {
