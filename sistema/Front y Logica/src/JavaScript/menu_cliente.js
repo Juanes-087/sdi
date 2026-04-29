@@ -579,7 +579,7 @@ setupPasswordValidation();
 // LOGOUT SEGURO & MODALES PERSONALIZADOS
 // ============================================
 
-window.logout = function (e) {
+window.cerrarSesionSeguro = function (e) {
     if (e) e.preventDefault();
 
     mostrarConfirmacionCustom(

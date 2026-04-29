@@ -330,9 +330,44 @@ class CQuerys
     // Usa una función SQL que combina instrumentos y kits en productos
     public function buscarProductos($q = '')
     {
-        $sql = "SELECT id, tipo, nombre, especializacion, nombre_origen, precio, img_url, categoria, descripcion FROM fun_buscar_productos(:q)";
+        // Usamos UNION ALL para separar instrumentos de kits de forma limpia,
+        // eliminando COALESCE y aprovechando INNER JOINs ya que no hay nulos.
+        $sql = "SELECT p.id_producto as id, 
+                       'instrumento' as tipo,
+                       p.nombre_producto as nombre,
+                       e.nom_espec as especializacion,
+                       i.nom_instrumento as nombre_origen,
+                       p.precio_producto as precio,
+                       p.img_url,
+                       e.nom_espec as categoria,
+                       'Instrumental odontológico de alta calidad para profesionales.' as descripcion
+                FROM tab_productos p
+                JOIN tab_instrumentos i ON p.id_instrumento = i.id_instrumento
+                JOIN tab_tipo_especializacion e ON i.id_especializacion = e.id_especializacion
+                WHERE p.ind_vivo = true 
+                AND (p.nombre_producto ILIKE :q OR i.nom_instrumento ILIKE :q OR e.nom_espec ILIKE :q)
+
+                UNION ALL
+
+                SELECT p.id_producto as id, 
+                       'kit' as tipo,
+                       p.nombre_producto as nombre,
+                       e.nom_espec as especializacion,
+                       k.nom_kit as nombre_origen,
+                       p.precio_producto as precio,
+                       p.img_url,
+                       e.nom_espec || ' kit' as categoria,
+                       'Instrumental odontológico de alta calidad para profesionales.' as descripcion
+                FROM tab_productos p
+                JOIN tab_kits k ON p.id_kit = k.id_kit
+                JOIN tab_tipo_especializacion e ON k.id_especializacion = e.id_especializacion
+                WHERE p.ind_vivo = true 
+                AND (p.nombre_producto ILIKE :q OR k.nom_kit ILIKE :q OR e.nom_espec ILIKE :q)
+
+                ORDER BY id DESC";
+        
         $stmt = $this->conn->prepare($sql);
-        $stmt->execute([':q' => $q]);
+        $stmt->execute([':q' => '%' . $q . '%']);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
