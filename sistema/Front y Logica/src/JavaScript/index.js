@@ -251,9 +251,6 @@
 
 
 
-
-
-
 // ========== CARRUSEL DE PRODUCTOS MÁS VENDIDOS ==========
 async function initBestSellersCarousel() {
     const track = document.getElementById('best-sellers-track');
@@ -284,12 +281,21 @@ function renderBestSellers(products, track, dotsContainer) {
     dotsContainer.innerHTML = '';
 
     products.forEach((product, index) => {
+        // Fix path for index.html (DB stores '../images/...', but index.html needs './images/...')
+        let imgSrc = product.img_url;
+        if (imgSrc && imgSrc.startsWith('../../')) {
+            imgSrc = imgSrc.substring(6);
+        } else if (imgSrc && imgSrc.startsWith('../')) {
+            imgSrc = imgSrc.substring(3);
+        }
+        if (!imgSrc) imgSrc = './images/placeholder.png';
+
         // Crear Slide
         const slide = document.createElement('li');
         slide.className = 'carousel-slide';
         slide.innerHTML = `
             <div class="slide-img-container">
-                <img src="${product.img_url || './images/placeholder.png'}" alt="${product.titulo}">
+                <img src="${imgSrc}" alt="${product.titulo}" onerror="this.src='./images/placeholder.png'">
             </div>
             <h3 class="slide-title">${product.titulo}</h3>
             <p class="slide-price">$${parseFloat(product.precio).toLocaleString('es-CO')}</p>
