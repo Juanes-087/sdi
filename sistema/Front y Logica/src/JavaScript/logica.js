@@ -1191,24 +1191,69 @@ function mostrarErrorCustom(titulo, mensaje) {
  * Muestra un diálogo de confirmación personalizado (HTML)
  */
 function mostrarConfirmacionCustom(titulo, mensaje, callbackAceptar, btnText = 'Sí, continuar', btnColor = '#36498f') {
-    const modal = document.getElementById('modalConfirmacionCustom');
-    const titleEl = document.getElementById('confirmTitle');
-    const messageEl = document.getElementById('confirmMessage');
-    const btnAccept = document.getElementById('confirmBtnAccept');
-
-    if (modal && titleEl && messageEl && btnAccept) {
-        titleEl.textContent = titulo;
-        messageEl.textContent = mensaje;
-        btnAccept.textContent = btnText;
-        
-        // Manejar el clic en aceptar
-        btnAccept.onclick = function() {
-            cerrarConfirmacionCustom();
-            if (callbackAceptar) callbackAceptar();
-        };
-
-        modal.style.display = 'block';
+    let modal = document.getElementById('modalConfirmacionCustom');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'modalConfirmacionCustom';
+        modal.className = 'modal';
+        document.body.appendChild(modal);
     }
+
+    // Determine styles based on context
+    let headerClass = '';
+    let acceptBtnClass = '';
+    let headerStyle = '';
+    let acceptBtnStyle = '';
+
+    const lowerTitulo = (titulo || '').toLowerCase();
+    const lowerMensaje = (mensaje || '').toLowerCase();
+    const lowerBtnText = (btnText || '').toLowerCase();
+
+    if (lowerTitulo.includes('cerrar') || lowerMensaje.includes('cerrar') || lowerBtnText.includes('cerrar')) {
+        headerClass = 'modal-header-logout';
+        acceptBtnClass = 'btn-logout-accept';
+        headerStyle = 'background: linear-gradient(135deg, #36498f 0%, #087d4e 100%) !important;';
+    } else if (btnColor) {
+        headerStyle = `background: ${btnColor} !important;`;
+        acceptBtnStyle = `background: ${btnColor} !important;`;
+    }
+
+    modal.innerHTML = `
+    <div class="modal-content" style="max-width: 400px; margin: 10% auto;">
+        <div class="modal-header ${headerClass}" style="${headerStyle}">
+             <div style="width: 60px; height: 60px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; border: 2px solid white;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: white;">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                    <line x1="12" y1="9" x2="12" y2="13" style="stroke: white;"></line>
+                    <line x1="12" y1="17" x2="12.01" y2="17" style="stroke: white;"></line>
+                </svg>
+             </div>
+             <h2 style="color: white !important; margin: 0;">${titulo}</h2>
+        </div>
+        <div class="modal-body" style="padding: 30px 25px; text-align: center; overflow: hidden;">
+            <p style="font-size: 1.1rem; margin-bottom: 25px; color: var(--text-main);">${mensaje}</p>
+            <div class="modal-buttons" style="display: flex; justify-content: center; gap: 15px; padding: 0;">
+                <button id="btnCancelarConfirm" class="btn-modal btn-secondary" style="flex: 1;">Cancelar</button>
+                <button id="btnAceptarConfirm" class="btn-modal btn-primary ${acceptBtnClass}" style="flex: 1; ${acceptBtnStyle}">${btnText}</button>
+            </div>
+        </div>
+    </div>
+    `;
+
+    const btnCancel = document.getElementById('btnCancelarConfirm');
+    btnCancel.onclick = function () { modal.style.display = 'none'; };
+
+    const btnAccept = document.getElementById('btnAceptarConfirm');
+
+    const newBtn = btnAccept.cloneNode(true);
+    btnAccept.parentNode.replaceChild(newBtn, btnAccept);
+
+    newBtn.addEventListener('click', function () {
+        modal.style.display = 'none';
+        if (callbackAceptar) callbackAceptar();
+    });
+
+    modal.style.display = 'block';
 }
 
 window.cerrarConfirmacionCustom = function() {

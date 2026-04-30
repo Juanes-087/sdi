@@ -359,24 +359,7 @@
     </div>
 </div>
 
-<!-- MODAL DE CONFIRMACIÓN PERSONALIZADO (Reemplaza SweetAlert) -->
-<div id="modalConfirmacionCustom" class="modal">
-    <div class="modal-content" style="max-width: 400px; border-radius: 15px; overflow: hidden; text-align: center;">
-        <div class="modal-header" style="background: var(--modal-header-grad); padding: 15px;">
-            <h3 id="confirmTitle" style="color: white; margin: 0;">Confirmación</h3>
-        </div>
-        <div class="modal-body" style="padding: 30px;">
-            <div id="confirmIcon" style="font-size: 3rem; color: #f8bb86; margin-bottom: 20px;">
-                <i class="fa-solid fa-circle-question"></i>
-            </div>
-            <p id="confirmMessage" style="color: var(--text-main); font-size: 1.1rem; margin: 0;">¿Estás seguro de realizar esta acción?</p>
-        </div>
-        <div class="modal-footer" style="padding: 20px; display: flex; gap: 10px; justify-content: center;">
-            <button type="button" class="btn-modal btn-secondary" onclick="cerrarConfirmacionCustom()" style="flex: 1;">Cancelar</button>
-            <button type="button" id="confirmBtnAccept" class="btn-modal btn-primary" style="flex: 1;">Aceptar</button>
-        </div>
-    </div>
-</div>
+
 
 <script>
     // --- LÓGICA DE TRADUCCIÓN ---

@@ -22,8 +22,8 @@ body.dark-mode {
     --text-muted: rgba(255, 255, 255, 0.7); /* Blanco suavizado para legibilidad */
     --sidebar-left-grad: linear-gradient(135deg, #000000 0%, #4a4a4a 100%); /* Diagonal: Negro (sup-izq) a Gris (inf-der) */
     --sidebar-right-grad: #000000; /* Negro puro */
-    --header-blue: #36498f; /* Restaurado el azul institucional */
-    --welcome-blue: #64b5f6; /* Azul claro vibrante solicitado por el usuario */
+    --header-blue: #333333; /* Fondo gris solicitado por el usuario */
+    --welcome-blue: #ffffff; /* Blanco solicitado por el usuario */
     --card-shadow: rgba(0, 0, 0, 0.4);
     --border-color: rgba(255, 255, 255, 0.1); /* Borde sutil para modo oscuro */
     --modal-header-grad: linear-gradient(135deg, #000000 0%, #4a4a4a 100%); /* Diagonal de Esquina a Esquina */
@@ -543,6 +543,14 @@ a {
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     position: relative;
     z-index: 10;
+}
+
+.modal-header-logout {
+    background: linear-gradient(135deg, #36498f 0%, #087d4e 100%) !important;
+}
+
+body.dark-mode .btn-logout-accept {
+    background: linear-gradient(135deg, #059669 0%, #10b981 100%) !important;
 }
 
 .modal-header h2 {
