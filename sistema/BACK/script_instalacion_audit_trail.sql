@@ -41,7 +41,7 @@ Create table tab_parametros
         id_empresa DECIMAL(10, 0) NOT NULL, -- Identificador único de la empresa (NIT)
         nom_empresa VARCHAR NOT NULL, -- Nombre o razón social de la empresa
         dir_empresa VARCHAR NOT NULL, -- Dirección de la sede principal
-        tel_empresa VARCHAR(10) NOT NULL, -- Teléfono principal de la empresa
+        tel_empresa VARCHAR(10) NOT NULL CHECK (tel_empresa ~ '^[0-9]+$'), -- Teléfono principal de la empresa (Solo números)
         id_ciudad INT NOT NULL, -- Ciudad donde se ubica la sede principal
         val_pordesc DECIMAL(3, 0) NOT NULL DEFAULT 10 CHECK (
             val_pordesc >= 0
@@ -79,8 +79,8 @@ Create table tab_users
         id_user INT NOT NULL, -- Identificador único del usuario
         nom_user VARCHAR NOT NULL, -- Nombre de usuario para login
         pass_user VARCHAR NOT NULL, -- Contraseña del usuario (hash)
-        tel_user VARCHAR(10) NOT NULL, -- Teléfono de contacto del usuario (Solo números)
-        mail_user VARCHAR(255) NOT NULL, -- Correo electrónico del usuario
+        tel_user VARCHAR(10) NOT NULL CHECK (tel_user ~ '^[0-9]+$'), -- Teléfono de contacto del usuario (Solo números)
+        mail_user VARCHAR(255) NOT NULL CHECK (mail_user ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$'), -- Correo electrónico del usuario
         -- Audit Trail
         user_insert VARCHAR NULL,
         fec_insert TIMESTAMP WITHOUT TIME ZONE NULL,
@@ -257,22 +257,22 @@ Create table tab_empleados
         id_cargo INT NOT NULL, -- Operario, Contador, Director Tecnico, Servicios generales, Gerente
         id_tipo_sangre INT NOT NULL, -- FK al tipo de sangre del empleado
         ind_genero INT NOT NULL CHECK (ind_genero IN (1, 2, 3)), -- 1=Masculino, 2=Femenino, 3=Otro
-        num_documento VARCHAR(20) NOT NULL, -- Número de documento de identidad
-        prim_nom VARCHAR(30) NOT NULL, -- Primer nombre del empleado
+        num_documento VARCHAR(20) NOT NULL CHECK (num_documento ~ '^[0-9]+$'), -- Número de documento de identidad (Solo números)
+        prim_nom VARCHAR(30) NOT NULL CHECK (length(prim_nom) >= 2), -- Primer nombre del empleado
         segun_nom VARCHAR(30) NULL DEFAULT '', -- Segundo nombre del empleado (opcional)
-        prim_apell VARCHAR(30) NOT NULL, -- Primer apellido del empleado
+        prim_apell VARCHAR(30) NOT NULL CHECK (length(prim_apell) >= 2), -- Primer apellido del empleado
         segun_apell VARCHAR(30) NULL DEFAULT '', -- Segundo apellido del empleado (opcional)
-        mail_empleado VARCHAR(255) NOT NULL, -- Correo electrónico del empleado
-        tel_empleado VARCHAR(10) NOT NULL, -- Teléfono de contacto del empleado (Solo números)
+        mail_empleado VARCHAR(255) NOT NULL CHECK (mail_empleado ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$'), -- Correo electrónico del empleado
+        tel_empleado VARCHAR(10) NOT NULL CHECK (tel_empleado ~ '^[0-9]+$'), -- Teléfono de contacto del empleado (Solo números)
         dir_emple VARCHAR(100) NOT NULL, -- Dirección de residencia del empleado
-        ind_fecha_contratacion DATE NOT NULL, -- Fecha en la que fue contratado el empleado
+        ind_fecha_contratacion DATE NOT NULL CHECK (ind_fecha_contratacion <= CURRENT_DATE), -- Fecha en la que fue contratado el empleado (No puede ser futura)
         ind_peso DECIMAL(5, 2) NOT NULL CHECK (ind_peso > 40 AND ind_peso < 200), -- Peso del empleado en kilogramos (examen ocupacional)
         ind_altura DECIMAL(3, 2) NOT NULL CHECK (ind_altura > 1.30 AND ind_altura < 2.50), -- Altura en metros (1.70, 1.80, etc)
         ult_fec_exam DATE NOT NULL CHECK (ult_fec_exam <= CURRENT_DATE), -- Última fecha del examen médico ocupacional
         observ TEXT NOT NULL DEFAULT 'N/A', -- Por si tiene algun llamado de atencion, reconocimientos o esta incapacitado.
         -- Cuentas
         id_banco INT NOT NULL, -- Banco donde se consigna
-        num_cuenta VARCHAR(20) NOT NULL, -- Número de cuenta bancaria para nómina (Solo números)
+        num_cuenta VARCHAR(20) NOT NULL CHECK (num_cuenta ~ '^[0-9]+$'), -- Número de cuenta bancaria para nómina (Solo números)
         -- Audit Trail
         user_insert VARCHAR NULL,
         fec_insert TIMESTAMP WITHOUT TIME ZONE NULL,
@@ -296,10 +296,10 @@ Create table tab_proveedores
         id_prov INT NOT NULL, -- Identificador único del proveedor
         id_documento INT NOT NULL, -- FK al tipo de documento del proveedor
         id_ciudad INT NOT NULL, -- FK a la ciudad del proveedor
-        num_documento VARCHAR(20) NOT NULL, -- Número de documento del proveedor (NIT o CC)
+        num_documento VARCHAR(20) NOT NULL CHECK (num_documento ~ '^[0-9]+$'), -- Número de documento del proveedor (NIT o CC, Solo números)
         nom_prov VARCHAR NOT NULL, -- Nombre o razón social del proveedor
-        tel_prov VARCHAR(10) NOT NULL, -- Teléfono de contacto del proveedor (Solo números)
-        mail_prov VARCHAR NOT NULL, -- Correo electrónico del proveedor
+        tel_prov VARCHAR(10) NOT NULL CHECK (tel_prov ~ '^[0-9]+$'), -- Teléfono de contacto del proveedor (Solo números)
+        mail_prov VARCHAR NOT NULL CHECK (mail_prov ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$'), -- Correo electrónico del proveedor
         dir_prov VARCHAR NOT NULL, -- Dirección del proveedor
         ind_calidad TEXT NOT NULL DEFAULT 'N/A', -- Atributo para ingresar comentarios de calidad al proveedor  
         -- Audit Trail
@@ -320,7 +320,7 @@ Create table tab_bancos_proveedor
 (
         id_prov INT NOT NULL, -- FK al proveedor
         id_banco INT NOT NULL, -- FK al banco
-        num_cuenta VARCHAR(20) NOT NULL, -- Número de cuenta bancaria del proveedor (Solo números)
+        num_cuenta VARCHAR(20) NOT NULL CHECK (num_cuenta ~ '^[0-9]+$'), -- Número de cuenta bancaria del proveedor (Solo números)
         -- Audit Trail
         user_insert VARCHAR NULL,
         fec_insert TIMESTAMP WITHOUT TIME ZONE NULL,
@@ -341,12 +341,12 @@ Create table tab_clientes
         id_documento INT NOT NULL, -- FK al tipo de documento del cliente
         id_ciudad INT NOT NULL, -- FK a la ciudad del cliente
         ind_genero INT NOT NULL CHECK (ind_genero IN (1, 2, 3)), -- 1=Masculino, 2=Femenino, 3=Otro
-        prim_nom VARCHAR(30) NOT NULL, -- Primer nombre del cliente
+        prim_nom VARCHAR(30) NOT NULL CHECK (length(prim_nom) >= 2), -- Primer nombre del cliente
         segun_nom VARCHAR(30) NULL, -- Segundo nombre del cliente (opcional)
-        prim_apell VARCHAR(30) NOT NULL, -- Primer apellido del cliente
+        prim_apell VARCHAR(30) NOT NULL CHECK (length(prim_apell) >= 2), -- Primer apellido del cliente
         segun_apell VARCHAR(30) NULL, -- Segundo apellido del cliente (opcional)
-        num_documento VARCHAR(20) NOT NULL, -- Número de documento de identidad del cliente
-        tel_cliente VARCHAR(10) NOT NULL, -- Teléfono de contacto del cliente (Solo números)
+        num_documento VARCHAR(20) NOT NULL CHECK (num_documento ~ '^[0-9]+$'), -- Número de documento de identidad del cliente (Solo números)
+        tel_cliente VARCHAR(10) NOT NULL CHECK (tel_cliente ~ '^[0-9]+$'), -- Teléfono de contacto del cliente (Solo números)
         dir_cliente VARCHAR(200) NOT NULL, -- Dirección de residencia del cliente
         ind_profesion VARCHAR(50) NOT NULL, -- Si es estudiante, o profesional de odontologia
         val_puntos DECIMAl(10,2) NOT NULL DEFAULT 0 CHECK (val_puntos >= 0), -- Puntos acumulados por el cliente
@@ -386,7 +386,7 @@ Create table tab_materias_primas
         id_cat_mat INT NOT NULL, -- FK a la categoría de materia prima
         nom_materia_prima VARCHAR NOT NULL, -- Atributo para ingresar el nom de la materia prima.
         stock_min INT NOT NULL DEFAULT 0 CHECK (stock_min >= 0), -- Cantidad mínima en inventario antes de generar alerta
-        stock_max INT NOT NULL DEFAULT 0 CHECK (stock_max >= 0), -- Cantidad máxima permitida en inventario
+        stock_max INT NOT NULL DEFAULT 0 CHECK (stock_max >= 0 AND stock_min <= stock_max), -- Cantidad máxima permitida en inventario
         img_url VARCHAR(255) NOT NULL, -- Imagen de la materia prima
         -- Audit Trail
         user_insert VARCHAR NULL,
@@ -540,7 +540,7 @@ Create table tab_instrumentos
         lote DECIMAL(3, 0) NOT NULL DEFAULT 0 CHECK (lote >= 0), -- Es el mismo lote de la materia prima.
         cant_disp DECIMAL(3, 0) NOT NULL CHECK (cant_disp >= 0), -- Cantidad disponible del instrumento.
         stock_min INT NOT NULL DEFAULT 0 CHECK (stock_min >= 0), -- Stock mínimo del instrumento antes de generar alerta
-        stock_max INT NOT NULL DEFAULT 0 CHECK (stock_max >= 0), -- Stock máximo del instrumento
+        stock_max INT NOT NULL DEFAULT 0 CHECK (stock_max >= 0 AND stock_min <= stock_max), -- Stock máximo del instrumento
         numeral_en_kit DECIMAL(2, 0) NULL DEFAULT 0 CHECK (numeral_en_kit >= 0), -- Número de numeral en el kit
         tipo_mat INT NOT NULL CHECK (tipo_mat IN (1, 2)), -- 1 = Specialized (Acero), 2 = Special (Aluminio)
         img_url VARCHAR(255) NOT NULL, -- Atributo para cargar la imagen del instrumento.
@@ -566,7 +566,7 @@ Create table tab_kits
         cant_disp DECIMAL(3, 0) NOT NULL CHECK (cant_disp >= 0), -- Atributo para ver cuantos kits hay disponibles.
         tipo_mat INT NOT NULL CHECK (tipo_mat IN (1, 2)), -- 1 = Specialized (Acero), 2 = Special (Aluminio)
         stock_min INT NOT NULL DEFAULT 0 CHECK (stock_min >= 0), -- Stock mínimo del kit antes de generar alerta
-        stock_max INT NOT NULL DEFAULT 0 CHECK (stock_max >= 0), -- Stock máximo del kit
+        stock_max INT NOT NULL DEFAULT 0 CHECK (stock_max >= 0 AND stock_min <= stock_max), -- Stock máximo del kit
         img_url VARCHAR(255) NOT NULL, -- Atributo para cargar la imagen del kit
         -- Audit Trail
         user_insert VARCHAR NULL,
