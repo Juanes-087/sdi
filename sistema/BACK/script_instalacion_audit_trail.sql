@@ -33,7 +33,7 @@ Drop table if exists tab_users;
 Drop table if exists tab_parametros;
 
 -- Documentación completada: Todos los campos tienen comentarios inline
--- Agregar checks
+-- Checks de TRIM aplicados solo a campos de formularios del front-end (interacción directa del usuario)
 
 -- Tabla de parametros generales
 Create table tab_parametros 
@@ -77,7 +77,7 @@ Create table tab_parametros
 Create table tab_users 
 (
         id_user INT NOT NULL, -- Identificador único del usuario
-        nom_user VARCHAR NOT NULL, -- Nombre de usuario para login
+        nom_user VARCHAR NOT NULL CHECK (length(trim(nom_user)) > 0), -- Nombre de usuario para login (no puede ser solo espacios)
         pass_user VARCHAR NOT NULL, -- Contraseña del usuario (hash)
         tel_user VARCHAR(10) NOT NULL CHECK (tel_user ~ '^[0-9]+$'), -- Teléfono de contacto del usuario (Solo números)
         mail_user VARCHAR(255) NOT NULL CHECK (mail_user ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$'), -- Correo electrónico del usuario
@@ -258,13 +258,13 @@ Create table tab_empleados
         id_tipo_sangre INT NOT NULL, -- FK al tipo de sangre del empleado
         ind_genero INT NOT NULL CHECK (ind_genero IN (1, 2, 3)), -- 1=Masculino, 2=Femenino, 3=Otro
         num_documento VARCHAR(20) NOT NULL CHECK (num_documento ~ '^[0-9]+$'), -- Número de documento de identidad (Solo números)
-        prim_nom VARCHAR(30) NOT NULL CHECK (length(prim_nom) >= 2), -- Primer nombre del empleado
+        prim_nom VARCHAR(30) NOT NULL CHECK (length(trim(prim_nom)) >= 2), -- Primer nombre del empleado (mínimo 2 caracteres reales)
         segun_nom VARCHAR(30) NULL DEFAULT '', -- Segundo nombre del empleado (opcional)
-        prim_apell VARCHAR(30) NOT NULL CHECK (length(prim_apell) >= 2), -- Primer apellido del empleado
+        prim_apell VARCHAR(30) NOT NULL CHECK (length(trim(prim_apell)) >= 2), -- Primer apellido del empleado (mínimo 2 caracteres reales)
         segun_apell VARCHAR(30) NULL DEFAULT '', -- Segundo apellido del empleado (opcional)
         mail_empleado VARCHAR(255) NOT NULL CHECK (mail_empleado ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$'), -- Correo electrónico del empleado
         tel_empleado VARCHAR(10) NOT NULL CHECK (tel_empleado ~ '^[0-9]+$'), -- Teléfono de contacto del empleado (Solo números)
-        dir_emple VARCHAR(100) NOT NULL, -- Dirección de residencia del empleado
+        dir_emple VARCHAR(100) NOT NULL CHECK (length(trim(dir_emple)) > 0), -- Dirección de residencia del empleado (no puede ser solo espacios)
         ind_fecha_contratacion DATE NOT NULL CHECK (ind_fecha_contratacion <= CURRENT_DATE), -- Fecha en la que fue contratado el empleado (No puede ser futura)
         ind_peso DECIMAL(5, 2) NOT NULL CHECK (ind_peso > 40 AND ind_peso < 200), -- Peso del empleado en kilogramos (examen ocupacional)
         ind_altura DECIMAL(3, 2) NOT NULL CHECK (ind_altura > 1.30 AND ind_altura < 2.50), -- Altura en metros (1.70, 1.80, etc)
@@ -297,10 +297,10 @@ Create table tab_proveedores
         id_documento INT NOT NULL, -- FK al tipo de documento del proveedor
         id_ciudad INT NOT NULL, -- FK a la ciudad del proveedor
         num_documento VARCHAR(20) NOT NULL CHECK (num_documento ~ '^[0-9]+$'), -- Número de documento del proveedor (NIT o CC, Solo números)
-        nom_prov VARCHAR NOT NULL, -- Nombre o razón social del proveedor
+        nom_prov VARCHAR NOT NULL CHECK (length(trim(nom_prov)) > 0), -- Nombre o razón social del proveedor (no puede ser solo espacios)
         tel_prov VARCHAR(10) NOT NULL CHECK (tel_prov ~ '^[0-9]+$'), -- Teléfono de contacto del proveedor (Solo números)
         mail_prov VARCHAR NOT NULL CHECK (mail_prov ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$'), -- Correo electrónico del proveedor
-        dir_prov VARCHAR NOT NULL, -- Dirección del proveedor
+        dir_prov VARCHAR NOT NULL CHECK (length(trim(dir_prov)) > 0), -- Dirección del proveedor (no puede ser solo espacios)
         ind_calidad TEXT NOT NULL DEFAULT 'N/A', -- Atributo para ingresar comentarios de calidad al proveedor  
         -- Audit Trail
         user_insert VARCHAR NULL,
@@ -341,14 +341,14 @@ Create table tab_clientes
         id_documento INT NOT NULL, -- FK al tipo de documento del cliente
         id_ciudad INT NOT NULL, -- FK a la ciudad del cliente
         ind_genero INT NOT NULL CHECK (ind_genero IN (1, 2, 3)), -- 1=Masculino, 2=Femenino, 3=Otro
-        prim_nom VARCHAR(30) NOT NULL CHECK (length(prim_nom) >= 2), -- Primer nombre del cliente
+        prim_nom VARCHAR(30) NOT NULL CHECK (length(trim(prim_nom)) >= 2), -- Primer nombre del cliente (mínimo 2 caracteres reales)
         segun_nom VARCHAR(30) NULL, -- Segundo nombre del cliente (opcional)
-        prim_apell VARCHAR(30) NOT NULL CHECK (length(prim_apell) >= 2), -- Primer apellido del cliente
+        prim_apell VARCHAR(30) NOT NULL CHECK (length(trim(prim_apell)) >= 2), -- Primer apellido del cliente (mínimo 2 caracteres reales)
         segun_apell VARCHAR(30) NULL, -- Segundo apellido del cliente (opcional)
         num_documento VARCHAR(20) NOT NULL CHECK (num_documento ~ '^[0-9]+$'), -- Número de documento de identidad del cliente (Solo números)
         tel_cliente VARCHAR(10) NOT NULL CHECK (tel_cliente ~ '^[0-9]+$'), -- Teléfono de contacto del cliente (Solo números)
-        dir_cliente VARCHAR(200) NOT NULL, -- Dirección de residencia del cliente
-        ind_profesion VARCHAR(50) NOT NULL, -- Si es estudiante, o profesional de odontologia
+        dir_cliente VARCHAR(200) NOT NULL CHECK (length(trim(dir_cliente)) > 0), -- Dirección de residencia del cliente (no puede ser solo espacios)
+        ind_profesion VARCHAR(50) NOT NULL CHECK (length(trim(ind_profesion)) > 0), -- Si es estudiante, o profesional de odontologia (no puede ser solo espacios)
         val_puntos DECIMAl(10,2) NOT NULL DEFAULT 0 CHECK (val_puntos >= 0), -- Puntos acumulados por el cliente
         -- Audit Trail
         user_insert VARCHAR NULL,
