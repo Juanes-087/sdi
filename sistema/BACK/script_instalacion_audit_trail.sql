@@ -488,7 +488,8 @@ Create table tab_kardex_mat_prima
         fec_delete TIMESTAMP WITHOUT TIME ZONE NULL,
         ind_vivo BOOLEAN NOT NULL DEFAULT TRUE,
         Primary Key (id_kardex_mat_prima),
-        Foreign Key (id_materia_prima) References tab_materias_primas (id_mat_prima)
+        Foreign Key (id_materia_prima) References tab_materias_primas (id_mat_prima),
+        Foreign Key (id_unidad_medida) References tab_unidades_medida (id_unidad_medida)
 );
 
 -- Tabla de histórico de precios de materia prima
@@ -616,7 +617,7 @@ Create table tab_instrumentos_kit
         id_instrumento_kit INT NOT NULL, -- Identificador único de la relación instrumento-kit
         id_kit INT NOT NULL, -- FK al kit
         id_instrumento INT NOT NULL, -- FK al instrumento que compone el kit
-        cant_instrumento DECIMAl(2, 0) NOT NULL CHECK (cant_instrumento > 0 AND cant_instrumento <= 10), -- Atributo para ingresar la cantidad de instrumentos que van en un kit.
+        cant_instrumento DECIMAl(2, 0) NOT NULL CHECK (cant_instrumento >= 1 AND cant_instrumento <= 10), -- Atributo para ingresar la cantidad de instrumentos que van en un kit.
         -- Audit Trail
         user_insert VARCHAR NULL,
         fec_insert TIMESTAMP WITHOUT TIME ZONE NULL,
@@ -723,7 +724,7 @@ Create table tab_devol_reparable
         id_factura INT NOT NULL, -- FK a la factura
         id_producto INT NOT NULL, -- FK al producto
         cantidad DECIMAL(3,0) NOT NULL CHECK (cantidad > 0),
-        id_estado_devol INT NOT NULL DEFAULT 1, -- 1 = Pendiente, 2 = Reparado, 3 = Desechado
+        id_estado_devol INT NOT NULL DEFAULT 1 CHECK (id_estado_devol IN (1, 2, 3)), -- 1 = Pendiente, 2 = Reparado, 3 = Desechado
         -- Audit Trail
         user_insert VARCHAR NULL,
         fec_insert TIMESTAMP WITHOUT TIME ZONE NULL,

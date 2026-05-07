@@ -220,9 +220,9 @@ INSERT INTO tab_empleados (id_empleado, id_documento, id_ciudad, id_cargo, id_ti
 
 -- 12. tab_proveedores (3 proveedores)
 INSERT INTO tab_proveedores (id_prov, id_documento, id_ciudad, num_documento, nom_prov, tel_prov, mail_prov, dir_prov, ind_calidad) VALUES
-(6, 4, 76001, '844555666-7', 'Suministros Dentales del Valle', 3002890123, 'suministros@dentalvalle.com', 'Av. 6N #25-10, Cali', 'Precios competitivos'),
-(7, 4, 66001, '855666777-8', 'Esterilab S.A.S.', 3006901234, 'compras@esterilab.com', 'Cra 7 #18-33, Pereira', 'Especialistas en esterilización'),
-(8, 4, 63001, '866777888-9', 'Dental Quindío Ltda', 3007012345, 'info@dentalquindio.com', 'Cl. 19 #12-45, Armenia', 'Materiales nacionales');
+(6, 4, 76001, '8445556667', 'Suministros Dentales del Valle', 3002890123, 'suministros@dentalvalle.com', 'Av. 6N #25-10, Cali', 'Precios competitivos'),
+(7, 4, 66001, '8556667778', 'Esterilab S.A.S.', 3006901234, 'compras@esterilab.com', 'Cra 7 #18-33, Pereira', 'Especialistas en esterilización'),
+(8, 4, 63001, '8667778889', 'Dental Quindío Ltda', 3007012345, 'info@dentalquindio.com', 'Cl. 19 #12-45, Armenia', 'Materiales nacionales');
 
 -- 12. tab_unidades_medida
 INSERT INTO tab_unidades_medida (id_unidad_medida, nom_unidad) VALUES
