@@ -14,6 +14,9 @@
    10. CASO EXITOSO:         SELECT fun_update_instrumentos(1, 1, 'Bisturí Láser', 'LOTE-2026', 25, 5, 50, 'INVIMA-2026', 1, 'Quirúrgico', 'url.png');
    -----------------------------------------------------------------------------
 */
+
+drop function if exists fun_update_instrumentos;    
+
 CREATE OR REPLACE FUNCTION fun_update_instrumentos  (jid_instrumento tab_instrumentos.id_instrumento%TYPE,
                                                     jid_especializacion tab_instrumentos.id_especializacion%TYPE,
                                                     jnom_instrumento tab_instrumentos.nom_instrumento%TYPE,

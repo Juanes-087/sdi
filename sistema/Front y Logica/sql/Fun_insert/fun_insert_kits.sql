@@ -63,8 +63,10 @@ BEGIN
 
     -- 5. GUARDAR EL KIT
     -- Insertamos los datos principales en la tabla de Kits
-    INSERT INTO tab_kits (id_kit, id_especializacion, nom_kit, cant_disp, tipo_mat, stock_min, stock_max, img_url) 
-    VALUES (jid_nuevo, jid_especializacion, TRIM(jnom_kit), jcant_disp, jtipo_mat, COALESCE(jstock_min, 0), COALESCE(jstock_max, 0), TRIM(jimg_url));
+    INSERT INTO tab_kits (id_kit, id_especializacion, nom_kit, cant_disp, tipo_mat, stock_min, stock_max, img_url, user_insert, fec_insert, ind_vivo) 
+    VALUES (jid_nuevo, jid_especializacion, TRIM(jnom_kit), jcant_disp, jtipo_mat, COALESCE(jstock_min, 0), COALESCE(jstock_max, 0), TRIM(jimg_url),
+            COALESCE(current_setting('specialized.app_user', true), CURRENT_USER),
+            CURRENT_TIMESTAMP, TRUE);
 
     -- 6. GUARDAR LOS INSTRUMENTOS
     -- Si nos enviaron instrumentos, los recorremos uno por uno para guardarlos
@@ -85,13 +87,13 @@ BEGIN
             END IF;
 
             -- Guardamos la relación
-            INSERT INTO tab_instrumentos_kit (id_instrumento_kit, id_kit, id_instrumento, cant_instrumento)
-            VALUES (j_check_val, jid_nuevo, j_inst_id, 1);
+            INSERT INTO tab_instrumentos_kit (id_instrumento_kit, id_kit, id_instrumento, cant_instrumento, user_insert, fec_insert, ind_vivo)
+            VALUES (j_check_val, jid_nuevo, j_inst_id, 1,
+                    COALESCE(current_setting('specialized.app_user', true), CURRENT_USER),
+                    CURRENT_TIMESTAMP, TRUE);
         END LOOP;
     END IF;
 
-    RAISE NOTICE '¡Listo! Kit guardado correctamente con sus instrumentos.';
-    
     -- Automatización: Registrar en historial de fabricación si hay stock inicial
     IF jcant_disp > 0 THEN
         PERFORM fun_kardex_productos(2, jid_nuevo, 1, jcant_disp, 'Carga inicial por creación');

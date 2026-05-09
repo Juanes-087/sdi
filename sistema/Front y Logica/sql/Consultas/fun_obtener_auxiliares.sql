@@ -1,3 +1,5 @@
+drop function if exists fun_obtener_auxiliares();
+
 -- Función para obtener listas auxiliares (Solo Nombres) en JSON - ACTUALIZADA
 CREATE OR REPLACE FUNCTION fun_obtener_auxiliares()
 RETURNS JSON AS $$

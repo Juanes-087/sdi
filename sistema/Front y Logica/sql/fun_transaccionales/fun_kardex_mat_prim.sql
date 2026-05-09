@@ -16,6 +16,8 @@
     -----------------------------------------------------------------------------
 */
 
+drop function fun_kardex_materia_prima;
+
 CREATE OR REPLACE FUNCTION fun_kardex_materia_prima(jid_materia        tab_materias_primas.id_mat_prima%TYPE,
                                                     jid_proveedor      tab_proveedores.id_prov%TYPE,
                                                     jtipo_movimiento   tab_kardex_mat_prima.tipo_movimiento%TYPE,

@@ -14,8 +14,11 @@
    10. CASO EXITOSO:         SELECT fun_update_devolucion(1, 'Cliente satisfecho con cambio.');
    -----------------------------------------------------------------------------
 */
+
+drop function if exists fun_update_devolucion();
+
 CREATE OR REPLACE FUNCTION fun_update_devolucion(jid_factura tab_dev.id_factura%TYPE,
-                                                jind_observaciones tab_dev.ind_observaciones%TYPE)
+                                                jind_observaciones tab_dev.ind_observaciones%TYPE DEFAULT 'N/A')
                                                 RETURNS BOOLEAN AS 
 $$
     DECLARE j_ind_vivo BOOLEAN;

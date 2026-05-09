@@ -39,34 +39,28 @@ $$
     
             -- VALIDACIÓN DE NULOS
                 IF jtipo_item IS NULL OR jid_item IS NULL OR jtipo_movimiento IS NULL OR jcantidad IS NULL THEN
-                    RAISE NOTICE 'Error de Datos: Parámetros nulos no permitidos.';
-                    RAISE EXCEPTION USING ERRCODE = 'P0002';
+                    RAISE EXCEPTION 'Error de Datos: Parámetros nulos no permitidos.';
                 END IF;
 
                 IF jobs IS NULL OR TRIM(jobs) = '' THEN
-                    RAISE NOTICE 'Error de Datos: La observación es obligatoria.';
-                    RAISE EXCEPTION USING ERRCODE = 'P0002';
+                    RAISE EXCEPTION 'Error de Datos: La observación es obligatoria.';
                 END IF;
 
             -- VALIDACIÓN DE LÓGICA (CANTIDAD Y TIPO)
                 IF jcantidad <= 0 THEN
-                    RAISE NOTICE 'Error de Negocio: Cantidad debe ser mayor a cero.';
-                    RAISE EXCEPTION USING ERRCODE = 'P0002';
+                    RAISE EXCEPTION 'Error de Negocio: Cantidad debe ser mayor a cero.';
                 END IF;
 
                 IF jcantidad > 5000 THEN 
-                    RAISE NOTICE 'Alerta de Seguridad: Cantidad % excesiva para producto terminado.', jcantidad;
-                    RAISE EXCEPTION USING ERRCODE = 'P0002';
+                    RAISE EXCEPTION 'Alerta de Seguridad: Cantidad % excesiva para producto terminado.', jcantidad;
                 END IF;
 
                 IF jtipo_item NOT IN (1, 2) THEN
-                    RAISE NOTICE 'Error de Datos: Tipo de Item % inválido (1=Instr, 2=Kit).', jtipo_item;
-                    RAISE EXCEPTION USING ERRCODE = 'P0002';
+                    RAISE EXCEPTION 'Error de Datos: Tipo de Item % inválido (1=Instr, 2=Kit).', jtipo_item;
                 END IF;
 
                 IF jtipo_movimiento NOT BETWEEN 1 AND 5 THEN
-                    RAISE NOTICE 'Error de Datos: Tipo de Movimiento % inválido.', jtipo_movimiento;
-                    RAISE EXCEPTION USING ERRCODE = 'P0002';
+                    RAISE EXCEPTION 'Error de Datos: Tipo de Movimiento % inválido.', jtipo_movimiento;
                 END IF;
 
             -- VALIDACIÓN DE EXISTENCIA Y OBTENCIÓN DE STOCK
@@ -76,8 +70,7 @@ $$
                         FROM tab_instrumentos WHERE id_instrumento = jid_item AND ind_vivo = TRUE;
                         
                         IF NOT FOUND THEN
-                            RAISE NOTICE 'Error de Integridad: El Instrumento ID % no existe.', jid_item;
-                            RAISE EXCEPTION USING ERRCODE = 'P0001';
+                            RAISE EXCEPTION 'Error de Integridad: El Instrumento ID % no existe o está inactivo.', jid_item;
                         END IF;
                         jid_instr_final := jid_item; -- Preparamos ID para el Insert
                     
@@ -87,8 +80,7 @@ $$
                         FROM tab_kits WHERE id_kit = jid_item AND ind_vivo = TRUE;
                         
                         IF NOT FOUND THEN
-                            RAISE NOTICE 'Error de Integridad: El Kit ID % no existe.', jid_item;
-                            RAISE EXCEPTION USING ERRCODE = 'P0001';
+                            RAISE EXCEPTION 'Error de Integridad: El Kit ID % no existe o está inactivo.', jid_item;
                         END IF;
                         jid_kit_final := jid_item; -- Preparamos ID para el Insert
                 END IF;
@@ -109,8 +101,7 @@ $$
                         WHEN 2, 4 THEN
                             -- Validar Stock suficiente
                             IF jcantidad > jstock_actual THEN
-                                RAISE NOTICE 'Error de Stock: Saldo insuficiente en % (Stock: %, Pide: %).', jnombre_item, jstock_actual, jcantidad;
-                                RAISE EXCEPTION USING ERRCODE = 'P0002';
+                                RAISE EXCEPTION 'Error de Stock: Saldo insuficiente en % (Stock: %, Pide: %).', jnombre_item, jstock_actual, jcantidad;
                             END IF;
 
                             IF jtipo_item = 1 THEN
@@ -163,15 +154,8 @@ $$
                 RETURN TRUE;
 
     EXCEPTION
-        WHEN SQLSTATE 'P0001' OR SQLSTATE 'P0002' THEN
-            RAISE NOTICE 'Operación cancelada por validación (Rollback).';
-            RETURN FALSE;
-        WHEN check_violation THEN
-            RAISE NOTICE 'Error de Integridad: Restricción Check violada.';
-            RETURN FALSE;
         WHEN OTHERS THEN
-            RAISE NOTICE 'Error del Sistema en Kardex Productos: %', SQLERRM;
-            RETURN FALSE;
+            RAISE EXCEPTION 'Error en movimiento de Kardex: %', SQLERRM;
     END;
 END;
 $$ 

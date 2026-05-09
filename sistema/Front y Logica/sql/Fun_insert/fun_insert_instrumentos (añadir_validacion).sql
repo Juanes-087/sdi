@@ -15,6 +15,9 @@
                                       NULL, 'INV-2025', NULL, 'Metal', 'http://img.com/sonda.jpg');
     -----------------------------------------------------------------------------
 */
+
+drop function if exists fun_insert_instrumentos;
+
 CREATE OR REPLACE FUNCTION fun_insert_instrumentos(jid_especializacion tab_instrumentos.id_especializacion%TYPE,
                                                    jnom_instru tab_instrumentos.nom_instrumento%TYPE,
                                                    jcant_disp tab_instrumentos.cant_disp%TYPE,
@@ -76,13 +79,14 @@ $$
         -- 5. Insertar
             INSERT INTO tab_instrumentos (
                 id_instrumento, id_especializacion, nom_instrumento, lote, cant_disp, 
-                numeral_en_kit, tipo_mat, img_url, stock_min, stock_max
+                numeral_en_kit, tipo_mat, img_url, stock_min, stock_max,
+                user_insert, fec_insert, ind_vivo
             ) VALUES (
                 jid_nuevo, jid_especializacion, TRIM(jnom_instru), COALESCE(jlote, 0), jcant_disp,
-                COALESCE(jnumeral, 0), jtipo_mat, TRIM(jimg_url), COALESCE(jstock_min, 0), COALESCE(jstock_max, 0)
+                COALESCE(jnumeral, 0), jtipo_mat, TRIM(jimg_url), COALESCE(jstock_min, 0), COALESCE(jstock_max, 0),
+                COALESCE(current_setting('specialized.app_user', true), CURRENT_USER),
+                CURRENT_TIMESTAMP, TRUE
             );
-
-            RAISE NOTICE 'Instrumento % registrado exitosamente.', jid_nuevo;
 
             -- Automatización: Registrar en historial de fabricación si hay stock inicial
             IF jcant_disp > 0 THEN

@@ -15,7 +15,7 @@
    -----------------------------------------------------------------------------
 */
 
-drop or replace function if exists fun_update_empleados;
+drop function if exists fun_update_empleados;
 
 CREATE OR REPLACE FUNCTION fun_update_empleados (jid_empleado tab_empleados.id_empleado%TYPE,
                                                 jid_documento tab_empleados.id_documento%TYPE,
@@ -34,9 +34,9 @@ CREATE OR REPLACE FUNCTION fun_update_empleados (jid_empleado tab_empleados.id_e
                                                 jind_peso tab_empleados.ind_peso%TYPE,
                                                 jind_altura tab_empleados.ind_altura%TYPE,
                                                 jult_fec_exam tab_empleados.ult_fec_exam%TYPE,
-                                                jobserv tab_empleados.observ%TYPE,
                                                 jid_banco tab_empleados.id_banco%TYPE,
-                                                jnum_cuenta tab_empleados.num_cuenta%TYPE)
+                                                jnum_cuenta tab_empleados.num_cuenta%TYPE,
+                                                jobserv tab_empleados.observ%TYPE DEFAULT 'N/A')
                                                 RETURNS BOOLEAN AS 
 $$
     DECLARE j_ind_vivo BOOLEAN;

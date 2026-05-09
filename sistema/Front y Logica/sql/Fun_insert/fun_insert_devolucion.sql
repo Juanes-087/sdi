@@ -12,8 +12,10 @@
    -----------------------------------------------------------------------------
 */
 
+drop function if exists fun_insert_devolucion();
+
 CREATE OR REPLACE FUNCTION fun_insert_devolucion (jid_factura tab_dev.id_factura%TYPE,
-                                                  jobservaciones tab_dev.ind_observaciones%TYPE) 
+                                                  jobservaciones tab_dev.ind_observaciones%TYPE DEFAULT 'N/A') 
                                                   RETURNS BOOLEAN AS
 $$
     DECLARE j_check_val INTEGER;

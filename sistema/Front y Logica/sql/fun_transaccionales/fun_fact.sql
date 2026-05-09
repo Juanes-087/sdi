@@ -17,7 +17,13 @@ SELECT fun_fact(NULL, ARRAY[17], ARRAY[1], 3);
 
 */
 
-                                    jid_forma_pago    tab_facturas.ind_forma_pago%TYPE
+drop function if exists fun_fact();
+
+CREATE OR REPLACE FUNCTION fun_fact(jid_cliente       INTEGER,
+                                    jproductos         INTEGER[], 
+                                    jcantidades        INTEGER[],
+                                    jid_forma_pago    tab_facturas.ind_forma_pago%TYPE,
+                                    jobservaciones    VARCHAR DEFAULT 'N/A'
                                     ) RETURNS INTEGER AS
 $$
         DECLARE
@@ -45,6 +51,9 @@ $$
             jprecio_venta       DECIMAL(10,2);
             jtipo_producto      INTEGER; 
             jid_aux             INTEGER;
+            jid_instr_final     INTEGER;
+            jid_kit_final       INTEGER;
+            jstock_actual       INTEGER;
 
             BEGIN
                 BEGIN 
@@ -53,8 +62,7 @@ $$
                     FROM tab_parametros WHERE id_empresa = 1;
 
                     IF NOT FOUND THEN 
-                        RAISE NOTICE 'Error Crítico: No hay parámetros de empresa configurados.'; 
-                        RETURN 0; 
+                        RAISE EXCEPTION 'Error Crítico: No hay parámetros de empresa configurados.'; 
                     END IF;
 
                 -- CLIENTE (Validamos que exista Y esté vivo)
@@ -66,26 +74,25 @@ $$
                     WHERE id_cliente = jid_cliente_final AND ind_vivo = TRUE;
 
                     IF NOT FOUND THEN 
-                        RAISE NOTICE 'Error de Negocio: El cliente % no existe o está inactivo.', jid_cliente_final; 
-                        RETURN 0; 
+                        RAISE EXCEPTION 'El cliente % no existe o está inactivo en el sistema.', jid_cliente_final; 
                     END IF;
 
                 -- VALIDACIONES DE ARRAYS
                     IF jproductos IS NULL OR jcantidades IS NULL THEN
-                        RAISE NOTICE 'Error: Arrays nulos.'; RETURN 0;
+                        RAISE EXCEPTION 'Error: Los datos de productos o cantidades son nulos.';
                     END IF;
 
                     IF array_length(jproductos, 1) IS NULL THEN 
-                        RAISE NOTICE 'Error: Lista de productos vacía.'; RETURN 0; 
+                         RAISE EXCEPTION 'Error: La lista de productos está vacía.'; 
                     END IF;
                     
                     jdif_longitud := array_length(jproductos, 1) - array_length(jcantidades, 1);
                     IF jdif_longitud != 0 THEN 
-                        RAISE NOTICE 'Error: Arrays desiguales.'; RETURN 0; 
+                        RAISE EXCEPTION 'Error: La cantidad de productos no coincide con la cantidad de unidades.'; 
                     END IF;
 
                     IF jreg_pmtros.val_actfact >= jreg_pmtros.val_finfact THEN 
-                        RAISE NOTICE 'Alerta: Sin consecutivos de facturación.'; RETURN 0; 
+                        RAISE EXCEPTION 'Alerta: Se han agotado los consecutivos de facturación.'; 
                     END IF;
 
                 -- PREPARAR IDs
@@ -111,45 +118,46 @@ $$
                             
                         -- Validaciones básicas
                             IF jproductos[jcontador] IS NULL OR jcantidades[jcontador] IS NULL OR jcantidades[jcontador] <= 0 THEN
-                                RAISE NOTICE 'Error de Datos en producto ID %.', jproductos[jcontador];
-                                RAISE EXCEPTION USING ERRCODE = 'P0002'; 
+                                RAISE EXCEPTION 'Error de Datos: Producto ID % tiene cantidad inválida.', jproductos[jcontador];
                             END IF;
 
                             IF jcantidades[jcontador] > 500 THEN
-                                RAISE NOTICE 'Alerta: Cantidad excesiva para producto ID %.', jproductos[jcontador];
-                                RAISE EXCEPTION USING ERRCODE = 'P0002';
+                                RAISE EXCEPTION 'Alerta: Cantidad excesiva (%) para producto ID %.', jcantidades[jcontador], jproductos[jcontador];
                             END IF;
 
-                            jtipo_producto := 0; 
+                            jtipo_producto  := 0; 
+                            jstock_actual   := NULL;
+                            jid_instr_final := NULL;
+                            jid_kit_final   := NULL;
                             
-                        -- Obtener datos del producto (Validamos que exista Y esté vivo)
-                            SELECT nombre_producto, precio_producto INTO jnom_prod, jprecio_venta FROM tab_productos 
-                            WHERE id_producto = jproductos[jcontador] AND ind_vivo = TRUE;
+                        -- Obtener datos del producto y su origen (Instrumento o Kit)
+                            SELECT p.nombre_producto, p.precio_producto, p.id_instrumento, p.id_kit 
+                            INTO jnom_prod, jprecio_venta, jid_instr_final, jid_kit_final
+                            FROM tab_productos p
+                            WHERE p.id_producto = jproductos[jcontador] AND p.ind_vivo = TRUE;
                             
                             IF NOT FOUND THEN 
-                                RAISE NOTICE 'Error: Producto ID % no existe o está inactivo.', jproductos[jcontador]; 
-                                RAISE EXCEPTION USING ERRCODE = 'P0001'; 
+                                RAISE EXCEPTION 'Error: El producto con ID % no existe o está inactivo.', jproductos[jcontador]; 
                             END IF;
 
-                        -- Determinar si es Instrumento (1) o Kit (2) (Y que estén vivos)
-                            SELECT id_instrumento INTO jid_aux FROM tab_instrumentos 
-                            WHERE id_instrumento = jproductos[jcontador] AND ind_vivo = TRUE;
-                            
-                            IF FOUND THEN 
+                        -- Determinar tipo y verificar stock
+                            IF jid_instr_final IS NOT NULL THEN
                                 jtipo_producto := 1;
-                            ELSE
-                                SELECT id_kit INTO jid_aux 
-                                FROM tab_kits 
-                                WHERE id_kit = jproductos[jcontador] AND ind_vivo = TRUE;
-                                
-                                IF FOUND THEN
-                                jtipo_producto := 2; 
-                                END IF;
+                                SELECT cant_disp INTO jstock_actual FROM tab_instrumentos 
+                                WHERE id_instrumento = jid_instr_final AND ind_vivo = TRUE;
+                            ELSIF jid_kit_final IS NOT NULL THEN
+                                jtipo_producto := 2;
+                                SELECT cant_disp INTO jstock_actual FROM tab_kits 
+                                WHERE id_kit = jid_kit_final AND ind_vivo = TRUE;
                             END IF;
 
-                            IF jtipo_producto = 0 THEN 
-                                RAISE NOTICE 'Error Integridad: Producto % sin referencia activa en inventario.', jnom_prod; 
-                                RAISE EXCEPTION USING ERRCODE = 'P0001'; 
+                            IF jtipo_producto = 0 OR jstock_actual IS NULL THEN 
+                                RAISE EXCEPTION 'Error Integridad: El producto % no tiene una referencia válida en inventario.', jnom_prod; 
+                            END IF;
+
+                            -- VALIDACIÓN DE STOCK
+                            IF jcantidades[jcontador] > jstock_actual THEN
+                                RAISE EXCEPTION 'Stock insuficiente para % (Disponible: %, Requerido: %)', jnom_prod, jstock_actual, jcantidades[jcontador];
                             END IF;
 
                         -- Cálculos
@@ -173,21 +181,23 @@ $$
                         -- ACTUALIZAR INVENTARIO Y KARDEX
                             IF jtipo_producto = 1 THEN
                                 UPDATE tab_instrumentos SET cant_disp = cant_disp - jcantidades[jcontador] 
-                                WHERE id_instrumento = jproductos[jcontador];
+                                WHERE id_instrumento = jid_instr_final;
                                 
                                 INSERT INTO tab_kardex_productos (
                                     id_kardex_producto, id_instrumento, id_kit, tipo_movimiento, cantidad, fecha_movimiento, observaciones
                                 ) VALUES (
-                                    jid_kardex_actual, jproductos[jcontador], NULL, 2, jcantidades[jcontador], NOW(), 'Factura #' || jid_factura
+                                    jid_kardex_actual, jid_instr_final, NULL, 2, jcantidades[jcontador], NOW(),
+                                    '(VENTA[' || jid_factura || ']) Precio unitario: [' || to_char(jprecio_venta, 'FM$999,999,999') || '] Precio total: [' || to_char(jval_bruto, 'FM$999,999,999') || '] + ' || COALESCE(jobservaciones, '')
                                 );
                             ELSE
                                 UPDATE tab_kits SET cant_disp = cant_disp - jcantidades[jcontador] 
-                                WHERE id_kit = jproductos[jcontador];
+                                WHERE id_kit = jid_kit_final;
                                 
                                 INSERT INTO tab_kardex_productos (
                                     id_kardex_producto, id_instrumento, id_kit, tipo_movimiento, cantidad, fecha_movimiento, observaciones
                                 ) VALUES (
-                                    jid_kardex_actual, NULL, jproductos[jcontador], 2, jcantidades[jcontador], NOW(), 'Factura #' || jid_factura
+                                    jid_kardex_actual, NULL, jid_kit_final, 2, jcantidades[jcontador], NOW(),
+                                    '(VENTA[' || jid_factura || ']) Precio unitario: [' || to_char(jprecio_venta, 'FM$999,999,999') || '] Precio total: [' || to_char(jval_bruto, 'FM$999,999,999') || '] + ' || COALESCE(jobservaciones, '')
                                 );
                             END IF;
 
@@ -207,10 +217,8 @@ $$
                     RETURN jid_factura;
 
     EXCEPTION
-        WHEN SQLSTATE 'P0001' OR SQLSTATE 'P0002' THEN 
-            RAISE NOTICE 'Operación cancelada (Rollback).'; RETURN 0;
         WHEN OTHERS THEN 
-            RAISE NOTICE 'Error del Sistema: %', SQLERRM; RETURN 0;
+            RAISE EXCEPTION 'Error en Venta: %', SQLERRM;
     END;
 END;
 $$ 

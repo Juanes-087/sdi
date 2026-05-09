@@ -14,13 +14,16 @@
    10. CASO EXITOSO:         SELECT fun_update_kardex_productos(1, 1, NULL, 2, 10, CURRENT_TIMESTAMP, 'Reposición');
    -----------------------------------------------------------------------------
 */
+
+drop function if exists fun_update_kardex_productos();
+
 CREATE OR REPLACE FUNCTION fun_update_kardex_productos  (jid_kardex_producto tab_kardex_productos.id_kardex_producto%TYPE,
                                                         jid_instrumento tab_kardex_productos.id_instrumento%TYPE,
                                                         jid_kit tab_kardex_productos.id_kit%TYPE,
                                                         jtipo_movimiento tab_kardex_productos.tipo_movimiento%TYPE,
                                                         jcantidad tab_kardex_productos.cantidad%TYPE,
                                                         jfecha_movimiento tab_kardex_productos.fecha_movimiento%TYPE,
-                                                        jobservaciones tab_kardex_productos.observaciones%TYPE)
+                                                        jobservaciones tab_kardex_productos.observaciones%TYPE DEFAULT 'N/A')
                                                         RETURNS BOOLEAN AS 
 $$
     DECLARE j_ind_vivo BOOLEAN;

@@ -14,12 +14,15 @@
    10. CASO EXITOSO:         SELECT fun_update_kardex_mat_prima(1, 1, 1, 50, CURRENT_TIMESTAMP, 'Corrección Inventario');
    -----------------------------------------------------------------------------
 */
+
+drop function if exists fun_update_kardex_mat_prima();
+
 CREATE OR REPLACE FUNCTION fun_update_kardex_mat_prima  (jid_kardex_mat_prima tab_kardex_mat_prima.id_kardex_mat_prima%TYPE,
                                                         jid_materia_prima tab_kardex_mat_prima.id_materia_prima%TYPE,
                                                         jtipo_movimiento tab_kardex_mat_prima.tipo_movimiento%TYPE,
                                                         jcantidad tab_kardex_mat_prima.cantidad%TYPE,
                                                         jfecha_movimiento tab_kardex_mat_prima.fecha_movimiento%TYPE,
-                                                        jobservaciones tab_kardex_mat_prima.observaciones%TYPE)
+                                                        jobservaciones tab_kardex_mat_prima.observaciones%TYPE DEFAULT 'N/A')
                                                         RETURNS BOOLEAN AS 
 $$
     DECLARE j_ind_vivo BOOLEAN;

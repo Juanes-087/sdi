@@ -132,6 +132,10 @@ FOR EACH ROW EXECUTE FUNCTION fun_audit_trail();
 CREATE OR REPLACE TRIGGER tri_audit_dev BEFORE INSERT OR UPDATE ON tab_dev
 FOR EACH ROW EXECUTE FUNCTION fun_audit_trail();
 
+-- 24.1. tab_devol_reparable
+CREATE OR REPLACE TRIGGER tri_audit_devol_reparable BEFORE INSERT OR UPDATE ON tab_devol_reparable
+FOR EACH ROW EXECUTE FUNCTION fun_audit_trail();
+
 -- 25. tab_detalle_facturas
 CREATE OR REPLACE TRIGGER tri_audit_detalle_facturas BEFORE INSERT OR UPDATE ON tab_detalle_facturas
 FOR EACH ROW EXECUTE FUNCTION fun_audit_trail();
@@ -156,6 +160,7 @@ FOR EACH ROW EXECUTE FUNCTION fun_audit_trail();
 CREATE OR REPLACE TRIGGER tri_audit_estado_fact BEFORE INSERT OR UPDATE ON tab_estado_fact
 FOR EACH ROW EXECUTE FUNCTION fun_audit_trail();
 
+drop trigger if exists tri_audit_generos on tab_generos;
 
 -- 32. tab_unidades_medida
 CREATE OR REPLACE TRIGGER tri_audit_unidades_medida BEFORE INSERT OR UPDATE ON tab_unidades_medida

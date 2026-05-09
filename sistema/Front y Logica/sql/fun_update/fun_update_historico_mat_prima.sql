@@ -14,13 +14,16 @@
    10. CASO EXITOSO:         SELECT fun_update_historico_mat_prima(1, 1, 1, 1000, 1200, CURRENT_TIMESTAMP, 'Ajuste anual');
    -----------------------------------------------------------------------------
 */
+
+drop function if exists fun_update_historico_mat_prima();
+
 CREATE OR REPLACE FUNCTION fun_update_historico_mat_prima   (jid_historico tab_historico_mat_prima.id_historico%TYPE,
                                                             jid_materia_prima tab_historico_mat_prima.id_materia_prima%TYPE,
                                                             jid_proveedor tab_historico_mat_prima.id_proveedor%TYPE,
                                                             jprecio_anterior tab_historico_mat_prima.precio_anterior%TYPE,
                                                             jprecio_nuevo tab_historico_mat_prima.precio_nuevo%TYPE,
                                                             jfecha_cambio tab_historico_mat_prima.fecha_cambio%TYPE,
-                                                            jmotivo tab_historico_mat_prima.motivo%TYPE)
+                                                            jmotivo tab_historico_mat_prima.motivo%TYPE DEFAULT 'N/A')
                                                             RETURNS BOOLEAN AS 
 $$
     DECLARE j_ind_vivo BOOLEAN;

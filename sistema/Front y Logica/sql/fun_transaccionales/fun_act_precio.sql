@@ -12,11 +12,12 @@ FROM tab_historico_mat_prima
 ORDER BY id_historico DESC LIMIT 1;
 */
 
+drop function if exists fun_act_precio_mat_prima();     
 
 CREATE OR REPLACE FUNCTION fun_act_precio_mat_prima(jid_materia     tab_materias_primas.id_mat_prima%TYPE,
                                                                         jid_proveedor   tab_proveedores.id_prov%TYPE,
                                                                         jnuevo_precio   tab_historico_mat_prima.precio_nuevo%TYPE,
-                                                                        jmotivo         tab_historico_mat_prima.motivo%TYPE
+                                                                        jmotivo         tab_historico_mat_prima.motivo%TYPE DEFAULT 'N/A'
                                                                         ) RETURNS BOOLEAN AS
 $$
         DECLARE
@@ -26,7 +27,7 @@ $$
     
             -- Variables para validación (Nombres para mensajes de error claros)
             jnom_mp          tab_materias_primas.nom_materia_prima%TYPE;
-            jnom_prov        tab_proveedores.nom_prov%TYPE;;
+            jnom_prov        tab_proveedores.nom_prov%TYPE;
 
         BEGIN
             BEGIN

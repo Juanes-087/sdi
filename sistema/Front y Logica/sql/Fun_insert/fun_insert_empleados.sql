@@ -16,7 +16,7 @@ CREATE OR REPLACE FUNCTION fun_insert_empleados (jid_docum tab_empleados.id_docu
                                                 jpeso tab_empleados.ind_peso%TYPE DEFAULT 70.0,
                                                 jaltura tab_empleados.ind_altura%TYPE DEFAULT 1.70,
                                                 jult_fec_exam tab_empleados.ult_fec_exam%TYPE DEFAULT CURRENT_DATE,
-                                                jobserv tab_empleados.observ%TYPE DEFAULT '',
+                                                jobserv tab_empleados.observ%TYPE DEFAULT 'N/A',
                                                 jid_banco tab_empleados.id_banco%TYPE DEFAULT 0,
                                                 jnum_cuenta tab_empleados.num_cuenta%TYPE DEFAULT ''
 )

@@ -2,8 +2,8 @@
 -- VERSIÓN CORREGIDA - Audit Trail automático
 
 -- 1. tab_parametros (1 registro)
-INSERT INTO tab_parametros (id_empresa, nom_empresa, dir_empresa, tel_empresa, id_ciudad, val_pordesc, val_inifact, val_finfact, val_actfact, val_observa, ind_idle, ind_salario, reg_invima) VALUES 
-(1, 'Specialized Instrumental Dental', 'Cl. 45 #28-15, Bucaramanga', 3006438791, 68077, 0, 1000, 9999, 1500, 'Fabricantes de instrumentación odontológica especializada', 30, 1423500.00, 'INVIMA-2024-GLOBAL');
+INSERT INTO tab_parametros (id_empresa, nom_empresa, dir_empresa, tel_empresa, id_ciudad, val_pordesc, val_inifact, val_finfact, val_actfact, val_observa, ind_idle, ind_salario, reg_invima, ind_tema, ind_idioma) VALUES 
+(1, 'Specialized Instrumental Dental', 'Cl. 45 #28-15, Bucaramanga', 3006438791, 68077, 0, 1000, 9999, 1500, 'Fabricantes de instrumentación odontológica especializada', 30, 1423500.00, 'INVIMA-2024-GLOBAL', TRUE, 'ES');
 
 -- 2. tab_tipo_documentos (5 tipos)
 INSERT INTO tab_tipo_documentos (id_documento, nom_tipo_docum) VALUES 
@@ -193,36 +193,36 @@ INSERT INTO tab_bancos (id_banco, id_ciudad, nom_banco, dir_banco) VALUES
 (19, 44001, 'Banco Agrario', 'Cl. 15 #5-40, Riohacha'),
 (20, 18001, 'Banco ProCredit', 'Cra 11 #12-45, Florencia');
 
+
 -- 11. tab_empleados (20 empleados)
 INSERT INTO tab_empleados (id_empleado, id_documento, id_ciudad, id_cargo, id_tipo_sangre, ind_genero, num_documento, prim_nom, segun_nom, prim_apell, segun_apell, mail_empleado, tel_empleado, dir_emple, ind_fecha_contratacion, ind_peso, ind_altura, ult_fec_exam, observ, id_banco, num_cuenta) VALUES
-(1, 1, 68001, 1, 1, 1, '123456789', 'Carlos', 'Andrés', 'Gómez', 'Pérez', 'c.gomez@dental.com', 3001112233, 'Dirección pendiente', '2023-01-15', 70.5, 1.75, '2023-06-20', NULL, 1, '1000000001'),
-(2, 1, 68077, 3, 3, 2, '987654321', 'Ana', 'María', 'López', 'García', 'a.lopez@dental.com', 3002223344, 'Dirección pendiente', '2022-03-10', 65.2, 1.68, '2023-05-15', NULL, 2, '1000000002'),
-(3, 1, 68132, 4, 2, 1, '456789123', 'Pedro', 'Rodríguez', 'Martínez', NULL, 'p.rodriguez@dental.com', 3003334455, 'Dirección pendiente', '2021-11-20', 80.1, 1.82, '2023-07-10', NULL, 3, '1000000003'),
-(4, 1, 68573, 1, 4, 2, '789123456', 'Laura', 'Isabel', 'Hernández', NULL, 'l.hernandez@dental.com', 3004445566, 'Dirección pendiente', '2023-02-28', 58.7, 1.65, '2023-08-05', NULL, 4, '1000000004'),
-(5, 1, 68001, 5, 1, 1, '321654987', 'Miguel', 'Ángel', 'Díaz', 'Silva', 'm.diaz@dental.com', 3005556677, 'Dirección pendiente', '2020-09-15', 75.3, 1.78, '2023-04-12', NULL, 5, '1000000005'),
-(6, 1, 68077, 6, 3, 2, '654987321', 'Sofia', 'Morales', 'Rojas', NULL, 's.morales@dental.com', 3006667788, 'Dirección pendiente', '2022-07-22', 62.8, 1.70, '2023-09-18', NULL, 1, '1000000006'),
-(7, 1, 68132, 7, 5, 1, '987321654', 'David', 'Esteban', 'Castillo', 'Vargas', 'd.castillo@dental.com', 3007778899, 'Dirección pendiente', '2021-05-30', 68.9, 1.73, '2023-10-22', NULL, 2, '1000000007'),
-(8, 1, 68573, 8, 2, 2, '147258369', 'Carmen', 'Elena', 'Ramírez', 'Ortega', 'c.ramirez@dental.com', 3008889900, 'Dirección pendiente', '2023-04-05', 55.4, 1.62, '2023-11-15', NULL, 3, '1000000008'),
-(9, 1, 68001, 9, 4, 1, '258369147', 'Jorge', 'Luis', 'Torres', 'Mendoza', 'j.torres@dental.com', 3009990011, 'Dirección pendiente', '2020-12-10', 72.6, 1.76, '2023-03-08', NULL, 4, '1000000009'),
-(10, 1, 68077, 10, 1, 2, '369147258', 'Patricia', 'Navarro', 'Castro', NULL, 'p.navarro@dental.com', 3000001122, 'Dirección pendiente', '2022-08-14', 61.2, 1.67, '2023-12-01', NULL, 5, '1000000010'),
-(11, 1, 68132, 1, 6, 1, '741852963', 'Fernando', 'José', 'Guerrero', 'Peña', 'f.guerrero@dental.com', 3001112233, 'Dirección pendiente', '2021-06-25', 77.8, 1.80, '2023-02-14', NULL, 1, '1000000011'),
-(12, 1, 68573, 11, 3, 2, '852963741', 'Gabriela', 'Marcela', 'Reyes', 'Santos', 'g.reyes@dental.com', 3002223344, 'Dirección pendiente', '2023-03-18', 59.1, 1.64, '2023-07-30', NULL, 2, '1000000012'),
-(13, 1, 68001, 12, 5, 1, '963741852', 'Ricardo', 'Vega', 'Fuentes', NULL, 'r.vega@dental.com', 3003334455, 'Dirección pendiente', '2020-10-08', 74.5, 1.79, '2023-05-25', NULL, 3, '1000000013'),
-(14, 1, 68077, 13, 2, 2, '159263748', 'Monica', 'Patricia', 'Medina', 'Arias', 'm.medina@dental.com', 3004445566, 'Dirección pendiente', '2022-01-12', 56.3, 1.61, '2023-09-10', NULL, 4, '1000000014'),
-(15, 1, 68132, 14, 4, 1, '263748159', 'Oscar', 'Alberto', 'Parra', 'Miranda', 'o.parra@dental.com', 3005556677, 'Dirección pendiente', '2021-07-07', 69.7, 1.74, '2023-11-28', NULL, 5, '1000000015'),
-(16, 1, 68573, 15, 1, 2, '374815926', 'Tatiana', 'Cardenas', 'Pacheco', NULL, 't.cardenas@dental.com', 3006667788, 'Dirección pendiente', '2023-05-20', 63.4, 1.69, '2023-04-17', NULL, 1, '1000000016'),
-(17, 1, 68001, 16, 7, 1, '481592637', 'Santiago', 'Manuel', 'Jiménez', 'Rios', 's.jimenez@dental.com', 3007778899, 'Dirección pendiente', '2020-04-03', 81.2, 1.83, '2023-08-12', NULL, 2, '1000000017'),
-(18, 1, 68077, 17, 3, 2, '592637481', 'Natalia', 'Carolina', 'Moreno', 'Cordoba', 'n.moreno@dental.com', 3008889900, 'Dirección pendiente', '2022-11-30', 60.8, 1.66, '2023-10-05', NULL, 3, '1000000018'),
-(19, 1, 68132, 18, 5, 1, '637481592', 'Humberto', 'Suarez', 'Londoño', NULL, 'h.suarez@dental.com', 3009990011, 'Dirección pendiente', '2021-02-14', 76.9, 1.81, '2023-06-15', NULL, 4, '1000000019'),
-(20, 1, 68573, 19, 2, 2, '748159263', 'Verónica', 'Alejandra', 'Gutierrez', 'Marin', 'v.gutierrez@dental.com', 3000001122, 'Dirección pendiente', '2023-06-08', 57.6, 1.63, '2023-12-20', NULL, 5, '1000000020');
-
+(1, 1, 68001, 1, 1, 1, '123456789', 'Carlos', 'Andrés', 'Gómez', 'Pérez', 'c.gomez@dental.com', 3001112233, 'Dirección pendiente', '2023-01-15', 70.5, 1.75, '2023-06-20', 'N/A', 1, '1000000001'),
+(2, 1, 68077, 3, 3, 2, '987654321', 'Ana', 'María', 'López', 'García', 'a.lopez@dental.com', 3002223344, 'Dirección pendiente', '2022-03-10', 65.2, 1.68, '2023-05-15', 'N/A', 2, '1000000002'),
+(3, 1, 68132, 4, 2, 1, '456789123', 'Pedro', 'Rodríguez', 'Martínez', NULL, 'p.rodriguez@dental.com', 3003334455, 'Dirección pendiente', '2021-11-20', 80.1, 1.82, '2023-07-10', 'N/A', 3, '1000000003'),
+(4, 1, 68573, 1, 4, 2, '789123456', 'Laura', 'Isabel', 'Hernández', NULL, 'l.hernandez@dental.com', 3004445566, 'Dirección pendiente', '2023-02-28', 58.7, 1.65, '2023-08-05', 'N/A', 4, '1000000004'),
+(5, 1, 68001, 5, 1, 1, '321654987', 'Miguel', 'Ángel', 'Díaz', 'Silva', 'm.diaz@dental.com', 3005556677, 'Dirección pendiente', '2020-09-15', 75.3, 1.78, '2023-04-12', 'N/A', 5, '1000000005'),
+(6, 1, 68077, 6, 3, 2, '654987321', 'Sofia', 'Morales', 'Rojas', NULL, 's.morales@dental.com', 3006667788, 'Dirección pendiente', '2022-07-22', 62.8, 1.70, '2023-09-18', 'N/A', 1, '1000000006'),
+(7, 1, 68132, 7, 5, 1, '987321654', 'David', 'Esteban', 'Castillo', 'Vargas', 'd.castillo@dental.com', 3007778899, 'Dirección pendiente', '2021-05-30', 68.9, 1.73, '2023-10-22', 'N/A', 2, '1000000007'),
+(8, 1, 68573, 8, 2, 2, '147258369', 'Carmen', 'Elena', 'Ramírez', 'Ortega', 'c.ramirez@dental.com', 3008889900, 'Dirección pendiente', '2023-04-05', 55.4, 1.62, '2023-11-15', 'N/A', 3, '1000000008'),
+(9, 1, 68001, 9, 4, 1, '258369147', 'Jorge', 'Luis', 'Torres', 'Mendoza', 'j.torres@dental.com', 3009990011, 'Dirección pendiente', '2020-12-10', 72.6, 1.76, '2023-03-08', 'N/A', 4, '1000000009'),
+(10, 1, 68077, 10, 1, 2, '369147258', 'Patricia', 'Navarro', 'Castro', NULL, 'p.navarro@dental.com', 3000001122, 'Dirección pendiente', '2022-08-14', 61.2, 1.67, '2023-12-01', 'N/A', 5, '1000000010'),
+(11, 1, 68132, 1, 6, 1, '741852963', 'Fernando', 'José', 'Guerrero', 'Peña', 'f.guerrero@dental.com', 3001112233, 'Dirección pendiente', '2021-06-25', 77.8, 1.80, '2023-02-14', 'N/A', 1, '1000000011'),
+(12, 1, 68573, 11, 3, 2, '852963741', 'Gabriela', 'Marcela', 'Reyes', 'Santos', 'g.reyes@dental.com', 3002223344, 'Dirección pendiente', '2023-03-18', 59.1, 1.64, '2023-07-30', 'N/A', 2, '1000000012'),
+(13, 1, 68001, 12, 5, 1, '963741852', 'Ricardo', 'Vega', 'Fuentes', NULL, 'r.vega@dental.com', 3003334455, 'Dirección pendiente', '2020-10-08', 74.5, 1.79, '2023-05-25', 'N/A', 3, '1000000013'),
+(14, 1, 68077, 13, 2, 2, '159263748', 'Monica', 'Patricia', 'Medina', 'Arias', 'm.medina@dental.com', 3004445566, 'Dirección pendiente', '2022-01-12', 56.3, 1.61, '2023-09-10', 'N/A', 4, '1000000014'),
+(15, 1, 68132, 14, 4, 1, '263748159', 'Oscar', 'Alberto', 'Parra', 'Miranda', 'o.parra@dental.com', 3005556677, 'Dirección pendiente', '2021-07-07', 69.7, 1.74, '2023-11-28', 'N/A', 5, '1000000015'),
+(16, 1, 68573, 15, 1, 2, '374815926', 'Tatiana', 'Cardenas', 'Pacheco', NULL, 't.cardenas@dental.com', 3006667788, 'Dirección pendiente', '2023-05-20', 63.4, 1.69, '2023-04-17', 'N/A', 1, '1000000016'),
+(17, 1, 68001, 16, 7, 1, '481592637', 'Santiago', 'Manuel', 'Jiménez', 'Rios', 's.jimenez@dental.com', 3007778899, 'Dirección pendiente', '2020-04-03', 81.2, 1.83, '2023-08-12', 'N/A', 2, '1000000017'),
+(18, 1, 68077, 17, 3, 2, '592637481', 'Natalia', 'Carolina', 'Moreno', 'Cordoba', 'n.moreno@dental.com', 3008889900, 'Dirección pendiente', '2022-11-30', 60.8, 1.66, '2023-10-05', 'N/A', 3, '1000000018'),
+(19, 1, 68132, 18, 5, 1, '637481592', 'Humberto', 'Suarez', 'Londoño', NULL, 'h.suarez@dental.com', 3009990011, 'Dirección pendiente', '2021-02-14', 76.9, 1.81, '2023-06-15', 'N/A', 4, '1000000019'),
+(20, 1, 68573, 19, 2, 2, '748159263', 'Verónica', 'Alejandra', 'Gutierrez', 'Marin', 'v.gutierrez@dental.com', 3000001122, 'Dirección pendiente', '2023-06-08', 57.6, 1.63, '2023-12-20', 'N/A', 5, '1000000020');
 
 
 -- 12. tab_proveedores (3 proveedores)
 INSERT INTO tab_proveedores (id_prov, id_documento, id_ciudad, num_documento, nom_prov, tel_prov, mail_prov, dir_prov, ind_calidad) VALUES
-(6, 4, 76001, '844555666-7', 'Suministros Dentales del Valle', 3002890123, 'suministros@dentalvalle.com', 'Av. 6N #25-10, Cali', 'Precios competitivos'),
-(7, 4, 66001, '855666777-8', 'Esterilab S.A.S.', 3006901234, 'compras@esterilab.com', 'Cra 7 #18-33, Pereira', 'Especialistas en esterilización'),
-(8, 4, 63001, '866777888-9', 'Dental Quindío Ltda', 3007012345, 'info@dentalquindio.com', 'Cl. 19 #12-45, Armenia', 'Materiales nacionales');
+(6, 4, 76001, '8445556667', 'Suministros Dentales del Valle', 3002890123, 'suministros@dentalvalle.com', 'Av. 6N #25-10, Cali', 'Precios competitivos'),
+(7, 4, 66001, '8556667778', 'Esterilab S.A.S.', 3006901234, 'compras@esterilab.com', 'Cra 7 #18-33, Pereira', 'Especialistas en esterilización'),
+(8, 4, 63001, '8667778889', 'Dental Quindío Ltda', 3007012345, 'info@dentalquindio.com', 'Cl. 19 #12-45, Armenia', 'Materiales nacionales');
 
 -- 12. tab_unidades_medida
 INSERT INTO tab_unidades_medida (id_unidad_medida, nom_unidad) VALUES

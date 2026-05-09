@@ -14,6 +14,9 @@
    10. CASO EXITOSO:         SELECT fun_update_clientes(1, 1, 1, 1, 'Juan', 'David', 'Perez', 'Lopez', '100123', 3001234567, 'Calle 10 #20', 'Ingeniero', 50);
    -----------------------------------------------------------------------------
 */
+
+drop function if exists fun_update_clientes();
+
 CREATE OR REPLACE FUNCTION fun_update_clientes  (jid_cliente tab_clientes.id_cliente%TYPE,
                                                 jid_documento tab_clientes.id_documento%TYPE,
                                                 jid_ciudad tab_clientes.id_ciudad%TYPE,
