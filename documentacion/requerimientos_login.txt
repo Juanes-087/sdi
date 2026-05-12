@@ -1,0 +1,178 @@
+========================================================================
+             REQUERIMIENTOS - MÓDULO LOGIN / REGISTRO
+========================================================================
+Versión: 1.0
+Módulo: Inicio de Sesión, Registro y Recuperación de Contraseña
+------------------------------------------------------------------------
+
+PARTE 1: REQUERIMIENTOS FUNCIONALES DEL MÓDULO LOGIN (40 REQUERIMIENTOS)
+
+A. Formulario de Inicio de Sesión
+- RF-LG01: Formulario de Login - El sistema debe mostrar un formulario con los campos "Usuario" y "Contraseña" para el ingreso de credenciales.
+- RF-LG02: Panel de Inicio de Sesión - El sistema debe mostrar el panel de inicio de sesión como vista principal al acceder a la página.
+- RF-LG03: Título Descriptivo - El sistema debe mostrar el título descriptivo "Iniciar Sesión" de forma visible en la parte superior del formulario.
+- RF-LG04: Ocultación de Contraseña - El campo de contraseña debe ocultar los caracteres ingresados por defecto mediante máscara de puntos o asteriscos.
+- RF-LG05: Mostrar/Ocultar Contraseña - El sistema debe permitir alternar la visibilidad de la contraseña mediante un ícono de ojo interactivo (fa-eye / fa-eye-slash) dentro del campo.
+- RF-LG06: Botón Iniciar Sesión - El sistema debe mostrar un botón "INICIAR SESIÓN" que, al ser presionado, envíe los datos del formulario al servidor para su validación.
+- RF-LG07: Mensaje de Carga - Al presionar el botón de login, el sistema debe mostrar el mensaje "Iniciando..." mientras se procesa la solicitud, deshabilitando el botón para evitar envíos duplicados.
+- RF-LG08: Validación de Campos Vacíos - El sistema debe mostrar el mensaje "Completa este campo" si el usuario intenta enviar el formulario con algún campo vacío.
+- RF-LG09: Login Exitoso - Si las credenciales son correctas, el sistema debe redirigir al usuario a la página principal del sistema según su rol (administrador o cliente).
+- RF-LG10: Login Fallido - Si las credenciales son incorrectas, el sistema debe mostrar un cuadro de texto indicando "Usuario o contraseña incorrectos" y debe permitir reingresar los datos.
+- RF-LG11: Autocompletado del Navegador - El sistema debe soportar la funcionalidad de autocompletar del navegador para los campos del formulario.
+- RF-LG12: Limpieza de Formulario - El sistema debe limpiar los campos del formulario tras un login exitoso mediante form.reset().
+
+B. Selector de Idioma
+- RF-LG13: Idioma Seleccionable - El sistema debe soportar archivos de idioma (ES/EN) mediante archivos JSON independientes (es.json, en.json) ubicados en la carpeta lang/.
+
+C. Navegación Login / Registro
+- RF-LG14: Sección de Bienvenida - El sistema debe mostrar la sección "¡Bienvenido de nuevo!" junto con un botón "Registrarse" visible y funcional en el panel lateral.
+- RF-LG15: Cambio a Registro - Al hacer clic en "Registrarse", el sistema debe activar la vista de registro mediante la adición de la clase CSS "right-panel-active" al contenedor.
+- RF-LG16: Cambio Fluido de Vistas - El cambio entre la vista de Login y la vista de Registro debe realizarse de forma fluida mediante manipulación de clases CSS con animaciones de deslizamiento lateral.
+- RF-LG17: Retorno a Login - Al hacer clic en "Iniciar Sesión" desde el panel de registro, el sistema debe remover la clase "right-panel-active" para volver al formulario de login.
+
+D. Recuperación de Contraseña
+- RF-LG18: Enlace de Recuperación - El sistema debe mostrar un enlace "¿Olvidaste tu contraseña?" funcional dentro del formulario de login.
+- RF-LG19: Modal de Recuperación - Al dar clic en "¿Olvidaste tu contraseña?", el sistema debe abrir un modal con el título "Recuperar Contraseña" y el mensaje "Ingresa tu nombre de usuario para buscar tu cuenta."
+- RF-LG20: Campo de Búsqueda de Usuario - El modal de recuperación debe mostrar un campo para ingresar el "Nombre de usuario" y un botón "Buscar" funcional.
+- RF-LG21: Validación Campo Vacío en Recuperación - Si al dar clic en "Buscar" el campo de usuario está vacío, el sistema debe mostrar una alerta con el mensaje "Ingresa tu usuario".
+- RF-LG22: Usuario No Encontrado - Si al dar clic en "Buscar" el usuario ingresado no corresponde a un registro del sistema, el sistema debe mostrar una alerta con el mensaje "Usuario no encontrado".
+- RF-LG23: Verificación de Usuario - El sistema debe verificar si el nombre de usuario ingresado corresponde a un usuario registrado mediante consulta preparada a la base de datos.
+- RF-LG24: Modal Método de Recuperación - Si el usuario está registrado, el sistema debe abrir un nuevo modal (paso 2) con el título "Elige un método" y el mensaje "¿Cómo quieres recibir tu código de recuperación?"
+- RF-LG25: Opción de Envío por Email - El modal debe mostrar la opción "Enviar código a (correo_enmascarado)" con el email parcialmente oculto por privacidad.
+- RF-LG26: Botón Atrás - El modal de método de recuperación debe incluir un botón "Atrás" que regrese al paso 1 (búsqueda de usuario).
+- RF-LG27: Envío Real de Código por Email - Al dar clic en "Enviar a Email", el sistema debe enviar un código de 6 dígitos al correo registrado del usuario mediante SMTP autenticado de Gmail.
+- RF-LG28: Modal Código Enviado - Tras enviar el código, el sistema debe abrir un nuevo modal (paso 3) con el título "Código Enviado" y la descripción "Ingresa el código de 6 dígitos y tu nueva contraseña."
+- RF-LG29: Campos de Recuperación - El modal de código enviado debe mostrar tres campos: uno para el código de recuperación y dos para la nueva contraseña (contraseña y confirmación).
+- RF-LG30: Toggle de Contraseña en Recuperación - El campo de nueva contraseña en el modal de recuperación debe incluir un ícono de ojo (fa-eye) funcional para alternar la visibilidad, con soporte de teclado (Enter/Espacio).
+- RF-LG31: Validación de Contraseñas en Recuperación - Si la contraseña ingresada no coincide con la confirmación, el sistema debe mostrar una alerta indicando que las contraseñas no son iguales.
+- RF-LG32: Validación de Código - El sistema debe verificar que el código ingresado coincida con el almacenado en sesión y que no haya expirado (5 minutos).
+- RF-LG33: Cambio Exitoso - Al cambiar la contraseña satisfactoriamente, el sistema debe mostrar un modal (paso 4) con un ícono de checkmark verde, el título "¡Listo!" y el mensaje "Tu contraseña ha sido actualizada."
+- RF-LG34: Cierre de Modal de Recuperación - El modal de recuperación debe poder cerrarse mediante el botón "×" en la esquina superior derecha.
+
+E. Gestión de Sesión y Seguridad
+- RF-LG35: Tiempo de Sesión Configurable - El sistema debe leer el valor de ind_idle desde tab_parametros para definir el tiempo de expiración del token JWT.
+- RF-LG36: Limpieza de Historial - El sistema debe manipular el historial de navegación mediante pushState y el evento pageshow para evitar que el usuario pueda volver atrás tras cerrar sesión.
+- RF-LG37: Limpieza de Token Residual - Al cargar la página de login, el sistema debe eliminar cualquier token JWT residual almacenado en localStorage.
+
+F. Registro de Usuarios
+- RF-LG38: Formulario de Registro - El sistema debe mostrar un formulario de registro con campos: Usuario, Correo electrónico, Teléfono, Contraseña, Confirmar Contraseña, y checkbox de Términos y Condiciones.
+- RF-LG39: Validaciones en Tiempo Real - El sistema debe validar en tiempo real cada campo del formulario mostrando mensajes de ayuda (color rojo para error, verde para éxito): usuario (3-50 caracteres alfanuméricos), email (formato válido), teléfono (10 dígitos), contraseña (mín. 8 caracteres, 1 mayúscula, 1 minúscula, 1 número).
+- RF-LG40: Términos y Condiciones - El sistema debe requerir la aceptación de términos y condiciones (checkbox obligatorio) con enlace a la página de términos antes de permitir el registro.
+
+------------------------------------------------------------------------
+
+PARTE 2: REQUERIMIENTOS NO FUNCIONALES DEL MÓDULO LOGIN (40 REQUERIMIENTOS)
+
+A. Contenedor Principal y Fondo
+- RNF-LG01: Fondo de Página - El body debe usar un degradado lineal de 135deg entre azul institucional (#36498f) y verde esmeralda (#087d4e), centrado vertical y horizontalmente con display flex, ocupando 100vh de altura.
+- RNF-LG02: Contenedor Principal - El contenedor principal debe tener fondo blanco (#fff), border-radius de 10px, sombra doble de 0 14px 28px rgba(0,0,0,0.25) y 0 10px 10px rgba(0,0,0,0.22), ancho de 768px y altura mínima de 480px.
+- RNF-LG03: Animación de Entrada - El contenedor debe animarse al cargar con un efecto fadeInUp de 0.8s (desplazamiento de 30px hacia arriba con incremento de opacidad de 0 a 1).
+
+B. Formulario de Inicio de Sesión - Presentación Visual
+- RNF-LG04: Fondo del Formulario - Los formularios deben tener fondo blanco (#FFFFFF), display flex con dirección column, alineación centrada y padding horizontal de 50px.
+- RNF-LG05: Título h1 - Los títulos h1 deben usar font-weight bold con una transición de 0.3s en todas las propiedades, cambiando a color azul institucional (#36498f) con text-shadow de 2px 2px 10px rgba(54,73,143,0.2) al hacer hover.
+- RNF-LG06: Campos de Entrada - Los inputs deben tener fondo gris claro (#eee), borde de 2px solid transparent, padding de 12px 15px, margen de 8px 0, ancho completo (100%) y transición de 0.3s en todas las propiedades.
+- RNF-LG07: Focus de Campos - Al hacer foco en un campo, el borde debe cambiar a azul institucional (#36498f), el fondo a #f8f9ff, escalar a 1.02 (transform: scale(1.02)) y mostrar una sombra de 0 4px 15px rgba(54,73,143,0.1).
+- RNF-LG08: Ícono de Ojo - El ícono fa-eye debe estar posicionado absolutamente a la derecha del campo (right: 10px, top: 50%, transform: translateY(-50%)), con cursor pointer, color #888, transición de 0.3s y z-index de 10.
+- RNF-LG09: Animación del Ícono de Ojo - Al hacer clic en el ícono, este debe escalar temporalmente a 1.2 durante 200ms antes de volver a escala 1, alternando entre las clases fa-eye y fa-eye-slash.
+- RNF-LG10: Enlace "¿Olvidaste tu contraseña?" - El enlace debe mostrarse en color #333, tamaño de 14px, sin decoración, con margen de 15px 0 y transición de 0.3s; al hacer hover debe cambiar a color #36498f y desplazarse 3px a la derecha (translateX(3px)).
+
+C. Botones
+- RNF-LG11: Botón Principal - Los botones deben tener border-radius de 20px, borde de 1px solid #36498f, fondo con degradado lineal de 135deg (#36498f a #087d4e), texto blanco, font-size de 12px, font-weight bold, padding de 12px 45px, letter-spacing de 1px, text-transform uppercase y transición de 0.3s.
+- RNF-LG12: Efecto Shine del Botón - Los botones implementan un pseudo-elemento ::before con degradado transparente-blanco(0.3)-transparente que se desplaza de left: -100% a left: 100% en 0.5s al hacer hover, simulando un efecto de brillo metálico.
+- RNF-LG13: Hover del Botón - Al hacer hover, el degradado debe invertirse (#087d4e a #36498f), elevarse 2px (translateY(-2px)), mostrar sombra de 0 8px 25px rgba(54,73,143,0.4) y cambiar el borde a #087d4e.
+- RNF-LG14: Active del Botón - Al presionar el botón, debe retornar a posición original y comprimirse a scale(0.95) con sombra reducida a 0 4px 15px rgba(54,73,143,0.3).
+- RNF-LG15: Botón Ghost - Los botones "ghost" (Registrarse/Iniciar Sesión en overlay) deben tener fondo transparente, borde de 2px solid blanco y texto blanco; al hacer hover el fondo cambia al degradado institucional con sombra blanca difuminada de 0 8px 25px rgba(255,255,255,0.2).
+
+D. Panel Overlay (Navegación Login/Registro)
+- RNF-LG16: Overlay Container - El contenedor del overlay debe estar posicionado absolutamente en la mitad derecha (left: 50%, width: 50%), con overflow hidden, z-index de 100 y transición de transform de 0.6s ease-in-out.
+- RNF-LG17: Fondo del Overlay - El fondo debe ser un degradado lineal de izquierda a derecha entre azul institucional (#36498f) y verde esmeralda (#087d4e), con texto blanco (#FFFFFF) y ancho doble (200%) para permitir el efecto de deslizamiento.
+- RNF-LG18: Paneles del Overlay - Cada panel del overlay debe tener display flex con dirección column, alineación centrada, padding de 40px, text-align center y transición de transform de 0.6s ease-in-out.
+- RNF-LG19: Transición de Vistas - Al activarse la clase "right-panel-active", el sign-in-container se desplaza 100% a la derecha (translateX(100%)), el overlay-container se desplaza -100% (translateX(-100%)) y el overlay interno se desplaza 50% (translateX(50%)), con animación "show" de 0.6s para el sign-up-container.
+
+E. Modal de Recuperación de Contraseña
+- RNF-LG20: Overlay del Modal - El overlay debe usar position fixed cubriendo toda la pantalla, fondo rgba(0,0,0,0.6), display none por defecto, z-index de 2000, opacidad 0 con transición de opacidad de 0.3s; al activarse la clase "active" cambia a display flex y opacidad 1.
+- RNF-LG21: Contenedor del Modal - El modal debe tener fondo blanco (#fff), padding de 40px, border-radius de 15px, ancho de 90% con max-width de 450px, sombra de 0 5px 20px rgba(0,0,0,0.3), text-align center y animación de entrada con translateY de -20px a 0.
+- RNF-LG22: Botón Cerrar Modal - El botón "×" debe estar posicionado absolutamente (top: 15px, right: 20px), font-size de 24px, cursor pointer, color #888 que cambia a #333 al hacer hover con transición de 0.3s.
+- RNF-LG23: Pasos del Modal - Cada paso (recovery-step) debe estar oculto (display: none) por defecto y mostrarse (display: block) al tener la clase "active", con una animación fadeIn de 0.4s.
+- RNF-LG24: Título del Modal - Los títulos h2 del modal deben tener color #333, text-align center y margin-bottom de 10px.
+- RNF-LG25: Descripción del Modal - Los párrafos del modal deben usar font-size de 14px, font-weight de 100, line-height de 20px, color #666 y margin-bottom de 20px.
+- RNF-LG26: Botones de Método de Envío - Las opciones de envío deben ser elementos con clase "btn-recovery-option": fondo #f8f9fa, borde de 2px solid #ddd, padding de 15px, border-radius de 10px, display flex con gap de 10px, font-weight bold, color #555, ancho completo; al hacer hover el borde cambia a #36498f, fondo a #f0f4ff, texto a #36498f y se desplaza 5px a la derecha.
+- RNF-LG27: Ícono de Método de Envío - Los íconos dentro de las opciones de envío deben tener font-size de 1.2rem y color azul institucional (#36498f).
+- RNF-LG28: Campo de Código - El campo de código de 6 dígitos debe tener text-align center, letter-spacing de 5px, font-size de 18px y maxlength de 6 caracteres.
+- RNF-LG29: Ícono de Éxito - El ícono de checkmark (fa-circle-check) en el paso 4 debe tener font-size de 50px, color verde esmeralda (#087d4e) y margin-bottom de 20px.
+
+F. Seguridad y Rendimiento
+- RNF-LG30: Cabeceras de Seguridad OWASP - El backend (validar.php) debe enviar las cabeceras X-Content-Type-Options: nosniff, X-Frame-Options: DENY, X-XSS-Protection: 1; mode=block, Referrer-Policy: strict-origin-when-cross-origin y Content-Security-Policy: default-src 'self'.
+- RNF-LG31: Consultas Preparadas - Todas las consultas a la base de datos deben utilizar sentencias preparadas con parámetros nombrados (PDO prepare/execute) para prevenir inyección SQL.
+- RNF-LG32: Contraseñas Hasheadas - Las contraseñas deben almacenarse utilizando password_hash() con PASSWORD_DEFAULT; el sistema soporta migración automática de contraseñas legadas (texto plano) a hash moderno mediante password_verify().
+- RNF-LG33: Errores Genéricos - Los mensajes de error mostrados al usuario deben ser genéricos ("Usuario o contraseña incorrectos") sin revelar si fue el usuario o la contraseña lo que falló, conforme a OWASP A2.
+- RNF-LG34: Logs de Auditoría - El sistema debe registrar en error_log cada intento de login fallido incluyendo el nombre de usuario y la dirección IP de origen ($_SERVER['REMOTE_ADDR']).
+- RNF-LG35: Ocultación de Errores PHP - La directiva display_errors debe estar en '0' y error_reporting en E_ALL, registrando errores en el log del servidor sin mostrarlos al usuario.
+- RNF-LG36: Verificación de Método HTTP - El backend solo debe aceptar peticiones POST, respondiendo con código 405 (Método no permitido) para cualquier otro método HTTP.
+
+G. Compatibilidad, Accesibilidad y Arquitectura
+- RNF-LG37: Accesibilidad por Teclado - Todos los elementos interactivos (botones, íconos de ojo, enlaces) deben incluir atributo tabindex="0" y el ícono de ojo en recuperación debe responder a eventos keydown (Enter y Espacio); el CSS debe implementar :focus-visible con outline de 3px solid #36498f, outline-offset de 3px y box-shadow de 0 0 0 5px rgba(54,73,143,0.2).
+- RNF-LG38: Ocultación de Controles del Navegador - Los controles nativos del navegador para revelar contraseña (input::-ms-reveal, input::-ms-clear) y autocompletar (input::-webkit-contacts-auto-fill-button) deben ocultarse mediante CSS para evitar conflicto con el ícono personalizado.
+- RNF-LG39: Carga de Scripts - El script principal de lógica (inicio_sesion.js) debe cargarse al final del body (después del cierre del contenido) con QueryString de versión (?v=100) para romper caché; el script de seguridad (security.js) se carga en el head.
+- RNF-LG40: Separación de Responsabilidades - La lógica de autenticación (inicio_sesion.js), los estilos visuales (estilos_inicio_sesion.css) y la seguridad (security.js) deben mantenerse en archivos externos independientes, referenciados desde el HTML con QueryString dinámico para control de versiones.
+
+------------------------------------------------------------------------
+
+M. Responsividad Móvil
+- RNF-LG41: Breakpoint Móvil - Para pantallas menores a 768px de ancho, el body debe permitir scroll vertical (overflow-y: auto) con altura mínima de 100vh y padding de 20px 0.
+- RNF-LG42: Contenedor Móvil - El contenedor principal reduce su ancho a 85% con max-width de 350px y se centra horizontalmente (margin: 0 auto), manteniendo min-height de 480px.
+- RNF-LG43: Formularios Móvil - Los formularios reducen su padding a 15px horizontal, los h1 a 1.4rem, los párrafos a 12px con line-height de 1.2, los inputs a padding de 8px 10px con margen de 4px 0, y los botones a padding de 8px 25px.
+- RNF-LG44: Overlay Móvil Vertical - El overlay-container se reposiciona al fondo (top: 75%, width: 100%, height: 25%) y las animaciones cambian de deslizamiento horizontal a vertical (translateY en lugar de translateX), con el panel de registro desplazándose 33.33% hacia abajo al activarse.
+
+========================================================================
+  RESUMEN GENERAL DEL MÓDULO LOGIN
+========================================================================
+Total de Requerimientos Funcionales:    40
+Total de Requerimientos No Funcionales: 44
+Total General:                          84
+========================================================================
+
+TRAZABILIDAD FUNCIONAL → NO FUNCIONAL:
+------------------------------------------------------------------------
+RF-LG01 (Formulario)          → RNF-LG04 (Fondo Formulario), RNF-LG06 (Campos de Entrada)
+RF-LG02 (Panel Login)         → RNF-LG01 (Fondo Página), RNF-LG02 (Contenedor Principal)
+RF-LG03 (Título Descriptivo)  → RNF-LG05 (Título h1)
+RF-LG04 (Ocultación Contra.)  → RNF-LG06 (Campos de Entrada), RNF-LG38 (Ocultación Controles)
+RF-LG05 (Mostrar/Ocultar)     → RNF-LG08 (Ícono de Ojo), RNF-LG09 (Animación del Ícono)
+RF-LG06 (Botón Login)         → RNF-LG11 (Botón Principal), RNF-LG12 (Efecto Shine)
+RF-LG07 (Mensaje de Carga)    → RNF-LG13 (Hover del Botón), RNF-LG14 (Active del Botón)
+RF-LG08 (Campos Vacíos)       → RNF-LG07 (Focus de Campos)
+RF-LG09 (Login Exitoso)       → RNF-LG31 (Consultas Preparadas), RNF-LG32 (Hash Contraseñas)
+RF-LG10 (Login Fallido)       → RNF-LG33 (Errores Genéricos), RNF-LG34 (Logs Auditoría)
+RF-LG11 (Autocompletado)      → RNF-LG38 (Ocultación Controles Navegador)
+RF-LG12 (Limpieza Formulario) → RNF-LG39 (Carga de Scripts)
+RF-LG13 (Idioma Seleccionable)→ RNF-LG40 (Separación de Responsabilidades)
+RF-LG14 (Sección Bienvenida)  → RNF-LG17 (Fondo del Overlay), RNF-LG18 (Paneles del Overlay)
+RF-LG15 (Cambio a Registro)   → RNF-LG19 (Transición de Vistas)
+RF-LG16 (Cambio Fluido)       → RNF-LG16 (Overlay Container), RNF-LG19 (Transición de Vistas)
+RF-LG17 (Retorno a Login)     → RNF-LG15 (Botón Ghost), RNF-LG19 (Transición de Vistas)
+RF-LG18 (Enlace Recuperación) → RNF-LG10 (Enlace "¿Olvidaste?")
+RF-LG19 (Modal Recuperación)  → RNF-LG20 (Overlay del Modal), RNF-LG21 (Contenedor Modal)
+RF-LG20 (Campo Búsqueda)      → RNF-LG06 (Campos de Entrada), RNF-LG07 (Focus de Campos)
+RF-LG21 (Validación Vacío)    → RNF-LG33 (Errores Genéricos)
+RF-LG22 (User No Encontrado)  → RNF-LG33 (Errores Genéricos)
+RF-LG23 (Verificación User)   → RNF-LG31 (Consultas Preparadas)
+RF-LG24 (Modal Método)        → RNF-LG23 (Pasos del Modal), RNF-LG24 (Título Modal)
+RF-LG25 (Opción Email)        → RNF-LG26 (Botones Método Envío), RNF-LG27 (Ícono Método)
+RF-LG26 (Botón Atrás)         → RNF-LG15 (Botón Ghost)
+RF-LG27 (Envío Real Email)    → RNF-LG30 (Cabeceras OWASP), RNF-LG36 (Verificación HTTP)
+RF-LG28 (Modal Código)        → RNF-LG23 (Pasos del Modal), RNF-LG25 (Descripción Modal)
+RF-LG29 (Campos Recuperación) → RNF-LG28 (Campo de Código)
+RF-LG30 (Toggle Recuperación) → RNF-LG08 (Ícono de Ojo), RNF-LG37 (Accesibilidad Teclado)
+RF-LG31 (Valid. Contraseñas)  → RNF-LG33 (Errores Genéricos)
+RF-LG32 (Validación Código)   → RNF-LG31 (Consultas Preparadas), RNF-LG35 (Ocultación Errores)
+RF-LG33 (Cambio Exitoso)      → RNF-LG29 (Ícono de Éxito)
+RF-LG34 (Cierre Modal)        → RNF-LG22 (Botón Cerrar Modal)
+RF-LG35 (Sesión Configurable) → RNF-LG32 (Contraseñas Hasheadas)
+RF-LG36 (Limpieza Historial)  → RNF-LG39 (Carga de Scripts)
+RF-LG37 (Limpieza Token)      → RNF-LG35 (Ocultación Errores PHP)
+RF-LG38 (Form. Registro)      → RNF-LG04 (Fondo Formulario), RNF-LG06 (Campos de Entrada)
+RF-LG39 (Validaciones Tiempo) → RNF-LG37 (Accesibilidad Teclado)
+RF-LG40 (Términos y Condic.)  → RNF-LG40 (Separación de Responsabilidades)
+========================================================================
