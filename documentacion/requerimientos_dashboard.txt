@@ -1,0 +1,87 @@
+========================================================================
+     REQUERIMIENTOS NO FUNCIONALES - MÓDULO DASHBOARD / PANEL ADMIN
+========================================================================
+Versión: 1.0
+Módulo: Panel de Administración, Gestión de Usuarios, Empleados,
+        Clientes, Proveedores, Métricas y Configuración
+------------------------------------------------------------------------
+
+A. Layout General y Grid del Sistema
+- RNF-DA01: Grid Principal - El body debe usar display grid con grid-template-columns de 350px 1fr 300px, height 100vh, font-family 'Segoe UI' (Tahoma, Geneva, Verdana, sans-serif), fondo var(--bg-primary) y transición de background y color de 0.3s ease.
+- RNF-DA02: Expansión de Contenido - Al activarse la clase "expand-content" en el body, la tercera columna debe colapsar a 0px (grid-template-columns: 350px 1fr 0px) y el panel derecho (.a3) debe ocultarse con display none.
+
+B. Variables CSS y Modo Oscuro
+- RNF-DA03: Variables de Tema Claro - El :root debe definir: --bg-primary: #f5f7fa, --bg-secondary: #ffffff, --text-main: #1f2937, --text-muted: #6b7280, --header-blue: #36498f, --welcome-blue: #36498f, --card-shadow: rgba(0,0,0,0.06), --border-color: transparent, --sidebar-left-grad y --modal-header-grad como linear-gradient(135deg, #36498f 0%, #087d4e 100%), --btn-primary-bg como linear-gradient(135deg, #36498f 0%, #087d4e 100%).
+- RNF-DA04: Variables de Tema Oscuro - La clase body.dark-mode debe redefinir: --bg-primary: #121212, --bg-secondary: #1e1e1e, --text-main: #f3f4f6, --text-muted: rgba(255,255,255,0.7), --sidebar-left-grad como linear-gradient(135deg, #000000 a #4a4a4a), --sidebar-right-grad: #000000, --header-blue: #333333, --welcome-blue: #ffffff, --card-shadow: rgba(0,0,0,0.4), --border-color: rgba(255,255,255,0.1), --btn-primary-bg como linear-gradient(135deg, #059669 a #10b981).
+
+C. Sidebar Izquierdo (Menú de Navegación)
+- RNF-DA05: Fondo del Sidebar - El sidebar izquierdo (.a1) debe usar background var(--sidebar-left-grad), display flex con justify-content center, sombra de 2px 0 20px rgba(0,0,0,0.3) y overflow hidden.
+- RNF-DA06: Botones de Menú - Cada botón (.menu) debe tener height 75px, width 200px, background rgba(255,255,255,0.1), border-radius 15px, margin-bottom 15px, display flex column centrado, transición de all 0.4s, sombra de 0 5px 15px rgba(0,0,0,0.1) y borde de 2px solid transparent.
+- RNF-DA07: Hover de Menú - Al hacer hover sobre un botón de menú, el fondo debe cambiar a rgba(255,255,255,0.2), escalarse a 1.05 (transform: scale(1.05)) y el borde debe cambiar a blanco; el texto e íconos deben mantener color blanco con !important.
+- RNF-DA08: Logo del Sistema - El logo debe tener fondo rgba(255,255,255,0.1), height 120px, width 200px, border-radius 20px, sombra de 0 10px 30px rgba(0,0,0,0.2) y transición de all 0.3s.
+
+D. Sección Central (Dashboard)
+- RNF-DA09: Contenedor Central - La sección central (.a2) debe tener background-color var(--bg-secondary), margen de 20px, border-radius 20px, sombra de 0 10px 30px var(--card-shadow), display flex column, overflow hidden y color var(--text-main).
+- RNF-DA10: Header del Dashboard - El header (.header-inventario) debe tener background-color var(--header-blue), padding 30px, text-align center y color blanco.
+- RNF-DA11: Introducción del Dashboard - La sección .dashboard-intro debe tener padding 25px 30px, background var(--bg-primary), borde inferior de 1px solid rgba(0,0,0,0.05) y opacity 0.9; el título h2 debe ser 1.5rem en color var(--welcome-blue).
+
+E. Tarjetas de Métricas (Stat Cards)
+- RNF-DA12: Tarjeta Base - Cada stat-card debe tener background var(--bg-secondary), border-radius 16px, padding 24px, display flex con gap 20px, sombra de 0 4px 12px var(--card-shadow), borde de 1px solid var(--border-color), transición de all 0.3s, cursor pointer !important, z-index 10 y user-select none.
+- RNF-DA13: Hover de Tarjeta - Al hacer hover, la tarjeta debe elevarse 4px (translateY(-4px)), la sombra debe aumentar a 0 8px 25px rgba(0,0,0,0.12) y el z-index a 100.
+- RNF-DA14: Borde Lateral por Tipo - Cada variante de tarjeta debe tener un border-left de 4px con el color correspondiente: primary=#36498f, success=#087d4e, warning=#f59e0b, info=#0ea5e9, secondary=#8b5cf6.
+- RNF-DA15: Ícono de Tarjeta - El contenedor del ícono (.stat-icon) debe tener 56x56px, border-radius 14px, display flex centrado y font-size 24px; el fondo debe ser una versión al 15% de opacidad del color del borde correspondiente.
+- RNF-DA16: Grid de Tarjetas - El grid de analíticas (.analytics-grid) debe usar CSS Grid con repeat(auto-fit, minmax(200px, 1fr)), gap de 20px y margin-bottom 25px.
+- RNF-DA17: Valor de Tarjeta - El valor numérico (.stat-value) debe tener font-size 1.75rem, font-weight 700 y color var(--text-main); la etiqueta (.stat-label) debe tener font-size 0.85rem, font-weight 500 y color var(--text-muted).
+
+F. Sidebar Derecho (Panel de Configuración)
+- RNF-DA18: Contenedor Perfil - El panel derecho (.a3) debe tener margen 20px 20px 20px 0, border-radius 20px, sombra de 0 10px 30px rgba(0,0,0,0.3), display flex column, overflow auto, background var(--sidebar-right-grad) y color blanco.
+- RNF-DA19: Avatar de Perfil - La imagen de perfil (.imagenPerfil) debe tener 80x80px, border-radius 50%, background rgba(255,255,255,0.2), borde de 3px solid blanco, font-size 32px, color blanco y sombra de 0 5px 15px rgba(0,0,0,0.2).
+- RNF-DA20: Opción de Menú Perfil - Cada opción (.opcion-perfil) debe tener display flex, padding 15px, background rgba(255,255,255,0.1), border-radius 12px, cursor pointer, transición de all 0.3s, borde de 2px solid transparent y gap 20px; al hacer hover el fondo debe cambiar a blanco y el texto a #36498f.
+
+G. Modales del Dashboard
+- RNF-DA21: Overlay del Modal - Los modales (.modal) deben usar position fixed, z-index 1000, cubriendo toda la pantalla con background-color rgba(0,0,0,0.6) y backdrop-filter blur(5px).
+- RNF-DA22: Contenedor del Modal - El .modal-content debe tener background var(--bg-secondary), margin 2% auto, border-radius 20px, width 90%, max-width 500px, sombra de 0 20px 50px var(--card-shadow), display flex column, max-height 95vh y animación modalSlideIn de 0.3s ease (translateY de -50px a 0 con opacidad).
+- RNF-DA23: Modal Grande - La clase .modal-large debe aplicar max-width 95% y width 95% para tablas de gestión.
+- RNF-DA24: Header del Modal - El header (.modal-header) debe usar background var(--modal-header-grad), color blanco, padding 25px, text-align center, borde inferior de 1px solid var(--border-color), sombra de 0 5px 15px rgba(0,0,0,0.1) y z-index 10.
+- RNF-DA25: Body del Modal - El .modal-body debe tener padding 20px, overflow-y auto y flex 1 para ocupar el espacio restante.
+
+H. Formularios de Gestión
+- RNF-DA26: Campo de Formulario - Los inputs y selects dentro de .form-group deben tener width 100%, padding 12px 15px, background var(--bg-primary), color var(--text-main), borde de 2px solid var(--text-muted), border-radius 10px, font-size 16px y transición de all 0.3s.
+- RNF-DA27: Focus de Campo - Al hacer foco, el borde debe cambiar a #36498f con box-shadow de 0 0 0 3px rgba(54,73,143,0.1) y sin outline.
+- RNF-DA28: Botón Principal - Los botones .btn-primary deben usar background var(--btn-primary-bg), color blanco; al hacer hover deben elevarse 2px y aplicar filter brightness(1.2).
+- RNF-DA29: Botón Secundario - Los botones .btn-secondary deben tener background #6c757d y color blanco; al hacer hover el fondo cambia a #5a6268 y se elevan 2px.
+- RNF-DA30: Botones de Modal - Los .btn-modal deben tener padding 12px 25px, border none, border-radius 10px, cursor pointer, font-size 16px, font-weight 600 y transición de all 0.3s.
+- RNF-DA31: Layout de Formulario Usuarios - El formulario de usuarios debe usar layout de columna simple (flex-direction column, max-width 400px, margin 0 auto); los demás módulos deben usar grid de 2 columnas (grid-template-columns: 1fr 1fr, gap 25px).
+
+I. Tablas de Gestión
+- RNF-DA32: Tabla de Datos - Las tablas .gestion-table deben tener width 100%, border-collapse collapse, margin-top 15px; las celdas th y td deben tener borde de 1px solid var(--text-muted), padding 12px y text-align left (th centrado).
+- RNF-DA33: Filas Alternas - Las filas pares (tr:nth-child(even)) deben tener background-color var(--bg-primary) con opacity 0.8; al hacer hover, las filas deben aplicar filter brightness(1.1).
+- RNF-DA34: Botones de Acción en Tabla - Los botones .btn-icon deben tener background none, border none, cursor pointer, font-size 1.2em, color var(--text-muted) y transición de color 0.2s; al hacer hover el color debe cambiar a #087d4e.
+
+J. Validaciones de Formularios
+- RNF-DA35: Validación de Usuarios - El esquema de usuarios debe validar: nom_user (3-30 caracteres), mail_user (email válido, máx 255), tel_user (7-10 dígitos numéricos), pass_user (mín 6 caracteres, 1 mayúscula, 1 número con pattern regex).
+- RNF-DA36: Validación de Empleados - El esquema de empleados debe validar: num_documento (5-20 alfanuméricos), prim_nom/prim_apell (solo letras, 3-30), tel_empleado (7-10 dígitos), mail_empleado (formato email), ind_peso (40-200 kg con separador coma), ind_altura (1.30-2.50 m con separador coma), ind_fecha_contratacion (mín año 2000, máx fecha actual GMT-5), ult_fec_exam (no futuro), num_cuenta (10-20 dígitos).
+- RNF-DA37: Validación de Clientes - El esquema de clientes debe validar: num_documento (5-20 alfanuméricos), prim_nom/prim_apell (solo letras, máx 30), tel_cliente (7-10 dígitos), ciudad (existente en lista auxiliar), dirección y profesión obligatorios.
+- RNF-DA38: Validación de Proveedores - El esquema de proveedores debe validar: num_documento (5-20 alfanuméricos), nom_prov (alfanumérico con tildes, máx 50), tel_prov (7-10 dígitos), mail_prov (formato email), ciudad (existente en lista auxiliar), dir_prov obligatoria.
+- RNF-DA39: Zona Horaria - Las fechas máximas permitidas en los formularios (contratación, exámenes) deben calcularse usando Intl.DateTimeFormat con timeZone 'America/Bogota' para evitar manipulación por cambio de reloj local.
+
+K. Seguridad y Rendimiento
+- RNF-DA40: Carga Paralela - Al abrir un modal de gestión, el sistema debe ejecutar en paralelo (Promise.all) la carga de datos del módulo y la carga de datos auxiliares (cargaAuxiliares) para optimizar el tiempo de respuesta.
+- RNF-DA41: Anti-Caché - Las peticiones a api_gestion.php para datos auxiliares deben incluir un parámetro QueryString dinámico (_t=timestamp) para prevenir respuestas cacheadas.
+- RNF-DA42: Normalización de Campos Opcionales - Los campos opcionales vacíos (observaciones, observ, motivo, ind_calidad, lote, tipo_mat_prima, reg_invima, segun_nom, segun_apell) deben normalizarse a 'N/A' antes del envío al servidor.
+- RNF-DA43: Validación de Imagen - Los archivos de imagen deben validarse en el cliente: solo tipos MIME image/jpeg, image/png y image/jpg, con tamaño máximo de 5MB; de lo contrario debe mostrarse un modal de error sin enviar la petición.
+- RNF-DA44: Desformateo Numérico - Los campos numéricos formateados con puntos de miles (data-is-number="true") deben limpiarse (eliminar puntos) antes del envío al servidor.
+
+L. Tarjetas de Soporte y Ayuda
+- RNF-DA45: Tarjeta de Desarrollador - Las tarjetas de soporte (.dev-card) deben tener background var(--bg-secondary), border-radius 15px, padding 20px, display flex con gap 20px, sombra de 0 5px 15px var(--card-shadow), borde de 1px solid var(--text-muted) y transición de transform y box-shadow de 0.3s; al hacer hover deben elevarse 5px, la sombra debe cambiar a 0 10px 25px rgba(54,73,143,0.15) y el borde a #36498f.
+- RNF-DA46: Avatar de Desarrollador - El avatar (.dev-avatar) debe tener 60x60px, background con degradado institucional (135deg, #36498f a #087d4e), border-radius 50%, display flex centrado, color blanco y font-size 24px.
+
+M. Animaciones y Efectos
+- RNF-DA47: Animación Shine - La animación @keyframes shine debe mover el pseudo-elemento de left: -100% a left: 100% para simular un efecto de brillo metálico.
+- RNF-DA48: Parallax del Header - El header de inventario debe aplicar un efecto parallax al hacer scroll mediante translateY(scrollOffset * 0.5) en el evento scroll del window.
+
+========================================================================
+  RESUMEN GENERAL
+========================================================================
+Total de Requerimientos No Funcionales Dashboard: 48
+========================================================================
