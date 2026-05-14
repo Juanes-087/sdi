@@ -1,0 +1,184 @@
+========================================================================
+     REQUERIMIENTOS NO FUNCIONALES GENERALES - SISTEMA SPECIALIZED
+========================================================================
+Versión: 1.0
+Alcance: Requisitos transversales aplicables a todos los módulos
+------------------------------------------------------------------------
+Formato: [#] Descripción técnica (Cumple: SÍ / NO)
+------------------------------------------------------------------------
+
+A. Seguridad
+
+1.  Encriptación de Contraseñas (Hashing) - Las contraseñas de los usuarios deben almacenarse
+    mediante la función password_hash() con algoritmo PASSWORD_DEFAULT (bcrypt), el sistema
+    debe soportar migración automática de contraseñas legadas (texto plano) a hash moderno
+    mediante password_verify(). (Cumple: SÍ)
+
+2.  Prevención de Inyección SQL - Todas las consultas a la base de datos PostgreSQL deben
+    ejecutarse mediante sentencias preparadas (PDO prepare/execute) con parámetros nombrados
+    (:param), eliminando la concatenación directa de valores del usuario en las consultas SQL.
+    (Cumple: SÍ)
+
+3.  Autenticación mediante Token JWT - El sistema debe generar un JSON Web Token (JWT) tras
+    el login exitoso, almacenarlo en localStorage y validarlo en cada petición al backend; el
+    token debe incluir payload con id_user, nom_user, id_menu (rol) y tiempo de expiración
+    (exp) configurable desde tab_parametros. (Cumple: SÍ)
+
+4.  Cabeceras de Seguridad OWASP - Todas las respuestas HTTP del backend deben incluir las
+    cabeceras: X-Content-Type-Options: nosniff, X-Frame-Options: DENY (anti-clickjacking),
+    X-XSS-Protection: 1; mode=block, Referrer-Policy: strict-origin-when-cross-origin y
+    Content-Security-Policy: default-src 'self'. (Cumple: SÍ)
+
+5.  Mensajes de Error Genéricos - Los mensajes de error de autenticación deben ser genéricos
+    ("Usuario o contraseña incorrectos") sin revelar si fue el usuario o la contraseña lo que
+    falló, conforme al estándar OWASP A2 (Broken Authentication). (Cumple: SÍ)
+
+6.  Ocultación de Errores del Servidor - La directiva PHP display_errors debe estar en '0' y
+    error_reporting en E_ALL, registrando errores exclusivamente en el log del servidor sin
+    mostrar trazas, rutas de archivos ni variables internas al usuario final. (Cumple: SÍ)
+
+7.  Protección Anti-Depuración en Cliente - El frontend debe implementar protecciones contra
+    la inspección no autorizada: bloqueo de tecla F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U,
+    clic derecho y arrastre de elementos, mediante event listeners en keydown y contextmenu.
+    (Cumple: SÍ)
+
+8.  Tipado Estricto en Backend - Todos los archivos PHP del backend deben declarar
+    declare(strict_types=1) para forzar el tipado estricto y prevenir errores de
+    conversión implícita de tipos. (Cumple: SÍ)
+
+9.  Verificación de Método HTTP - Los endpoints del backend solo deben aceptar el método HTTP
+    correspondiente (POST para escritura, GET para lectura), respondiendo con código 405
+    (Method Not Allowed) para métodos no autorizados. (Cumple: SÍ)
+
+10. Bloqueo por Intentos Fallidos - Si un usuario falla 3 veces consecutivas al ingresar su
+    contraseña, su cuenta debe bloquearse temporalmente para prevenir ataques de fuerza bruta.
+    (Cumple: NO)
+
+11. Control de Acceso por Rol - El sistema debe restringir la visibilidad de módulos y
+    funciones según el rol del usuario autenticado (id_menu = 1 para administrador,
+    id_menu = 2 para cliente), impidiendo el acceso a rutas no autorizadas. (Cumple: SÍ)
+
+12. Restricción de Informes Médicos - Solo los usuarios con rol de jefe o administrador
+    deben poder visualizar los informes médicos de los empleados del sistema.
+    (Cumple: NO)
+
+------------------------------------------------------------------------
+
+B. Desempeño
+
+13. Tiempo de Respuesta en Operaciones Comunes - El tiempo de respuesta del sistema debe ser
+    inferior a 3 segundos en operaciones de consulta, búsqueda y filtrado, garantizado
+    mediante carga asíncrona (fetch API), ejecución paralela (Promise.all) y funciones
+    PostgreSQL optimizadas en el backend. (Cumple: SÍ)
+
+14. Generación de Reportes - La generación de reportes de ventas mensual y facturación debe
+    completarse en menos de 10 segundos, ejecutando consultas SQL consolidadas con funciones
+    de agregación y agrupamiento en PostgreSQL. (Cumple: SÍ)
+
+15. Carga No Bloqueante - La carga de datos del dashboard (tarjetas de métricas, estadísticas)
+    debe realizarse de forma asíncrona sin bloquear la interfaz del usuario, utilizando
+    peticiones fetch paralelas con indicadores de carga (spinner) visibles durante la espera.
+    (Cumple: SÍ)
+
+16. Control de Caché en Peticiones - Las peticiones AJAX a endpoints que devuelven datos
+    dinámicos deben incluir un parámetro anti-caché (_t=timestamp) para garantizar que el
+    navegador no devuelva respuestas obsoletas. (Cumple: SÍ)
+
+------------------------------------------------------------------------
+
+C. Usabilidad
+
+17. Navegación Intuitiva sin Curva de Aprendizaje - La interfaz debe permitir al usuario
+    completar cualquier flujo operativo (crear, editar, eliminar registros) sin necesidad de
+    capacitación previa, mediante el uso de iconografía estandarizada (FontAwesome), tooltips
+    descriptivos en botones de acción y modales paso a paso con instrucciones visibles.
+    (Cumple: SÍ)
+
+18. Facilidad de Uso y Retroalimentación Visual - Todas las acciones del usuario deben generar
+    retroalimentación visual inmediata: modales de confirmación (SweetAlert2) antes de acciones
+    críticas, mensajes de éxito/error claros en español, validaciones en tiempo real con
+    indicadores de color (rojo=error, verde=válido) y estados de carga ("Guardando...") en
+    botones durante operaciones asíncronas. (Cumple: SÍ)
+
+19. Accesibilidad por Teclado - Los elementos interactivos deben incluir atributo tabindex="0"
+    y responder a eventos de teclado (Enter y Espacio); los estilos CSS deben implementar
+    :focus-visible con outline de 3px solid #36498f para navegación sin mouse. (Cumple: SÍ)
+
+------------------------------------------------------------------------
+
+D. Compatibilidad
+
+20. Compatibilidad Multi-Navegador - El sistema debe funcionar correctamente en los
+    navegadores Google Chrome (v90+), Mozilla Firefox (v88+), Microsoft Edge (v90+) y
+    Safari (v14+), utilizando exclusivamente APIs web estándar (Fetch API, CSS Grid,
+    Flexbox, ES6+) sin dependencias de motor propietario. (Cumple: SÍ)
+
+21. Diseño Responsivo Multi-Dispositivo - La interfaz debe adaptarse a dispositivos móviles
+    (≤768px), tabletas (769-1024px) y escritorio (≥1025px) mediante media queries CSS,
+    reorganizando el layout de grid de 3 columnas a columna única en dispositivos menores.
+    (Cumple: SÍ)
+
+------------------------------------------------------------------------
+
+E. Respaldo y Recuperación
+
+22. Copias de Seguridad Automáticas - El sistema debe realizar copias de seguridad automáticas
+    de la base de datos PostgreSQL de forma diaria, permitiendo restauración rápida en caso
+    de fallas del servidor o corrupción de datos. (Cumple: NO)
+
+23. Restauración desde Respaldo - En caso de pérdida de datos, el sistema debe permitir la
+    recuperación completa desde la última copia de seguridad disponible mediante herramientas
+    nativas de PostgreSQL (pg_restore). (Cumple: NO)
+
+------------------------------------------------------------------------
+
+F. Mantenimiento
+
+24. Mensajes de Error Amigables para el Usuario - El sistema debe mostrar mensajes de error
+    descriptivos y accionables en español (ej: "No se pudo guardar. Verifique los campos
+    marcados en rojo." o "Error de conexión con el servidor."), sin exponer excepciones
+    internas, trazas de PHP ni nombres de tablas/columnas al usuario final. (Cumple: SÍ)
+
+25. Separación de Responsabilidades (MVC) - La arquitectura del sistema debe mantener la
+    separación entre la lógica de presentación (HTML/CSS), la lógica de negocio (JavaScript
+    controllers) y la capa de datos (PHP/PostgreSQL), organizados en archivos independientes
+    con estructura de carpetas clara (styles/, JavaScript/controllers/, php/). (Cumple: SÍ)
+
+26. Estilos CSS Externos e Independientes - Todos los estilos visuales deben estar en archivos
+    CSS externos independientes por módulo (estilos_inicio_sesion.css, estilos_menuPrincipal.css,
+    validation.css), referenciados con QueryString de versión (?v=XXX) para control de caché
+    en actualizaciones. (Cumple: SÍ)
+
+------------------------------------------------------------------------
+
+G. Cumplimiento Normativo
+
+27. Protección de Datos Personales - El sistema debe cumplir con la Ley 1581 de 2012
+    (Protección de Datos Personales de Colombia) y el Decreto 1377 de 2013, garantizando
+    que la información personal de clientes, empleados y proveedores no se exponga en
+    mensajes de error, logs del navegador ni respuestas HTTP al frontend. (Cumple: SÍ)
+
+28. Aceptación de Términos y Condiciones - El formulario de registro debe requerir la
+    aceptación explícita de términos y condiciones mediante un checkbox obligatorio antes
+    de permitir la creación de la cuenta. (Cumple: SÍ)
+
+------------------------------------------------------------------------
+
+H. Impresión y Reportes
+
+29. Impresión Nativa sin Configuración Adicional - El sistema debe generar facturas y
+    reportes en formato HTML renderizable directamente por la función window.print() del
+    navegador, sin requerir instalación de plugins, extensiones ni software de terceros.
+    (Cumple: SÍ)
+
+30. Logo Corporativo en Documentos Impresos - El logo de la empresa debe ser visible en todas
+    las facturas, reportes y documentos generados por el sistema para impresión.
+    (Cumple: NO)
+
+========================================================================
+  RESUMEN GENERAL
+========================================================================
+Total de Requerimientos:            30
+Cumplen (SÍ):                      25
+No Cumplen (NO):                    5  (Filas: 10, 12, 22, 23, 30)
+========================================================================
