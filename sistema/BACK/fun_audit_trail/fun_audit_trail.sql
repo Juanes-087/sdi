@@ -106,11 +106,24 @@ FOR EACH ROW EXECUTE FUNCTION fun_audit_trail();
 Create or replace function max_instrum_kit()
 Returns TRIGGER as 
 $$
+DECLARE
+    v_conteo INT;
 BEGIN
-    IF (Select count (id_instrumento) 
-        From tab_instrumentos_kit Where id_kit = NEW.id_kit) > 10 THEN
+    -- Si es un UPDATE y el kit no ha cambiado, permitimos la actualización sin validar el límite
+    IF (TG_OP = 'UPDATE' AND OLD.id_kit = NEW.id_kit) THEN
+        RETURN NEW;
+    END IF;
+
+    -- Contamos instrumentos activos en el kit de destino
+    SELECT count(1) INTO v_conteo
+    FROM tab_instrumentos_kit 
+    WHERE id_kit = NEW.id_kit 
+    AND ind_vivo = true;
+
+    IF v_conteo >= 10 THEN
         Raise Exception 'Un kit no puede tener más de 10 instrumentos diferentes';
     END IF;
+    
     RETURN NEW;
 END;
 $$
