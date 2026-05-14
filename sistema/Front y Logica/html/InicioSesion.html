@@ -160,10 +160,203 @@
             position: absolute;
             right: 0;
         }
+
+        /* ========================================
+           MODALES DE ALERTA DE LOGIN
+           ======================================== */
+        .login-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .login-modal-overlay.visible {
+            opacity: 1;
+            pointer-events: all;
+        }
+        .login-modal-box {
+            background: #fff;
+            border-radius: 18px;
+            padding: 36px 32px 28px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            transform: translateY(-24px) scale(0.96);
+            transition: transform 0.35s cubic-bezier(.34,1.56,.64,1), opacity 0.3s ease;
+            opacity: 0;
+            position: relative;
+        }
+        .login-modal-overlay.visible .login-modal-box {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+        }
+        /* Shake animation para error de credenciales */
+        @keyframes loginShake {
+            0%,100% { transform: translateX(0) scale(1); }
+            15%      { transform: translateX(-8px) scale(1); }
+            30%      { transform: translateX(8px) scale(1); }
+            45%      { transform: translateX(-6px) scale(1); }
+            60%      { transform: translateX(6px) scale(1); }
+            75%      { transform: translateX(-3px) scale(1); }
+        }
+        .login-modal-box.shake {
+            animation: loginShake 0.5s ease;
+        }
+        .login-modal-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin: 0 auto 18px;
+        }
+        .login-modal-icon.error   { background: #fff0f0; color: #e74c3c; }
+        .login-modal-icon.warning { background: #fff8e1; color: #f39c12; }
+        .login-modal-box h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #222;
+            margin-bottom: 8px;
+            font-family: 'Montserrat', Arial, sans-serif;
+        }
+        .login-modal-box p {
+            font-size: 0.9rem;
+            color: #666;
+            line-height: 1.5;
+            margin: 0 0 22px;
+        }
+        /* Countdown ring */
+        .countdown-ring-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 8px 0 22px;
+        }
+        .countdown-ring {
+            position: relative;
+            width: 88px;
+            height: 88px;
+            margin-bottom: 10px;
+        }
+        .countdown-ring svg {
+            transform: rotate(-90deg);
+        }
+        .countdown-ring .ring-track {
+            fill: none;
+            stroke: #f0f0f0;
+            stroke-width: 6;
+        }
+        .countdown-ring .ring-fill {
+            fill: none;
+            stroke: url(#ringGrad);
+            stroke-width: 6;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1s linear;
+        }
+        .countdown-ring .ring-num {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #36498f;
+            font-family: 'Montserrat', Arial, sans-serif;
+        }
+        .countdown-label {
+            font-size: 0.78rem;
+            color: #999;
+            letter-spacing: 0.5px;
+        }
+        .login-modal-btn {
+            border-radius: 20px;
+            border: none;
+            background: linear-gradient(135deg, #36498f, #087d4e);
+            color: #fff;
+            font-size: 0.82rem;
+            font-weight: 700;
+            padding: 11px 36px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        .login-modal-btn:hover {
+            background: linear-gradient(135deg, #087d4e, #36498f);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(54,73,143,0.35);
+        }
+        .login-modal-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
     </style>
 
+    <!-- =========================================
+         MODAL: CREDENCIALES INCORRECTAS
+         ========================================= -->
+    <div class="login-modal-overlay" id="modalErrorLogin">
+        <div class="login-modal-box" id="modalErrorBox">
+            <div class="login-modal-icon error">
+                <i class="fa-solid fa-lock"></i>
+            </div>
+            <h3>Acceso denegado</h3>
+            <p id="errorLoginMsg">Usuario o contraseña incorrectos.<br>Verifica tus datos e inténtalo de nuevo.</p>
+            <button class="login-modal-btn" id="btnCerrarErrorLogin">Entendido</button>
+        </div>
+    </div>
+
+    <!-- =========================================
+         MODAL: BLOQUEO BRUTE FORCE CON COUNTDOWN
+         ========================================= -->
+    <div class="login-modal-overlay" id="modalBruteForce">
+        <div class="login-modal-box" id="modalBruteBox">
+            <div class="login-modal-icon warning">
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <h3>Cuenta temporalmente bloqueada</h3>
+            <p>Demasiados intentos fallidos.<br>Podrás intentarlo de nuevo en:</p>
+
+            <!-- Contador circular -->
+            <div class="countdown-ring-wrap">
+                <div class="countdown-ring" id="countdownRing">
+                    <svg width="88" height="88" viewBox="0 0 88 88">
+                        <defs>
+                            <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#36498f"/>
+                                <stop offset="100%" stop-color="#087d4e"/>
+                            </linearGradient>
+                        </defs>
+                        <circle class="ring-track" cx="44" cy="44" r="38"/>
+                        <circle class="ring-fill" id="ringFill" cx="44" cy="44" r="38"
+                            stroke-dasharray="238.76"
+                            stroke-dashoffset="0"/>
+                    </svg>
+                    <div class="ring-num" id="countdownNum">--</div>
+                </div>
+                <span class="countdown-label">segundos restantes</span>
+            </div>
+
+            <button class="login-modal-btn" id="btnCerrarBrute" disabled>Espera...</button>
+        </div>
+    </div>
+
 </body>
-<script src="../src/JavaScript/inicio_sesion.js?v=100"></script>
+<script src="../src/JavaScript/inicio_sesion.js?v=101"></script>
 <script>
     // ============================================
     // SEGURIDAD: Limpiar sesión residual

@@ -3,6 +3,80 @@ document.addEventListener("DOMContentLoaded", function () {
     const form = document.getElementById("loginForm");
 
     if (form) {
+        // ── Referencias a los modales de error ──
+        const overlayError  = document.getElementById('modalErrorLogin');
+        const boxError      = document.getElementById('modalErrorBox');
+        const msgError      = document.getElementById('errorLoginMsg');
+        const btnCerrarErr  = document.getElementById('btnCerrarErrorLogin');
+        const overlayBrute  = document.getElementById('modalBruteForce');
+        const countdownNum  = document.getElementById('countdownNum');
+        const ringFill      = document.getElementById('ringFill');
+        const btnCerrarBrute = document.getElementById('btnCerrarBrute');
+        const CIRC = 238.76; // 2πr con r=38
+        let bruteTimer = null;
+
+        // Abrir modal de error de credenciales (con shake)
+        function mostrarErrorCredenciales(msg) {
+            msgError.innerHTML = msg || 'Usuario o contraseña incorrectos.<br>Verifica tus datos e inténtalo de nuevo.';
+            overlayError.classList.add('visible');
+            // Shake después de que la caja termina de aparecer
+            setTimeout(() => boxError.classList.add('shake'), 350);
+            boxError.addEventListener('animationend', () => boxError.classList.remove('shake'), { once: true });
+        }
+
+        // Cerrar modal de error
+        if (btnCerrarErr) {
+            btnCerrarErr.addEventListener('click', () => overlayError.classList.remove('visible'));
+        }
+        // Cerrar al hacer clic en el fondo
+        if (overlayError) {
+            overlayError.addEventListener('click', (e) => {
+                if (e.target === overlayError) overlayError.classList.remove('visible');
+            });
+        }
+
+        // Abrir modal de bloqueo con countdown en tiempo real
+        function mostrarBruteForce(segundos) {
+            clearInterval(bruteTimer);
+            let restante = Math.max(0, segundos);
+            const total  = restante;
+
+            function actualizarRing() {
+                const progreso = restante / total;               // 1 → 0
+                const offset   = CIRC * (1 - progreso);         // 0 → CIRC
+                ringFill.style.strokeDashoffset = offset;
+                countdownNum.textContent = restante;
+
+                if (restante <= 0) {
+                    clearInterval(bruteTimer);
+                    countdownNum.textContent = '0';
+                    ringFill.style.strokeDashoffset = CIRC;
+                    btnCerrarBrute.disabled = false;
+                    btnCerrarBrute.textContent = 'Intentar de nuevo';
+                }
+            }
+
+            actualizarRing();
+            overlayBrute.classList.add('visible');
+
+            bruteTimer = setInterval(() => {
+                restante--;
+                actualizarRing();
+            }, 1000);
+        }
+
+        // Cerrar modal brute force (solo cuando el timer llega a 0)
+        if (btnCerrarBrute) {
+            btnCerrarBrute.addEventListener('click', () => {
+                clearInterval(bruteTimer);
+                overlayBrute.classList.remove('visible');
+                btnCerrarBrute.disabled = true;
+                btnCerrarBrute.textContent = 'Espera...';
+                countdownNum.textContent = '--';
+                ringFill.style.strokeDashoffset = '0';
+            });
+        }
+
         form.addEventListener("submit", function (e) {
             e.preventDefault();
             const formData = new FormData(form);
@@ -39,26 +113,29 @@ document.addEventListener("DOMContentLoaded", function () {
                         throw new Error("El servidor respondió con un formato incorrecto.");
                     }
 
-                    // RESTAURAR BOTÓN SI HAY ERROR EN DATA
+                    // Si el servidor devuelve error, enriquecer con código HTTP
                     if (!data.success) {
                         btn.innerHTML = originalText;
                         btn.disabled = false;
-                        throw new Error(data.error || "Error en la solicitud");
+                        const err = new Error(data.error || "Error en la solicitud");
+                        err.httpStatus = res.status;
+                        err.segundos   = data.segundos ?? null;
+                        throw err;
                     }
 
                     return data;
                 })
                 .then(data => {
-                    // Si llegamos aquí, data.success es true
+                    // Guardar el token en localStorage para los fetch posteriores
+                    // (Authorization: Bearer). La URL de redirección ya NO lleva el
+                    // token como parámetro: el servidor creó la sesión PHP en validar.php
+                    // y envía la URL limpia en data.redirect.
                     localStorage.setItem("token", data.token);
-                    const idMenu = Number(data.id_menu);
 
-                    if (idMenu === 1) {
-                        window.location.replace("../src/php/menuPrincipal.php?token=" + encodeURIComponent(data.token));
-                    } else if (idMenu === 2) {
-                        window.location.replace("../src/php/menuCliente.php?token=" + encodeURIComponent(data.token));
+                    if (data.redirect) {
+                        window.location.replace(data.redirect);
                     } else {
-                        alert("Menú no válido");
+                        mostrarErrorCredenciales('Menú no válido. Contacta al administrador.');
                         btn.innerHTML = originalText;
                         btn.disabled = false;
                     }
@@ -68,7 +145,25 @@ document.addEventListener("DOMContentLoaded", function () {
                     console.error("Error:", err);
                     btn.innerHTML = originalText;
                     btn.disabled = false;
-                    alert(err.message || "Error de conexión.");
+
+                    // Brute force bloqueado (429) → modal con countdown
+                    if (err.httpStatus === 429) {
+                        // Extraer segundos del mensaje: "Espera 13 minuto(s)..."
+                        // O usar data.segundos si el servidor lo envía
+                        let segs = err.segundos;
+                        if (!segs) {
+                            const match = err.message.match(/(\d+)\s*minuto/);
+                            segs = match ? parseInt(match[1]) * 60 : 900;
+                        }
+                        mostrarBruteForce(segs);
+                        return;
+                    }
+
+                    // Error de credenciales (401) u otro → modal de error
+                    mostrarErrorCredenciales(
+                        (err.message || 'Error de conexión.')
+                            .replace(/\./g, '.<br>')
+                    );
                 });
         });
     }

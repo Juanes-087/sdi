@@ -99,6 +99,49 @@ if ($usuario === '' || $password === '') {
 }
 
 // ══════════════════════════════════════════════
+// BLOQUE 4B: PROTECCIÓN BRUTE FORCE POR IP
+// ══════════════════════════════════════════════
+// Máximo 5 intentos fallidos por IP en 15 minutos.
+// Usa sesión PHP para no añadir carga a la BD.
+// También aplica un delay de 1 segundo para
+// ralentizar ataques de diccionario automatizados.
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+$clienteIP   = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+$claveIP     = 'login_attempts_' . md5($clienteIP);
+const LIMITE_INTENTOS  = 5;
+const VENTANA_SEGUNDOS = 15 * 60; // 15 minutos
+
+// Obtener historial de intentos para esta IP
+$intentos = $_SESSION[$claveIP] ?? ['count' => 0, 'first_attempt' => time()];
+
+// Reiniciar contador si ya pasó la ventana de tiempo
+if ((time() - $intentos['first_attempt']) > VENTANA_SEGUNDOS) {
+    $intentos = ['count' => 0, 'first_attempt' => time()];
+}
+
+// Bloquear si se superó el límite
+if ($intentos['count'] >= LIMITE_INTENTOS) {
+    $restante  = VENTANA_SEGUNDOS - (time() - $intentos['first_attempt']);
+    $segundos  = max(0, $restante);
+    $minutos   = ceil($segundos / 60);
+    error_log("Brute force bloqueado: IP={$clienteIP} intentos={$intentos['count']}");
+    http_response_code(429);
+    echo json_encode([
+        "success"  => false,
+        "error"    => "Demasiados intentos fallidos. Espera {$minutos} minuto(s) antes de intentarlo de nuevo.",
+        "segundos" => $segundos   // ← el JS usa esto para el countdown exacto
+    ]);
+    exit;
+}
+
+// Delay de 1 segundo para ralentizar bots (aplica ANTES de consultar la BD)
+sleep(1);
+
+// ══════════════════════════════════════════════
 // BLOQUE 5: CONECTAR A LA BASE DE DATOS
 // ══════════════════════════════════════════════
 
@@ -208,27 +251,40 @@ try {
     $rowIdle = $stmtIdle->fetch(PDO::FETCH_ASSOC);
     $idleMinutos = $rowIdle ? (int) $rowIdle['ind_idle'] : 30;
 
-    // Guardar en sesión para security_headers.php
+    // Login exitoso → resetear el contador de brute force para esta IP
+    unset($_SESSION[$claveIP]);
+
+    // Guardar en sesión PHP (la sesión sabe a qué menú redirigir,
+    // así el JS no necesita pasar el token por la URL)
     if (session_status() === PHP_SESSION_NONE) {
         session_start();
     }
-    $_SESSION['ind_idle'] = $idleMinutos;
+    session_regenerate_id(true);
+    $_SESSION['ind_idle']      = $idleMinutos;
+    $_SESSION['id_usuario']    = (int) $user["id_user"];
+    $_SESSION['nom_user']      = $user["nom_user"];
+    $_SESSION['id_menu']       = $user["id_menu"];
+    $_SESSION['last_activity'] = time();
 
     $payload = [
-        "id" => (int) $user["id_user"],
+        "id"      => (int) $user["id_user"],
         "usuario" => $user["nom_user"],
-        "menu" => $user["id_menu"],
-        "iat" => time(),
-        "exp" => time() + ($idleMinutos * 60) // Configurable desde tab_parametros
+        "menu"    => $user["id_menu"],
+        "iat"     => time(),
+        "exp"     => time() + ($idleMinutos * 60)
     ];
 
     $token = generarJWT($payload);
 
     http_response_code(200);
     echo json_encode([
-        "success" => true,
-        "token" => $token,
-        "id_menu" => $user["id_menu"]
+        "success"  => true,
+        "token"    => $token,
+        "id_menu"  => $user["id_menu"],
+        // redirect_url le dice al JS a dónde ir, sin exponer el token en la URL
+        "redirect" => $user["id_menu"] == 1
+            ? "../src/php/menuPrincipal.php"
+            : "../src/php/menuCliente.php"
     ]);
     exit;
 
@@ -236,12 +292,25 @@ try {
     error_log("Error de base de datos: " . $e->getMessage());
     enviarError(500, "Error al consultar la base de datos");
 } catch (Throwable $e) {
-    // Registra el intento fallido con la IP para auditoría de seguridad
-    error_log("Login fallido: {$usuario} IP: {$_SERVER['REMOTE_ADDR']} - Error: " . $e->getMessage());
+    // Incrementar contador de intentos fallidos para esta IP
+    $intentos['count']++;
+    $_SESSION[$claveIP] = $intentos;
+
+    $intentosRestantes = max(0, LIMITE_INTENTOS - $intentos['count']);
+    $msgIntentos = $intentosRestantes > 0 
+        ? "Te quedan {$intentosRestantes} intento(s)." 
+        : "Al próximo intento fallido se bloqueará tu cuenta temporalmente.";
+
+    if ($intentosRestantes === 0) {
+        $msgIntentos = "Has agotado tus intentos. Tu IP será bloqueada por " . (VENTANA_SEGUNDOS / 60) . " minutos.";
+    }
+
+    // Registrar en log del servidor para auditoría
+    error_log("Login fallido: {$usuario} IP: {$_SERVER['REMOTE_ADDR']} intento={$intentos['count']} - " . $e->getMessage());
     http_response_code(401);
     echo json_encode([
         "success" => false,
-        "error" => "Usuario o contraseña incorrectos"
+        "error"   => "Usuario o contraseña incorrectos. " . $msgIntentos
     ]);
     exit;
 }
