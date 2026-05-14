@@ -39,6 +39,8 @@
 
         <!-- Formulario de edición de perfil -->
         <form id="formPerfil" method="POST" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
+            <!-- Token CSRF: protege contra ataques Cross-Site Request Forgery -->
+            <input type="hidden" name="csrf_token" value="<?php echo generarCSRFToken(); ?>">
             <div class="form-group">
                 <label>Nombre de Usuario:</label>
                 <input type="text" name="nom_user" id="nombreCompleto"
@@ -84,6 +86,8 @@
         <form id="formPassword" method="POST" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
             <!-- Campo oculto para identificar que es un cambio de contraseña -->
             <input type="hidden" name="cambiar_password" value="1">
+            <!-- Token CSRF: protege contra ataques Cross-Site Request Forgery -->
+            <input type="hidden" name="csrf_token" value="<?php echo generarCSRFToken(); ?>">
 
             <div class="form-group">
                 <label>Contraseña Actual:</label>
@@ -326,6 +330,8 @@
         </div>
         <form id="formAccesibilidad" method="POST" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
             <input type="hidden" name="update_params" value="1">
+            <!-- Token CSRF: protege contra ataques Cross-Site Request Forgery -->
+            <input type="hidden" name="csrf_token" value="<?php echo generarCSRFToken(); ?>">
             <div class="modal-body" style="padding: 30px;">
                 <!-- Modo Oscuro (Switch) -->
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">

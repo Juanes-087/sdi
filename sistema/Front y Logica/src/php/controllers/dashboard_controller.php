@@ -149,6 +149,12 @@ if (isset($_SESSION['id_usuario']) && (!isset($_SESSION['mail_user']) || !isset(
 // Cuando el usuario envía el formulario de cambio de
 // contraseña desde el modal en footer.php
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['cambiar_password'])) {
+    // Validar token CSRF antes de procesar el formulario
+    if (!validarCSRFToken($_POST['csrf_token'] ?? '')) {
+        $_SESSION['error_password'] = "Sesión expirada. Recarga la página e inténtalo de nuevo.";
+        header("Location: " . $_SERVER['PHP_SELF']);
+        exit();
+    }
     // Obtener los 3 campos del formulario
     $password_actual = trim($_POST["password_actual"] ?? "");
     $password_nueva = trim($_POST["password_nueva"] ?? "");
@@ -240,6 +246,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['cambiar_password'])) {
 // ══════════════════════════════════════════════════════════
 // Cuando el usuario envía el formulario de edición de perfil
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['nom_user'])) {
+    // Validar token CSRF antes de procesar el formulario
+    if (!validarCSRFToken($_POST['csrf_token'] ?? '')) {
+        $_SESSION['error_perfil'] = "Sesión expirada. Recarga la página e inténtalo de nuevo.";
+        header("Location: " . $_SERVER['PHP_SELF']);
+        exit();
+    }
     // Obtener y limpiar los datos del formulario
     $nom_user = trim($_POST["nom_user"] ?? "");
     $mail_user = trim($_POST["mail_user"] ?? "");
@@ -313,6 +325,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['nom_user'])) {
 // SECCIÓN 6: PROCESAMIENTO DE CONFIGURACIÓN GLOBAL (POST)
 // ══════════════════════════════════════════════════════════
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_params'])) {
+    // Validar token CSRF antes de procesar el formulario
+    if (!validarCSRFToken($_POST['csrf_token'] ?? '')) {
+        header("Location: " . $_SERVER['PHP_SELF']);
+        exit();
+    }
     $tema = isset($_POST['tema']) && $_POST['tema'] === 'claro';
     $idioma = $_POST['idioma'] ?? 'ES';
 

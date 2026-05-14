@@ -119,7 +119,13 @@ if (isset($_SESSION['id_usuario']) && (!isset($_SESSION['mail_user']) || !isset(
 
 // --- Actualización de Perfil ---
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['nom_user'])) {
-    $nom_user = trim($_POST["nom_user"] ?? "");
+    // Validar token CSRF
+    if (!validarCSRFToken($_POST['csrf_token'] ?? '')) {
+        $_SESSION['error_perfil'] = "Sesión expirada. Recarga la página e inténtalo de nuevo.";
+        header("Location: " . $_SERVER['PHP_SELF']);
+        exit();
+    }
+    $nom_user  = trim($_POST["nom_user"] ?? "");
     $mail_user = trim($_POST["mail_user"] ?? "");
     $tel_user = preg_replace('/[^0-9]/', '', $_POST["tel_user"] ?? "");
     $tel_user_int = (int) $tel_user;
@@ -187,7 +193,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['nom_user'])) {
 
 // --- Cambio de Contraseña ---
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['cambiar_password'])) {
-    $password_actual = trim($_POST["password_actual"] ?? "");
+    // Validar token CSRF
+    if (!validarCSRFToken($_POST['csrf_token'] ?? '')) {
+        $_SESSION['error_password'] = "Sesión expirada. Recarga la página e inténtalo de nuevo.";
+        header("Location: " . $_SERVER['PHP_SELF']);
+        exit();
+    }
+    $password_actual    = trim($_POST["password_actual"] ?? "");
     $password_nueva = trim($_POST["password_nueva"] ?? "");
     $password_confirmar = trim($_POST["password_confirmar"] ?? "");
 
@@ -546,6 +558,7 @@ unset($_SESSION['success_password']);
             <div style="padding:30px;">
 
                 <form method="POST" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
+                    <input type="hidden" name="csrf_token" value="<?php echo generarCSRFToken(); ?>">
                     <div class="form-group">
                         <label>Nombre de Usuario</label>
                         <input type="text" name="nom_user" value="<?php echo htmlspecialchars($nom_user); ?>" required>
@@ -589,6 +602,7 @@ unset($_SESSION['success_password']);
 
                 <form id="formPassword" method="POST" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
                     <input type="hidden" name="cambiar_password" value="1">
+                    <input type="hidden" name="csrf_token" value="<?php echo generarCSRFToken(); ?>">
                     <div class="form-group">
                         <label>Contraseña Actual</label>
                         <div style="position: relative;">

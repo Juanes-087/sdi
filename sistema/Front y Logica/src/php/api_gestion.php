@@ -107,22 +107,39 @@ elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 mkdir($uploadDir, 0777, true);
 
             $fileTmpPath = $_FILES['img_url']['tmp_name'];
-            $fileName = $_FILES['img_url']['name'];
-            $fileNameCmps = explode(".", $fileName);
-            $fileExtension = strtolower(end($fileNameCmps));
+            $fileName    = $_FILES['img_url']['name'];
 
-            $allowedfileExtensions = array('jpg', 'png', 'jpeg');
-            if (in_array($fileExtension, $allowedfileExtensions)) {
-                $newFileName = md5(time() . $fileName) . '.' . $fileExtension;
-                $dest_path = $uploadDir . $newFileName;
-                if (move_uploaded_file($fileTmpPath, $dest_path)) {
-                    $parsedInput['img_url'] = '../../images/' . $subFolder . '/' . $newFileName;
-                } else {
-                    echo json_encode(['error' => 'Error al mover imagen al destino.']);
-                    exit;
-                }
-            } else {
+            // ── Validación MIME real (no confiar solo en la extensión) ──
+            // finfo lee los bytes del archivo, no el nombre.
+            // Esto evita que un .php renombrado a .jpg pase el filtro.
+            $finfo    = finfo_open(FILEINFO_MIME_TYPE);
+            $mimeType = finfo_file($finfo, $fileTmpPath);
+            finfo_close($finfo);
+
+            $allowedMimes = ['image/jpeg', 'image/png'];
+            if (!in_array($mimeType, $allowedMimes)) {
                 echo json_encode(['error' => 'Tipo de archivo no permitido. Solo JPG y PNG.']);
+                exit;
+            }
+
+            // Verificar que el contenido sea realmente una imagen válida
+            if (!getimagesize($fileTmpPath)) {
+                echo json_encode(['error' => 'El archivo no es una imagen válida.']);
+                exit;
+            }
+
+            // Derivar extensión del MIME real (no del nombre del archivo)
+            $extensionMap = ['image/jpeg' => 'jpg', 'image/png' => 'png'];
+            $fileExtension = $extensionMap[$mimeType];
+
+            // Nombre seguro: hash del tiempo + extensión validada (sin el nombre original)
+            $newFileName = bin2hex(random_bytes(16)) . '.' . $fileExtension;
+            $dest_path   = $uploadDir . $newFileName;
+
+            if (move_uploaded_file($fileTmpPath, $dest_path)) {
+                $parsedInput['img_url'] = '../../images/' . $subFolder . '/' . $newFileName;
+            } else {
+                echo json_encode(['error' => 'Error al mover imagen al destino.']);
                 exit;
             }
         }
