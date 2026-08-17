@@ -91,56 +91,103 @@ elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($id === 'null' || $id === 'undefined')
             $id = null;
 
-        $parsedInput = json_decode($_POST['data'] ?? '{}', true);
+        $rawPostData = $_POST['data'] ?? '{}';
+        $parsedInput = json_decode($rawPostData, true);
+        if (!is_array($parsedInput)) {
+            $parsedInput = json_decode(stripslashes($rawPostData), true) ?? [];
+        }
+        if (!is_array($parsedInput)) {
+            $parsedInput = [];
+        }
 
-        if (isset($_FILES['img_url']) && $_FILES['img_url']['error'] === UPLOAD_ERR_OK) {
-            $subFolder = 'instrum';
-            if ($tipo === 'kits')
-                $subFolder = 'kit';
-            if ($tipo === 'productos')
-                $subFolder = 'prod';
-            if ($tipo === 'materias_primas')
-                $subFolder = 'mat_prima';
-
-            $uploadDir = __DIR__ . '/../../images/' . $subFolder . '/';
-            if (!file_exists($uploadDir))
-                mkdir($uploadDir, 0777, true);
-
-            $fileTmpPath = $_FILES['img_url']['tmp_name'];
-            $fileName    = $_FILES['img_url']['name'];
-
-            // ── Validación MIME real (no confiar solo en la extensión) ──
-            // finfo lee los bytes del archivo, no el nombre.
-            // Esto evita que un .php renombrado a .jpg pase el filtro.
-            $finfo    = finfo_open(FILEINFO_MIME_TYPE);
-            $mimeType = finfo_file($finfo, $fileTmpPath);
-            finfo_close($finfo);
-
-            $allowedMimes = ['image/jpeg', 'image/png'];
-            if (!in_array($mimeType, $allowedMimes)) {
-                echo json_encode(['error' => 'Tipo de archivo no permitido. Solo JPG y PNG.']);
-                exit;
+        // Buscar si se envió archivo de imagen bajo cualquier nombre o si hubo error de subida
+        $fileKey = null;
+        if (isset($_FILES['img_url'])) {
+            $fileKey = 'img_url';
+        } else {
+            foreach ($_FILES as $k => $f) {
+                if (is_array($f) && isset($f['name']) && !empty($f['name'])) {
+                    $fileKey = $k;
+                    break;
+                }
             }
+        }
 
-            // Verificar que el contenido sea realmente una imagen válida
-            if (!getimagesize($fileTmpPath)) {
-                echo json_encode(['error' => 'El archivo no es una imagen válida.']);
-                exit;
-            }
-
-            // Derivar extensión del MIME real (no del nombre del archivo)
-            $extensionMap = ['image/jpeg' => 'jpg', 'image/png' => 'png'];
-            $fileExtension = $extensionMap[$mimeType];
-
-            // Nombre seguro: hash del tiempo + extensión validada (sin el nombre original)
-            $newFileName = bin2hex(random_bytes(16)) . '.' . $fileExtension;
-            $dest_path   = $uploadDir . $newFileName;
-
-            if (move_uploaded_file($fileTmpPath, $dest_path)) {
-                $parsedInput['img_url'] = '../../images/' . $subFolder . '/' . $newFileName;
+        if ($fileKey && isset($_FILES[$fileKey])) {
+            $fileError = $_FILES[$fileKey]['error'];
+            if ($fileError !== UPLOAD_ERR_OK) {
+                $errorMessages = [
+                    UPLOAD_ERR_INI_SIZE   => 'El archivo excede upload_max_filesize en php.ini.',
+                    UPLOAD_ERR_FORM_SIZE  => 'El archivo excede el tamaño máximo del formulario.',
+                    UPLOAD_ERR_PARTIAL    => 'El archivo se subió solo parcialmente.',
+                    UPLOAD_ERR_NO_FILE    => 'No se seleccionó ningún archivo.',
+                    UPLOAD_ERR_NO_TMP_DIR => 'Falta la carpeta temporal en el servidor.',
+                    UPLOAD_ERR_CANT_WRITE => 'Error de escritura en el disco del servidor.',
+                    UPLOAD_ERR_EXTENSION  => 'Una extensión de PHP detuvo la subida.'
+                ];
+                if ($fileError !== UPLOAD_ERR_NO_FILE) {
+                    http_response_code(400);
+                    echo json_encode(['error' => 'Error al subir archivo: ' . ($errorMessages[$fileError] ?? 'Código ' . $fileError)]);
+                    exit;
+                }
             } else {
-                echo json_encode(['error' => 'Error al mover imagen al destino.']);
-                exit;
+                $subFolder = 'instrum';
+                if ($tipo === 'kits')
+                    $subFolder = 'kit';
+                if ($tipo === 'productos')
+                    $subFolder = 'prod';
+                if ($tipo === 'materias_primas')
+                    $subFolder = 'mat_prima';
+
+                $uploadDir = __DIR__ . '/../../images/' . $subFolder . '/';
+                if (!file_exists($uploadDir))
+                    @mkdir($uploadDir, 0777, true);
+
+                $fileTmpPath = $_FILES[$fileKey]['tmp_name'];
+                $fileName    = $_FILES[$fileKey]['name'];
+
+                // ── Validación MIME segura ──
+                $mimeType = null;
+                if (function_exists('finfo_open')) {
+                    $finfo    = finfo_open(FILEINFO_MIME_TYPE);
+                    $mimeType = finfo_file($finfo, $fileTmpPath);
+                    finfo_close($finfo);
+                } elseif (function_exists('mime_content_type')) {
+                    $mimeType = mime_content_type($fileTmpPath);
+                } else {
+                    $imgInfo = @getimagesize($fileTmpPath);
+                    $mimeType = $imgInfo['mime'] ?? null;
+                }
+
+                $allowedMimes = ['image/jpeg', 'image/png', 'image/jpg'];
+                if (!$mimeType || !in_array($mimeType, $allowedMimes)) {
+                    http_response_code(400);
+                    echo json_encode(['error' => 'Tipo de archivo no permitido. Solo JPG y PNG. (Detectado: ' . ($mimeType ?: 'desconocido') . ')']);
+                    exit;
+                }
+
+                // Verificar que el contenido sea realmente una imagen válida
+                if (!@getimagesize($fileTmpPath)) {
+                    http_response_code(400);
+                    echo json_encode(['error' => 'El archivo no es una imagen válida o está dañado.']);
+                    exit;
+                }
+
+                // Derivar extensión del MIME real
+                $extensionMap = ['image/jpeg' => 'jpg', 'image/jpg' => 'jpg', 'image/png' => 'png'];
+                $fileExtension = $extensionMap[$mimeType] ?? 'jpg';
+
+                // Nombre seguro: hash del tiempo + extensión validada (sin el nombre original)
+                $newFileName = bin2hex(random_bytes(16)) . '.' . $fileExtension;
+                $dest_path   = $uploadDir . $newFileName;
+
+                if (move_uploaded_file($fileTmpPath, $dest_path)) {
+                    $parsedInput['img_url'] = '../../images/' . $subFolder . '/' . $newFileName;
+                } else {
+                    http_response_code(500);
+                    echo json_encode(['error' => 'Error al mover imagen al destino. Verifique permisos de escritura en ' . $uploadDir]);
+                    exit;
+                }
             }
         }
     } else {
@@ -278,8 +325,10 @@ elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $conn->commit();
 
-    } catch (Exception $e) {
-        $conn->rollBack();
+    } catch (Throwable $e) {
+        if (isset($conn) && $conn->inTransaction()) {
+            $conn->rollBack();
+        }
         http_response_code(500);
         $msg = $e->getMessage();
 

@@ -203,7 +203,7 @@
         // Función para cargar datos
         async function cargarProductos(busqueda = '') {
             try {
-                const url = `./src/php/api_productos.php?q=${encodeURIComponent(busqueda)}`;
+                const url = `/sdi/src/php/api_productos.php?q=${encodeURIComponent(busqueda)}`;
                 const response = await fetch(url);
                 if (!response.ok) {
                     const errorText = await response.text();
@@ -280,7 +280,7 @@ async function initBestSellersCarousel() {
     if (!track) return;
 
     try {
-        const response = await fetch('./src/php/api_top_vendidos.php');
+        const response = await fetch('/sdi/src/php/api_top_vendidos.php');
         const result = await response.json();
 
         if (result.success && result.data.length > 0) {

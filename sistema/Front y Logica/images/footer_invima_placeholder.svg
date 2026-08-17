@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <style>
+      .badge-circle { fill: none; stroke: #087d4e; stroke-width: 3; }
+      .badge-text { font-family: Arial, sans-serif; text-anchor: middle; }
+      .badge-title { font-size: 14px; font-weight: bold; fill: #087d4e; }
+      .badge-number { font-size: 10px; fill: #666; }
+      .badge-check { fill: #087d4e; }
+    </style>
+  </defs>
+  
+  <!-- Outer circle -->
+  <circle class="badge-circle" cx="100" cy="100" r="95"/>
+  
+  <!-- Inner circle -->
+  <circle class="badge-circle" cx="100" cy="100" r="85"/>
+  
+  <!-- Checkmark -->
+  <g class="badge-check">
+    <path d="M 75 100 L 90 115 L 125 80" stroke="currentColor" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  
+  <!-- Text -->
+  <text class="badge-text badge-title" x="100" y="145">INVIMA</text>
+  <text class="badge-text badge-number" x="100" y="165">Certificado</text>
+</svg>

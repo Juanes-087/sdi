@@ -38,7 +38,7 @@ window.FormSchemas['instrumentos'] = (data = {}) => {
         { label: 'Cantidad Disponible', name: 'cant_disp', type: 'number', value: d.cant_disp, required: true, placeholder: 'Ej: 50', min: 1, max: 999, maxLength: 3, helpText: 'Unidades actuales.' },
         { label: 'Lote', name: 'lote', type: 'text', value: d.lote, required: false, placeholder: 'Ej: 101', maxLength: 3, helpText: 'Código numérico (Máx 3 dígitos).' },
         { label: 'Numeral en Kit', name: 'numeral_en_kit', type: 'number', value: d.numeral_en_kit || 0, required: false, placeholder: '0', helpText: 'Orden dentro del kit.' },
-        { label: 'Imagen del Instrumento', name: 'img_url', type: 'file', accept: '.jpg, .png', required: !d.id_instrumento, fullWidth: true, placeholder: 'Seleccionar imagen JPG/PNG', helpText: 'Formato JPG/PNG, Máx 5MB.' }
+        { label: 'Imagen del Instrumento', name: 'img_url', type: 'file', accept: '.jpg, .png', required: !d.id_instrumento, fullWidth: true, placeholder: 'Seleccionar imagen JPG/PNG', helpText: 'Formato JPG/PNG, Máx 15MB.' }
     ];
 };
 

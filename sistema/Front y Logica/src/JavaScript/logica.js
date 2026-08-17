@@ -998,11 +998,11 @@ window.guardarRegistro = async function (event, tipo, accion, id, originType = n
                         return; // Detener envío
                     }
 
-                    // VALIDACIÓN DE TAMAÑO (Max 5MB)
-                    const maxSize = 5 * 1024 * 1024; // 5MB
+                    // VALIDACIÓN DE TAMAÑO (Max 15MB)
+                    const maxSize = 15 * 1024 * 1024; // 15MB
                     if (value.size > maxSize) {
                         ocultarCargando();
-                        mostrarErrorCustom('Archivo muy pesado', 'La imagen no puede pesar más de 5MB.');
+                        mostrarErrorCustom('Archivo muy pesado', 'La imagen no puede pesar más de 15MB.');
                         btnSubmit.disabled = false;
                         btnSubmit.textContent = oldText;
                         return; // Detener envío
