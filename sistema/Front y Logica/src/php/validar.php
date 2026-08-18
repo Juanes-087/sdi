@@ -50,7 +50,7 @@ function enviarError($codigo, $mensaje, $debug = null)
 {
     http_response_code($codigo);
     $respuesta = ["success" => false, "error" => $mensaje];
-    if ($debug !== null && ini_get('display_errors')) {
+    if ($debug !== null && class_exists('CConexion') && CConexion::isDebugEnabled()) {
         $respuesta["debug"] = $debug;
     }
     echo json_encode($respuesta);
@@ -90,7 +90,7 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
 // Si alguno está vacío, rechaza la petición.
 
 $usuario = trim($_POST["usuario"] ?? '');
-$password = trim($_POST["password"] ?? '');
+$password = $_POST["password"] ?? '';
 
 if ($usuario === '' || $password === '') {
     http_response_code(400);
@@ -103,7 +103,7 @@ if ($usuario === '' || $password === '') {
 // ══════════════════════════════════════════════
 // Máximo 5 intentos fallidos por IP en 15 minutos.
 // Usa sesión PHP para no añadir carga a la BD.
-// También aplica un delay de 1 segundo para
+// En caso de fallo, aplica un delay de 1 segundo para
 // ralentizar ataques de diccionario automatizados.
 
 if (session_status() === PHP_SESSION_NONE) {
@@ -138,19 +138,15 @@ if ($intentos['count'] >= LIMITE_INTENTOS) {
     exit;
 }
 
-// Delay de 1 segundo para ralentizar bots (aplica ANTES de consultar la BD)
-sleep(1);
-
 // ══════════════════════════════════════════════
 // BLOQUE 5: CONECTAR A LA BASE DE DATOS
 // ══════════════════════════════════════════════
 
 try {
-    $conexion = new CConexion();
-    $conn = $conexion->conexionBD();
+    $conn = CConexion::getInstance();
 
     if (!$conn) {
-        error_log("Error: conexionBD() retornó null - Revisa los logs de PHP para más detalles");
+        error_log("Error: CConexion::getInstance() retornó null - Revisa los logs de PHP para más detalles");
         if (!extension_loaded('pdo_pgsql')) {
             enviarError(500, "La extensión PDO_PGSQL no está habilitada en PHP");
         } else {
@@ -160,7 +156,7 @@ try {
 } catch (Throwable $e) {
     error_log("Error al crear conexión: " . $e->getMessage());
     error_log("Stack trace: " . $e->getTraceAsString());
-    enviarError(500, "Error al establecer conexión con la base de datos");
+    enviarError(500, "Error al establecer conexión con la base de datos", $e->getMessage());
 }
 
 try {
@@ -254,8 +250,7 @@ try {
     // Login exitoso → resetear el contador de brute force para esta IP
     unset($_SESSION[$claveIP]);
 
-    // Guardar en sesión PHP (la sesión sabe a qué menú redirigir,
-    // así el JS no necesita pasar el token por la URL)
+    // Guardar en sesión PHP
     if (session_status() === PHP_SESSION_NONE) {
         session_start();
     }
@@ -290,8 +285,11 @@ try {
 
 } catch (PDOException $e) {
     error_log("Error de base de datos: " . $e->getMessage());
-    enviarError(500, "Error al consultar la base de datos");
+    enviarError(500, "Error al consultar la base de datos", $e->getMessage());
 } catch (Throwable $e) {
+    // Delay de 1 segundo para ralentizar ataques de fuerza bruta solo en intentos fallidos
+    sleep(1);
+
     // Incrementar contador de intentos fallidos para esta IP
     $intentos['count']++;
     $_SESSION[$claveIP] = $intentos;
@@ -308,9 +306,13 @@ try {
     // Registrar en log del servidor para auditoría
     error_log("Login fallido: {$usuario} IP: {$_SERVER['REMOTE_ADDR']} intento={$intentos['count']} - " . $e->getMessage());
     http_response_code(401);
-    echo json_encode([
+    $resp = [
         "success" => false,
         "error"   => "Usuario o contraseña incorrectos. " . $msgIntentos
-    ]);
+    ];
+    if (class_exists('CConexion') && CConexion::isDebugEnabled()) {
+        $resp["debug"] = $e->getMessage();
+    }
+    echo json_encode($resp);
     exit;
 }

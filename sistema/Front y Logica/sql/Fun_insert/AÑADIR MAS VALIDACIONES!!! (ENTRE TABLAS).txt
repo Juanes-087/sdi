@@ -1,1 +1,0 @@
-Añadir mas validaciones a fun empleados.

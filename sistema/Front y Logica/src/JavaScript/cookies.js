@@ -278,10 +278,3 @@ class CookieManager {
 
 // Inicializar el gestor de cookies
 const cookieManager = new CookieManager();
-
-
-
-
-
-
-

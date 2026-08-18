@@ -19,17 +19,43 @@ require_once __DIR__ . '/load_env.php';
 
 class CConexion
 {
+    private static $instance = null;
+
     /**
-     * Crea y devuelve la conexión a la base de datos.
-     * 
-     * Lee las credenciales desde las variables de entorno (archivo .env),
-     * verifica que estén completas, comprueba que PHP tenga el driver 
-     * de PostgreSQL habilitado, y si todo está bien, abre la conexión.
-     * 
-     * Si algo falla (credenciales vacías, driver faltante, BD apagada),
-     * registra el error en el log del servidor y devuelve null.
+     * Devuelve la instancia única (Singleton) de la conexión PDO.
+     */
+    public static function getInstance()
+    {
+        if (self::$instance === null) {
+            $connObj = new self();
+            self::$instance = $connObj->createConnection();
+        }
+        return self::$instance;
+    }
+
+    /**
+     * Verifica si el modo DEBUG está activado en las variables de entorno (.env).
+     * Soporta APP_DEBUG=true / APP_DEBUG=1 o APP_ENV=desarrollo
+     */
+    public static function isDebugEnabled(): bool
+    {
+        $debug = strtolower((string)(getenv('APP_DEBUG') ?: ''));
+        $env = strtolower((string)(getenv('APP_ENV') ?: ''));
+        return in_array($debug, ['true', '1', 'yes', 'on'], true) || in_array($env, ['desarrollo', 'development', 'debug', 'local'], true);
+    }
+
+    /**
+     * Método público retrocompatible. Reutiliza la conexión singleton.
      */
     public function conexionBD()
+    {
+        return self::getInstance();
+    }
+
+    /**
+     * Crea y devuelve la conexión PDO a PostgreSQL leyendo el .env.
+     */
+    private function createConnection()
     {
         // ── Leer credenciales desde variables de entorno ──
         $host = getenv('DB_HOST');
@@ -55,17 +81,14 @@ class CConexion
 
         try {
             // ── Intentar la conexión a PostgreSQL ──
-            // Se arma la cadena de conexión (DSN) y se abre la conexión con PDO.
-            // Se configura para que lance excepciones si hay error en las consultas.
             $dsn = "pgsql:host=$host;port=$port;dbname=$dbname";
             $conn = new PDO($dsn, $username, $password);
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             error_log("Conexión exitosa a PostgreSQL");
+            return $conn;
         } catch (PDOException $exp) {
             error_log("Error de conexión PostgreSQL: " . $exp->getMessage());
             return null;
         }
-
-        return $conn;
     }
 }

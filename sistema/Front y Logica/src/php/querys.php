@@ -730,91 +730,47 @@ class CQuerys
      */
     public function deleteGeneric($tipo, $id)
     {
-        $sql = "";
-        switch ($tipo) {
-            case 'usuarios':
-                $sql = "SELECT fun_user_delete(:id) as result";
-                break;
-            case 'clientes':
-                $sql = "SELECT fun_delete_cliente(:id) as result";
-                break;
-            case 'empleados':
-                $sql = "SELECT fun_delete_empleado(:id) as result";
-                break;
-            case 'proveedores':
-                $sql = "SELECT fun_delete_prov(:id) as result";
-                break;
-            case 'instrumentos':
-                $sql = "SELECT fun_delete_instrum(:id) as result";
-                break;
-            case 'kits':
-                $sql = "SELECT fun_delete_kit(:id) as result";
-                break;
-            case 'productos':
-                // Implementación directa por si la función fun_delete_producto falla o no existe
-                // Se prepara la sentencia SQL para marcar como inactivo (soft delete)
-                $sql = "UPDATE tab_productos SET ind_vivo = false, fec_update = NOW() WHERE id_producto = :id";
-                // $this->conn -> Es la conexión activa a la base de datos (PDO)
-                $stmt = $this->conn->prepare($sql);
-                // .execute -> Envía la orden a la BD con el ID sanitizado para seguridad
-                return ['result' => $stmt->execute([':id' => (int) $id])];
-                break;
-            case 'categorias_materia':
-                $sql = "SELECT fun_delete_cat_mat_prim(:id) as result";
-                break;
-            case 'materias_primas':
-                $sql = "SELECT fun_delete_materias_primas(:id) as result";
-                break;
-            default:
-                return false;
+        $config = [
+            'usuarios'           => ['table' => 'tab_users',           'pk' => 'id_user',        'fn' => 'fun_user_delete'],
+            'clientes'           => ['table' => 'tab_clientes',        'pk' => 'id_cliente',     'fn' => 'fun_delete_cliente'],
+            'empleados'          => ['table' => 'tab_empleados',       'pk' => 'id_empleado',    'fn' => 'fun_delete_empleado'],
+            'proveedores'        => ['table' => 'tab_proveedores',     'pk' => 'id_prov',        'fn' => 'fun_delete_prov'],
+            'instrumentos'       => ['table' => 'tab_instrumentos',    'pk' => 'id_instrumento', 'fn' => 'fun_delete_instrum'],
+            'kits'               => ['table' => 'tab_kits',            'pk' => 'id_kit',         'fn' => 'fun_delete_kit'],
+            'productos'          => ['table' => 'tab_productos',       'pk' => 'id_producto',    'fn' => null],
+            'categorias_materia' => ['table' => 'tab_cat_mat_prim',    'pk' => 'id_cat_mat',     'fn' => 'fun_delete_cat_mat_prim'],
+            'materias_primas'    => ['table' => 'tab_materias_primas', 'pk' => 'id_mat_prima',   'fn' => 'fun_delete_materias_primas'],
+        ];
+
+        if (!isset($config[$tipo])) {
+            return false;
+        }
+
+        $c = $config[$tipo];
+
+        if ($tipo === 'productos') {
+            // Implementación directa por si la función fun_delete_producto falla o no existe
+            // Se prepara la sentencia SQL para marcar como inactivo (soft delete)
+            $sql = "UPDATE tab_productos SET ind_vivo = false, fec_update = NOW() WHERE id_producto = :id";
+            $stmt = $this->conn->prepare($sql);
+            return ['result' => $stmt->execute([':id' => (int) $id])];
         }
 
         // 1) Verificar que el registro existe y no fue eliminado previamente
-        $checkSql = "";
-        switch ($tipo) {
-            case 'usuarios':
-                $checkSql = "SELECT ind_vivo FROM tab_users WHERE id_user = :id";
-                break;
-            case 'clientes':
-                $checkSql = "SELECT ind_vivo FROM tab_clientes WHERE id_cliente = :id";
-                break;
-            case 'empleados':
-                $checkSql = "SELECT ind_vivo FROM tab_empleados WHERE id_empleado = :id";
-                break;
-            case 'proveedores':
-                $checkSql = "SELECT ind_vivo FROM tab_proveedores WHERE id_prov = :id";
-                break;
-            case 'instrumentos':
-                $checkSql = "SELECT ind_vivo FROM tab_instrumentos WHERE id_instrumento = :id";
-                break;
-            case 'kits':
-                $checkSql = "SELECT ind_vivo FROM tab_kits WHERE id_kit = :id";
-                break;
-            case 'productos':
-                $checkSql = "SELECT ind_vivo FROM tab_productos WHERE id_producto = :id";
-                break;
-            case 'categorias_materia':
-                $checkSql = "SELECT ind_vivo FROM tab_cat_mat_prim WHERE id_cat_mat = :id";
-                break;
-            case 'materias_primas':
-                $checkSql = "SELECT ind_vivo FROM tab_materias_primas WHERE id_mat_prima = :id";
-                break;
+        $checkSql = "SELECT ind_vivo FROM {$c['table']} WHERE {$c['pk']} = :id";
+        $checkStmt = $this->conn->prepare($checkSql);
+        $checkStmt->execute([':id' => (int) $id]);
+        $row = $checkStmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$row) {
+            throw new Exception("Error: El registro no existe.");
+        }
+        if ($row['ind_vivo'] === false || $row['ind_vivo'] === 0 || $row['ind_vivo'] === 'f') {
+            throw new Exception("Error: El registro ya fue eliminado anteriormente.");
         }
 
-        if ($checkSql) {
-            $checkStmt = $this->conn->prepare($checkSql);
-            $checkStmt->execute([':id' => (int) $id]);
-            $row = $checkStmt->fetch(PDO::FETCH_ASSOC);
-
-            if (!$row)
-                throw new Exception("Error: El registro no existe.");
-            if ($row['ind_vivo'] === false || $row['ind_vivo'] === 0 || $row['ind_vivo'] === 'f') {
-                throw new Exception("Error: El registro ya fue eliminado anteriormente.");
-            }
-        }
-
-        // 2) Verificar dependencias (otros módulos pueden añadir sus checks en los controladores)
-        // Se han movido las validaciones específicas a los controladores correspondientes para mejor mantenimiento
+        // 2) Ejecutar la función SQL de borrado específica
+        $sql = "SELECT {$c['fn']}(:id) as result";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute([':id' => (int) $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
@@ -942,10 +898,28 @@ class CQuerys
     // hizo el cambio y cuándo (auditoría).
     public function updateGeneric($table, $data, $idField, $idValue, $userSession)
     {
+        $allowedTables = [
+            'tab_users', 'tab_clientes', 'tab_empleados', 'tab_proveedores',
+            'tab_instrumentos', 'tab_kits', 'tab_productos', 'tab_cat_mat_prim',
+            'tab_materias_primas', 'tab_ciudades', 'tab_cargos', 'tab_bancos',
+            'tab_tipo_documentos', 'tab_unidades_medida'
+        ];
+
+        if (!in_array($table, $allowedTables, true)) {
+            throw new InvalidArgumentException("Tabla no permitida para actualización genérica.");
+        }
+
+        if (!preg_match('/^[a-zA-Z0-9_]+$/', $idField)) {
+            throw new InvalidArgumentException("Campo ID inválido.");
+        }
+
         $campos = [];
         $params = [':id' => $idValue, ':user' => $userSession];
 
         foreach ($data as $key => $val) {
+            if (!preg_match('/^[a-zA-Z0-9_]+$/', $key)) {
+                continue;
+            }
             $campos[] = "$key = :val_$key";
             $params[":val_$key"] = $val;
         }
@@ -1426,14 +1400,19 @@ class CQuerys
                        p.nom_prov as proveedor,
                        mpp.valor_medida,
                        mpp.cant_mat_prima,
-                       (SELECT precio_nuevo FROM tab_historico_mat_prima h 
-                        WHERE h.id_materia_prima = mp.id_mat_prima 
-                        AND h.id_proveedor = mpp.id_prov 
-                        ORDER BY h.fec_insert DESC LIMIT 1) as precio_actual
+                       hp.precio_nuevo as precio_actual
                 FROM tab_materias_primas mp
                 LEFT JOIN tab_mat_primas_prov mpp ON mp.id_mat_prima = mpp.id_mat_prima
                 LEFT JOIN tab_proveedores p ON mpp.id_prov = p.id_prov
                 LEFT JOIN tab_unidades_medida um ON mpp.id_unidad_medida = um.id_unidad_medida
+                LEFT JOIN LATERAL (
+                    SELECT h.precio_nuevo
+                    FROM tab_historico_mat_prima h
+                    WHERE h.id_materia_prima = mp.id_mat_prima
+                      AND h.id_proveedor = mpp.id_prov
+                    ORDER BY h.fec_insert DESC
+                    LIMIT 1
+                ) hp ON true
                 WHERE mp.id_cat_mat = :id_cat AND mp.ind_vivo = :estado
                 ORDER BY mp.nom_materia_prima ASC";
         $stmt = $this->conn->prepare($sql);

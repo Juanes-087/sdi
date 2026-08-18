@@ -42,10 +42,14 @@ header("Pragma: no-cache");
 // ══════════════════════════════════════════════
 // Envía una respuesta JSON indicando que algo falló,
 // con un mensaje descriptivo para el usuario.
-function volverConError(string $mensaje): void
+function volverConError(string $mensaje, ?string $debug = null): void
 {
     header('Content-Type: application/json');
-    echo json_encode(['success' => false, 'error' => $mensaje]);
+    $res = ['success' => false, 'error' => $mensaje];
+    if ($debug !== null && class_exists('CConexion') && CConexion::isDebugEnabled()) {
+        $res['debug'] = $debug;
+    }
+    echo json_encode($res);
     exit();
 }
 
@@ -124,8 +128,7 @@ $hash = password_hash($password, PASSWORD_DEFAULT);
 // ══════════════════════════════════════════════
 // BLOQUE 7: CONECTAR A LA BASE DE DATOS
 // ══════════════════════════════════════════════
-$conexion = new CConexion();
-$conn = $conexion->conexionBD();
+$conn = CConexion::getInstance();
 
 if (!$conn) {
     volverConError("Error de conexión con la base de datos");
@@ -222,5 +225,5 @@ try {
 
     // Registrar el error en los logs del servidor (nunca se muestra al usuario)
     error_log('[REGISTRO ERROR] ' . $e->getMessage());
-    volverConError("Ocurrió un error interno. Intenta nuevamente");
+    volverConError("Ocurrió un error interno. Intenta nuevamente", $e->getMessage());
 }

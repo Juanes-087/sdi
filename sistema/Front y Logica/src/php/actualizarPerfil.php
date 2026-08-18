@@ -18,24 +18,7 @@
  * ============================================================
  */
 session_start();
-
-// ══════════════════════════════════════════════
-// BLOQUE 1: INFORMACIÓN DE DEPURACIÓN
-// ══════════════════════════════════════════════
-// Guarda en sesión los datos recibidos para poder diagnosticar
-// problemas si algo falla durante la actualización.
-$_SESSION['debug_inicio'] = [
-    'timestamp' => date('Y-m-d H:i:s'),
-    'method' => $_SERVER["REQUEST_METHOD"],
-    'post_data' => $_POST,
-    'session_id' => session_id(),
-    'id_usuario_en_sesion' => $_SESSION['id_usuario'] ?? 'NO DEFINIDO'
-];
-
 include_once("conexion.php");
-
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
 
 // ══════════════════════════════════════════════
 // BLOQUE 2: VERIFICAR SESIÓN ACTIVA
@@ -43,7 +26,6 @@ ini_set('display_errors', 1);
 // Si no hay un usuario autenticado, redirige al login.
 if (!isset($_SESSION['id_usuario'])) {
     $_SESSION['error_perfil'] = "Sesión no válida. Por favor, inicia sesión nuevamente.";
-    $_SESSION['debug_error'] = "No hay id_usuario en sesión";
     header("Location: ../../html/InicioSesion.html");
     exit();
 }
@@ -54,7 +36,6 @@ if (!isset($_SESSION['id_usuario'])) {
 // Solo acepta POST (envío de formulario de perfil).
 if ($_SERVER["REQUEST_METHOD"] != "POST") {
     $_SESSION['error_perfil'] = "Error: No se recibieron datos del formulario. Método recibido: " . $_SERVER["REQUEST_METHOD"];
-    $_SESSION['debug_error'] = "No es POST, es: " . $_SERVER["REQUEST_METHOD"];
     header("Location: menuPrincipal.php");
     exit();
 }
@@ -67,14 +48,6 @@ if ($_SERVER["REQUEST_METHOD"] != "POST") {
 $nom_user = trim($_POST["nom_user"] ?? "");
 $mail_user = trim($_POST["mail_user"] ?? "");
 $tel_user = preg_replace('/[^0-9]/', '', $_POST["tel_user"] ?? "");
-
-// Guardar datos para depuración
-$_SESSION['debug_post'] = [
-    'nom_user' => $nom_user,
-    'mail_user' => $mail_user,
-    'tel_user' => $tel_user,
-    'post_completo' => $_POST
-];
 
 // ══════════════════════════════════════════════
 // BLOQUE 5: VALIDAR CAMPOS
@@ -146,21 +119,6 @@ try {
     $resultado = $stmt->execute();
     $filas_afectadas = $stmt->rowCount();
 
-    // Guardar información de la ejecución para depuración
-    $_SESSION['debug_update'] = [
-        'resultado' => $resultado,
-        'filas_afectadas' => $filas_afectadas,
-        'id_usuario' => $id_usuario,
-        'sql' => $sql,
-        'valores' => [
-            'nom_user' => $nom_user,
-            'mail_user' => $mail_user,
-            'tel_user_int' => $tel_user_int,
-            'user_update' => $user_update
-        ],
-        'error_info' => $stmt->errorInfo()
-    ];
-
     // ══════════════════════════════════════════════
     // BLOQUE 9: EVALUAR RESULTADO
     // ══════════════════════════════════════════════
@@ -189,39 +147,7 @@ try {
 
 } catch (PDOException $e) {
     $_SESSION['error_perfil'] = "Error en la base de datos: " . $e->getMessage();
-    $_SESSION['debug_error'] = [
-        'mensaje' => $e->getMessage(),
-        'codigo' => $e->getCode(),
-        'archivo' => $e->getFile(),
-        'linea' => $e->getLine()
-    ];
     error_log("Error al actualizar perfil: " . $e->getMessage());
-}
-
-// ══════════════════════════════════════════════
-// BLOQUE 10: MODO DEPURACIÓN (OPCIONAL)
-// ══════════════════════════════════════════════
-// Si se accede con ?debug=1, muestra toda la información
-// de depuración en pantalla en lugar de redirigir.
-if (isset($_GET['debug']) && $_GET['debug'] == '1') {
-    echo "<h2>Debug de Actualización</h2>";
-    echo "<pre>";
-    echo "Datos POST recibidos:\n";
-    print_r($_POST);
-    echo "\n\nDatos procesados:\n";
-    echo "nom_user: " . $nom_user . "\n";
-    echo "mail_user: " . $mail_user . "\n";
-    echo "tel_user_int: " . $tel_user_int . "\n";
-    echo "id_usuario: " . $id_usuario . "\n";
-    echo "\n\nDebug de sesión:\n";
-    print_r($_SESSION['debug_update'] ?? 'No hay debug_update');
-    if (isset($_SESSION['debug_error'])) {
-        echo "\n\nError:\n";
-        print_r($_SESSION['debug_error']);
-    }
-    echo "</pre>";
-    echo "<a href='menuPrincipal.php'>Volver al menú</a>";
-    exit();
 }
 
 // Redirigir de vuelta al menú principal
