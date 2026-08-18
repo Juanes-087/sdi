@@ -9,3 +9,7 @@ vendor/
 # Ignorar archivos temporales de Windows
 Thumbs.db
 desktop.ini
+
+# Video pesado
+documentacion/MANUALES/manual_de_usuario.mkv
+*.mkv
