@@ -66,6 +66,7 @@ function enviarError($codigo, $mensaje, $debug = null)
 try {
     include_once "conexion.php";
     include_once "jwt.php";
+    include_once __DIR__ . "/includes/rate_limiter.php";
 } catch (Throwable $e) {
     error_log("Error al incluir archivos: " . $e->getMessage());
     enviarError(500, "Error de configuración del servidor");
@@ -99,41 +100,28 @@ if ($usuario === '' || $password === '') {
 }
 
 // ══════════════════════════════════════════════
-// BLOQUE 4B: PROTECCIÓN BRUTE FORCE POR IP
+// BLOQUE 4B: PROTECCIÓN BRUTE FORCE POR IP (PERSISTENTE)
 // ══════════════════════════════════════════════
-// Máximo 5 intentos fallidos por IP en 15 minutos.
-// Usa sesión PHP para no añadir carga a la BD.
+// Máximo 5 intentos fallidos por IP en 15 minutos (persistente fuera de sesión).
 // En caso de fallo, aplica un delay de 1 segundo para
 // ralentizar ataques de diccionario automatizados.
 
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
 $clienteIP   = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
-$claveIP     = 'login_attempts_' . md5($clienteIP);
+$claveIP     = 'login_ip_' . md5($clienteIP);
 const LIMITE_INTENTOS  = 5;
 const VENTANA_SEGUNDOS = 15 * 60; // 15 minutos
 
-// Obtener historial de intentos para esta IP
-$intentos = $_SESSION[$claveIP] ?? ['count' => 0, 'first_attempt' => time()];
+$rateStatus = RateLimiter::check($claveIP, LIMITE_INTENTOS, VENTANA_SEGUNDOS);
 
-// Reiniciar contador si ya pasó la ventana de tiempo
-if ((time() - $intentos['first_attempt']) > VENTANA_SEGUNDOS) {
-    $intentos = ['count' => 0, 'first_attempt' => time()];
-}
-
-// Bloquear si se superó el límite
-if ($intentos['count'] >= LIMITE_INTENTOS) {
-    $restante  = VENTANA_SEGUNDOS - (time() - $intentos['first_attempt']);
-    $segundos  = max(0, $restante);
-    $minutos   = ceil($segundos / 60);
-    error_log("Brute force bloqueado: IP={$clienteIP} intentos={$intentos['count']}");
+if (!$rateStatus['allowed']) {
+    $segundos = $rateStatus['remaining_seconds'];
+    $minutos  = (int)ceil($segundos / 60);
+    error_log("Brute force bloqueado: IP={$clienteIP} intentos={$rateStatus['attempts']}");
     http_response_code(429);
     echo json_encode([
         "success"  => false,
         "error"    => "Demasiados intentos fallidos. Espera {$minutos} minuto(s) antes de intentarlo de nuevo.",
-        "segundos" => $segundos   // ← el JS usa esto para el countdown exacto
+        "segundos" => $segundos
     ]);
     exit;
 }
@@ -248,7 +236,7 @@ try {
     $idleMinutos = $rowIdle ? (int) $rowIdle['ind_idle'] : 30;
 
     // Login exitoso → resetear el contador de brute force para esta IP
-    unset($_SESSION[$claveIP]);
+    RateLimiter::clear($claveIP);
 
     // Guardar en sesión PHP
     if (session_status() === PHP_SESSION_NONE) {
@@ -290,11 +278,10 @@ try {
     // Delay de 1 segundo para ralentizar ataques de fuerza bruta solo en intentos fallidos
     sleep(1);
 
-    // Incrementar contador de intentos fallidos para esta IP
-    $intentos['count']++;
-    $_SESSION[$claveIP] = $intentos;
+    // Registrar intento fallido persistente para esta IP
+    $intentosActuales = RateLimiter::hit($claveIP, VENTANA_SEGUNDOS);
 
-    $intentosRestantes = max(0, LIMITE_INTENTOS - $intentos['count']);
+    $intentosRestantes = max(0, LIMITE_INTENTOS - $intentosActuales);
     $msgIntentos = $intentosRestantes > 0 
         ? "Te quedan {$intentosRestantes} intento(s)." 
         : "Al próximo intento fallido se bloqueará tu cuenta temporalmente.";
@@ -304,7 +291,7 @@ try {
     }
 
     // Registrar en log del servidor para auditoría
-    error_log("Login fallido: {$usuario} IP: {$_SERVER['REMOTE_ADDR']} intento={$intentos['count']} - " . $e->getMessage());
+    error_log("Login fallido: {$usuario} IP: {$_SERVER['REMOTE_ADDR']} intento={$intentosActuales} - " . $e->getMessage());
     http_response_code(401);
     $resp = [
         "success" => false,

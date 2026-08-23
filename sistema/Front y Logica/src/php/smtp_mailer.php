@@ -47,39 +47,83 @@ class SmtpMailer
     public function send(string $to, string $subject, string $body): bool
     {
         try {
+            // Validar que las credenciales SMTP no estén vacías
+            if (empty($this->user) || empty($this->pass)) {
+                $this->lastError = "Credenciales SMTP no configuradas. Verifica SMTP_USER y SMTP_PASS en el archivo .env";
+                return false;
+            }
+
             // 1. Conectar al servidor SMTP
-            $this->socket = @fsockopen($this->host, $this->port, $errno, $errstr, 30);
+            $context = stream_context_create([
+                'ssl' => [
+                    'verify_peer' => false,
+                    'verify_peer_name' => false,
+                    'allow_self_signed' => true
+                ]
+            ]);
+
+            $this->socket = @stream_socket_client(
+                "tcp://{$this->host}:{$this->port}",
+                $errno,
+                $errstr,
+                15,
+                STREAM_CLIENT_CONNECT,
+                $context
+            );
+
             if (!$this->socket) {
-                $this->lastError = "No se pudo conectar: $errstr ($errno)";
+                $this->lastError = "No se pudo conectar al servidor SMTP ({$this->host}:{$this->port}): $errstr ($errno)";
                 return false;
             }
 
             // Leer saludo del servidor
-            $this->getResponse();
+            $resp = $this->getResponse();
+            if (substr($resp, 0, 3) !== '220') {
+                $this->lastError = "Respuesta no esperada del servidor: " . trim($resp);
+                return false;
+            }
 
             // 2. Identificarse ante el servidor (EHLO)
             $this->sendCommand("EHLO " . gethostname());
 
             // 3. Iniciar encriptación TLS
-            $this->sendCommand("STARTTLS");
-            
-            // Activar encriptación en el socket
-            if (!stream_socket_enable_crypto($this->socket, true, STREAM_CRYPTO_METHOD_TLS_CLIENT)) {
-                $this->lastError = "Error al iniciar TLS";
+            $tlsResp = $this->sendCommand("STARTTLS");
+            if (substr($tlsResp, 0, 3) === '220') {
+                // Activar encriptación en el socket
+                $cryptoMethod = STREAM_CRYPTO_METHOD_TLS_CLIENT;
+                if (defined('STREAM_CRYPTO_METHOD_TLSv1_2_CLIENT')) {
+                    $cryptoMethod |= STREAM_CRYPTO_METHOD_TLSv1_2_CLIENT;
+                }
+                if (defined('STREAM_CRYPTO_METHOD_TLSv1_3_CLIENT')) {
+                    $cryptoMethod |= STREAM_CRYPTO_METHOD_TLSv1_3_CLIENT;
+                }
+
+                if (!@stream_socket_enable_crypto($this->socket, true, $cryptoMethod)) {
+                    $this->lastError = "Error al iniciar TLS en la conexión segura con el servidor SMTP.";
+                    return false;
+                }
+
+                // 4. Re-identificarse después de TLS
+                $this->sendCommand("EHLO " . gethostname());
+            }
+
+            // 5. Autenticación (AUTH LOGIN)
+            $authResp = $this->sendCommand("AUTH LOGIN");
+            $this->sendCommand(base64_encode($this->user));
+            $passResp = $this->sendCommand(base64_encode($this->pass));
+
+            if (substr($passResp, 0, 3) !== '235') {
+                $this->lastError = "Fallo de autenticación SMTP. Revisa tu correo y contraseña de aplicación en .env: " . trim($passResp);
                 return false;
             }
 
-            // 4. Re-identificarse después de TLS
-            $this->sendCommand("EHLO " . gethostname());
-
-            // 5. Autenticación (AUTH LOGIN)
-            $this->sendCommand("AUTH LOGIN");
-            $this->sendCommand(base64_encode($this->user));
-            $this->sendCommand(base64_encode($this->pass));
-
             // 6. Configurar remitente y destinatario
             $this->sendCommand("MAIL FROM:<{$this->user}>");
-            $this->sendCommand("RCPT TO:<{$to}>");
+            $rcptResp = $this->sendCommand("RCPT TO:<{$to}>");
+            if (substr($rcptResp, 0, 3) !== '250') {
+                $this->lastError = "Destinatario rechazado por el servidor: " . trim($rcptResp);
+                return false;
+            }
 
             // 7. Enviar contenido del email
             $this->sendCommand("DATA");
@@ -95,11 +139,16 @@ class SmtpMailer
 
             // Enviar headers + body + terminador
             fwrite($this->socket, $headers . $body . "\r\n.\r\n");
-            $this->getResponse();
+            $dataResp = $this->getResponse();
 
             // 8. Cerrar conexión
             $this->sendCommand("QUIT");
             fclose($this->socket);
+
+            if (substr($dataResp, 0, 3) !== '250') {
+                $this->lastError = "Error al finalizar envío del correo: " . trim($dataResp);
+                return false;
+            }
 
             return true;
 

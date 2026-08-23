@@ -39,11 +39,11 @@ header("Expires: Thu, 01 Jan 1970 00:00:00 GMT");
 // ══════════════════════════════════════════════
 // BLOQUE 2: VERIFICAR MÉTODO HTTP
 // ══════════════════════════════════════════════
-// Acepta POST (desde JavaScript) o GET (desde un enlace directo)
-if ($_SERVER["REQUEST_METHOD"] !== "POST" && $_SERVER["REQUEST_METHOD"] !== "GET") {
+// Acepta únicamente peticiones POST para prevenir ataques de CSRF en logout
+if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     http_response_code(405);
     header("Content-Type: application/json");
-    echo json_encode(["success" => false, "error" => "Método no permitido"]);
+    echo json_encode(["success" => false, "error" => "Método no permitido. El cierre de sesión requiere POST."]);
     exit();
 }
 

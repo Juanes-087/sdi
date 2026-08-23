@@ -38,11 +38,34 @@ if (!isset($_SESSION['id_usuario'])) {
     exit;
 }
 
+// Validación de rol y permisos (RBAC):
+$isAdmin = isset($_SESSION['id_menu']) && ((int)$_SESSION['id_menu'] === 1);
+
+// Whitelist de endpoints GET permitidos para clientes (no administradores)
+$publicGetEndpoints = [
+    'auxiliares',
+    'instrumentos',
+    'kits',
+    'kit_instruments',
+    'productos',
+    'top_vendidos'
+];
+
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
-    if (!isset($_SESSION['id_menu']) || $_SESSION['id_menu'] != 1) {
+    if (!$isAdmin) {
         http_response_code(403);
         echo json_encode([
             'error' => 'Acceso denegado: No tienes permisos de administrador.'
+        ]);
+        exit;
+    }
+} else {
+    $tipo = $_GET['tipo'] ?? '';
+    // Si no es admin y solicita un recurso administrativo, bloquear
+    if (!$isAdmin && !in_array($tipo, $publicGetEndpoints, true)) {
+        http_response_code(403);
+        echo json_encode([
+            'error' => 'Acceso denegado: Se requieren permisos de administrador para consultar este recurso.'
         ]);
         exit;
     }

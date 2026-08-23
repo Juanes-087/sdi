@@ -138,6 +138,9 @@ try {
     // Se inicia una transacción: si algo falla, todo se deshace
     $conn->beginTransaction();
 
+    // Bloqueo de tabla para serializar registros concurrentes y prevenir race condition de IDs
+    $conn->exec("LOCK TABLE tab_users IN EXCLUSIVE MODE");
+
     // ══════════════════════════════════════════════
     // BLOQUE 8: VERIFICAR QUE NO EXISTA DUPLICADO
     // ══════════════════════════════════════════════
@@ -163,8 +166,8 @@ try {
     // ══════════════════════════════════════════════
     // BLOQUE 9: GENERAR ID Y GUARDAR USUARIO
     // ══════════════════════════════════════════════
-    // Calcula el siguiente ID disponible e inserta el usuario
-    // con todos sus datos en la tabla principal.
+    // Calcula de forma atómica y segura el siguiente ID disponible
+    // e inserta el usuario con todos sus datos en la tabla principal.
     $nextId = (int) $conn
         ->query("SELECT COALESCE(MAX(id_user),0)+1 FROM tab_users")
         ->fetchColumn();
