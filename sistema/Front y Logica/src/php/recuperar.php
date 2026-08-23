@@ -109,8 +109,8 @@ try {
             enviarRespuesta(false, "Sesión expirada. Busca tu usuario nuevamente.");
         }
 
-        // Generar código aleatorio de 6 dígitos
-        $codigo = rand(100000, 999999);
+        // Generar código aleatorio de 6 dígitos criptográficamente seguro
+        $codigo = random_int(100000, 999999);
 
         // Guardar código en sesión con expiración de 5 minutos
         $_SESSION['recup_codigo'] = (string) $codigo;
@@ -186,5 +186,9 @@ try {
 
 } catch (Throwable $e) {
     error_log("Error Recuperación: " . $e->getMessage());
-    enviarRespuesta(false, "Error del servidor: " . $e->getMessage());
+    $errorMsg = "Ocurrió un error en el servidor al procesar la solicitud.";
+    if (class_exists('CConexion') && CConexion::isDebugEnabled()) {
+        $errorMsg .= " Detalle: " . $e->getMessage();
+    }
+    enviarRespuesta(false, $errorMsg);
 }

@@ -66,8 +66,14 @@ header("Expires: Thu, 01 Jan 1970 00:00:00 GMT");
 if (session_status() === PHP_SESSION_NONE) {
     // Las cookies de sesión solo son accesibles por HTTP (no por JavaScript)
     ini_set('session.cookie_httponly', '1');
-    // En producción con HTTPS, cambiar a '1' para mayor seguridad
-    ini_set('session.cookie_secure', '0');
+    
+    // Cookie Secure activado si es HTTPS o si estamos en producción
+    $isSecure = (!empty($_SERVER['HTTPS']) && strtolower((string)$_SERVER['HTTPS']) !== 'off')
+        || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443)
+        || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https')
+        || (strtolower((string)(getenv('APP_ENV') ?: '')) === 'produccion');
+    ini_set('session.cookie_secure', $isSecure ? '1' : '0');
+
     // La cookie solo se envía en peticiones al mismo sitio
     ini_set('session.cookie_samesite', 'Strict');
     // Solo acepta IDs de sesión generados por el servidor

@@ -146,8 +146,11 @@ try {
     }
 
 } catch (PDOException $e) {
-    $_SESSION['error_perfil'] = "Error en la base de datos: " . $e->getMessage();
     error_log("Error al actualizar perfil: " . $e->getMessage());
+    $_SESSION['error_perfil'] = "Error al comunicarse con la base de datos. Intente nuevamente.";
+    if (class_exists('CConexion') && CConexion::isDebugEnabled()) {
+        $_SESSION['error_perfil'] .= " (Debug: " . $e->getMessage() . ")";
+    }
 }
 
 // Redirigir de vuelta al menú principal

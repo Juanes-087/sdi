@@ -30,9 +30,13 @@ declare(strict_types=1)
 require_once __DIR__ . '/load_env.php';
 
 // ── Clave secreta para firmar los tokens ──
-// Se lee del archivo .env. Si no existe, usa un valor por defecto
-// (solo para desarrollo; en producción DEBE configurarse).
-define('JWT_SECRET', getenv('JWT_SECRET') ?: 'clave-por-defecto-cambiar-en-produccion');
+// Se lee del archivo .env. Si no existe, se lanza una excepción de seguridad.
+$jwtSecret = getenv('JWT_SECRET');
+if (empty($jwtSecret)) {
+    error_log("Error crítico de seguridad: JWT_SECRET no está configurado en el archivo .env");
+    throw new RuntimeException("Error de configuración de seguridad del servidor.");
+}
+define('JWT_SECRET', $jwtSecret);
 
 // ── Algoritmo de cifrado utilizado ──
 const JWT_ALG = 'HS256';

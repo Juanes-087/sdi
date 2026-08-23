@@ -42,8 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     if (!isset($_SESSION['id_menu']) || $_SESSION['id_menu'] != 1) {
         http_response_code(403);
         echo json_encode([
-            'error' => 'Acceso denegado: No tienes permisos de administrador.',
-            'debug_role' => $_SESSION['id_menu'] ?? 'null'
+            'error' => 'Acceso denegado: No tienes permisos de administrador.'
         ]);
         exit;
     }
@@ -69,8 +68,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         echo json_encode(['error' => 'Tipo de dato (GET) no válido o no encontrado: ' . $tipo]);
         exit;
     } catch (Throwable $e) {
+        error_log("Error en api_gestion GET: " . $e->getMessage());
         http_response_code(500);
-        echo json_encode(['error' => 'Error del Servidor: ' . $e->getMessage()]);
+        $errorMsg = 'Error interno del servidor al procesar la solicitud.';
+        if (class_exists('CConexion') && CConexion::isDebugEnabled()) {
+            $errorMsg .= ' Detalle: ' . $e->getMessage();
+        }
+        echo json_encode(['error' => $errorMsg]);
         exit;
     }
 }
@@ -141,7 +145,7 @@ elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 $uploadDir = __DIR__ . '/../../images/' . $subFolder . '/';
                 if (!file_exists($uploadDir))
-                    @mkdir($uploadDir, 0777, true);
+                    @mkdir($uploadDir, 0755, true);
 
                 $fileTmpPath = $_FILES[$fileKey]['tmp_name'];
                 $fileName    = $_FILES[$fileKey]['name'];

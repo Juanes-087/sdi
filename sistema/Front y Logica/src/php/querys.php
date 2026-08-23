@@ -81,7 +81,19 @@ class CQuerys
             return null;
 
         if (is_numeric($val))
-            return $val;
+            return (int)$val;
+
+        // Lista blanca de tablas y columnas permitidas para evitar inyecciones indirectas
+        $allowedTables = [
+            'tab_ciudades', 'tab_tipo_documentos', 'tab_cargos', 'tab_tipo_sangre',
+            'tab_bancos', 'tab_tipo_especializacion', 'tab_proveedores',
+            'tab_unidades_medida', 'tab_cat_mat_prim'
+        ];
+
+        if (!in_array($table, $allowedTables, true) || !preg_match('/^[a-zA-Z0-9_]+$/', $colId) || !preg_match('/^[a-zA-Z0-9_]+$/', $colName)) {
+            error_log("Intento de acceso a tabla/columna no permitida en getIdByName: table={$table}, colId={$colId}, colName={$colName}");
+            return null;
+        }
 
         $sql = "SELECT $colId FROM $table WHERE LOWER($colName) = LOWER(:val) LIMIT 1";
         $stmt = $this->conn->prepare($sql);
@@ -788,32 +800,32 @@ class CQuerys
      */
     public function restoreGeneric($tipo, $id)
     {
-        $table = '';
-        $pk = '';
+        $config = [
+            'usuarios'           => ['table' => 'tab_users',           'pk' => 'id_user'],
+            'clientes'           => ['table' => 'tab_clientes',        'pk' => 'id_cliente'],
+            'empleados'          => ['table' => 'tab_empleados',       'pk' => 'id_empleado'],
+            'proveedores'        => ['table' => 'tab_proveedores',     'pk' => 'id_prov'],
+            'instrumentos'       => ['table' => 'tab_instrumentos',    'pk' => 'id_instrumento'],
+            'kits'               => ['table' => 'tab_kits',            'pk' => 'id_kit'],
+            'productos'          => ['table' => 'tab_productos',       'pk' => 'id_producto'],
+            'categorias_materia' => ['table' => 'tab_cat_mat_prim',    'pk' => 'id_cat_mat'],
+            'materias_primas'    => ['table' => 'tab_materias_primas', 'pk' => 'id_mat_prima'],
+        ];
 
-        switch ($tipo) {
-            case 'usuarios': $table = 'tab_users'; $pk = 'id_user'; break;
-            case 'clientes': $table = 'tab_clientes'; $pk = 'id_cliente'; break;
-            case 'empleados': $table = 'tab_empleados'; $pk = 'id_empleado'; break;
-            case 'proveedores': $table = 'tab_proveedores'; $pk = 'id_prov'; break;
-            case 'instrumentos': $table = 'tab_instrumentos'; $pk = 'id_instrumento'; break;
-            case 'kits': $table = 'tab_kits'; $pk = 'id_kit'; break;
-            case 'productos': $table = 'tab_productos'; $pk = 'id_producto'; break;
-            case 'categorias_materia': $table = 'tab_cat_mat_prim'; $pk = 'id_cat_mat'; break;
-            case 'materias_primas': $table = 'tab_materias_primas'; $pk = 'id_mat_prima'; break;
-            default: return ['success' => false, 'error' => 'Tipo no soportado para restauración.'];
+        if (!isset($config[$tipo])) {
+            return ['success' => false, 'error' => 'Tipo no soportado para restauración.'];
         }
 
+        $c = $config[$tipo];
+
         try {
-            // Se construye el UPDATE dinámicamente según la tabla y su Clave Primaria (PK)
-            $sql = "UPDATE $table SET ind_vivo = true, fec_update = NOW() WHERE $pk = :id";
-            // .prepare($sql) -> Prepara la plantilla de la consulta para evitar Inyección SQL
+            $sql = "UPDATE {$c['table']} SET ind_vivo = true, fec_update = NOW() WHERE {$c['pk']} = :id";
             $stmt = $this->conn->prepare($sql);
-            // .execute -> Ejecuta la consulta vinculando el parámetro :id de forma segura
             $res = $stmt->execute([':id' => (int)$id]);
             return ['success' => $res];
         } catch (Exception $e) {
-            return ['success' => false, 'error' => $e->getMessage()];
+            error_log("Error en restoreGeneric: " . $e->getMessage());
+            return ['success' => false, 'error' => 'No se pudo restaurar el registro.'];
         }
     }
 

@@ -1,15 +1,58 @@
-# Ignorar archivos de configuración sensible
-.env
-.env.local
+# ===========================================
+# Variables de entorno y credenciales (CRÍTICO)
+# ===========================================
+**/.env
+**/*.env
+**/.env.local
+!**/.env.example
 
-# Ignorar carpetas de dependencias (si usa Node o PHP)
-node_modules/
-vendor/
+# ===========================================
+# Dependencias (Node / Composer)
+# ===========================================
+**/node_modules/
+**/vendor/
 
-# Ignorar archivos temporales de Windows
-Thumbs.db
+# ===========================================
+# Archivos subidos por usuarios y multimedia dinámica
+# ===========================================
+**/images/instrum/*
+**/images/kit/*
+**/images/prod/*
+**/images/mat_prima/*
+!**/images/instrum/.gitkeep
+!**/images/kit/.gitkeep
+!**/images/prod/.gitkeep
+!**/images/mat_prima/.gitkeep
+
+# ===========================================
+# Archivos multimedia pesados
+# ===========================================
+**/*.mkv
+**/*.mp4
+**/*.mov
+
+# ===========================================
+# Logs, temporales y volcados del sistema
+# ===========================================
+*.log
+**/*.log
+*.txt
+scratch/
+.system_generated/
+error_log
+php_error.log
 desktop.ini
+Thumbs.db
+.DS_Store
 
-# Video pesado
-documentacion/MANUALES/manual_de_usuario.mkv
-*.mkv
+# ===========================================
+# IDEs, Editores y Entornos
+# ===========================================
+.vscode/
+.idea/
+.gemini/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
