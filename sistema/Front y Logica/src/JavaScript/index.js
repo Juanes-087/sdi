@@ -203,11 +203,11 @@
         // Función para cargar datos
         async function cargarProductos(busqueda = '') {
             try {
-                const url = `/sdi/src/php/api_productos.php?q=${encodeURIComponent(busqueda)}`;
+                const url = `./src/php/api_productos.php?q=${encodeURIComponent(busqueda)}`;
                 const response = await fetch(url);
                 if (!response.ok) {
                     const errorText = await response.text();
-                    alert(`Error API (${response.status}): ${errorText}`); // DEBUG ALERT
+                    console.error(`Error API (${response.status}): ${errorText}`);
                     throw new Error(`Error HTTP ${response.status}: ${errorText}`);
                 }
 
@@ -280,7 +280,7 @@ async function initBestSellersCarousel() {
     if (!track) return;
 
     try {
-        const response = await fetch('/sdi/src/php/api_top_vendidos.php');
+        const response = await fetch('./src/php/api_top_vendidos.php');
         const result = await response.json();
 
         if (result.success && result.data.length > 0) {
@@ -350,7 +350,6 @@ function renderBestSellers(products, track) {
                     <img src="${imgSrc}" alt="${product.titulo}" onerror="this.src='./images/placeholder.png'">
                 </div>
                 <h3 class="slide-title">${product.titulo}</h3>
-                <p class="slide-price">$${parseFloat(product.precio).toLocaleString('es-CO')}</p>
             </div>
         `;
         track.appendChild(slide);

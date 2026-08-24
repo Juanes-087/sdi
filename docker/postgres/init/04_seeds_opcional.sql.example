@@ -1,0 +1,99 @@
+-- ============================================================================
+-- SCRIPT DE SEMILLAS DE PRUEBA (OPCIONAL / ENTORNO DESARROLLO)
+-- SPECIALIZED INSTRUMENTAL DENTAL
+-- ============================================================================
+-- Para cargar estos datos de prueba en desarrollo, renombra este archivo
+-- a 04_seeds.sql dentro de docker/postgres/init/ o ejecútalo manualmente.
+-- ============================================================================
+
+-- Proveedores de prueba
+INSERT INTO tab_proveedores (id_prov, id_documento, id_ciudad, num_documento, nom_prov, tel_prov, mail_prov, dir_prov, ind_calidad) VALUES
+(6, 4, 76001, '8445556667', 'Suministros Dentales del Valle', 3002890123, 'suministros@dentalvalle.com', 'Av. 6N #25-10, Cali', 'Precios competitivos'),
+(7, 4, 66001, '8556667778', 'Esterilab S.A.S.', 3006901234, 'compras@esterilab.com', 'Cra 7 #18-33, Pereira', 'Especialistas en esterilización'),
+(8, 4, 63001, '8667778889', 'Dental Quindío Ltda', 3007012345, 'info@dentalquindio.com', 'Cl. 19 #12-45, Armenia', 'Materiales nacionales')
+ON CONFLICT (id_prov) DO NOTHING;
+
+-- Materias primas de prueba
+INSERT INTO tab_materias_primas (id_mat_prima, id_cat_mat, nom_materia_prima, img_url) VALUES
+(1, 1, 'Varilla Acero Inox 2.0mm', '../../images/sim_imagen.png'),
+(2, 1, 'Varilla Titanio 1.5mm', '../../images/sim_imagen.png'),
+(3, 2, 'Tornillo Miniimplante 1.5x8mm', '../../images/sim_imagen.png'),
+(4, 2, 'Tornillo Miniimplante 2.0x10mm', '../../images/sim_imagen.png'),
+(5, 3, 'Alambre Níquel-Titanio 0.014', '../../images/sim_imagen.png'),
+(6, 3, 'Alambre Acero Inoxidable 0.016', '../../images/sim_imagen.png')
+ON CONFLICT (id_mat_prima) DO NOTHING;
+
+-- Instrumentos de prueba
+INSERT INTO tab_instrumentos (id_instrumento, id_especializacion, nom_instrumento, lote, cant_disp, numeral_en_kit, tipo_mat, img_url) VALUES
+(1, 1, 'Explorador Dental N°5', 201, 50, 1, 1, '../../images/sim_imagen.png'),
+(2, 1, 'Explorador Dental N°23', 202, 45, 2, 1, '../../images/sim_imagen.png'),
+(3, 3, 'Lima K #15', 203, 100, 3, 1, '../../images/sim_imagen.png'),
+(4, 3, 'Lima K #25', 204, 95, 4, 1, '../../images/sim_imagen.png'),
+(5, 4, 'Cureta Gracey 1-2', 205, 60, 5, 1, '../../images/sim_imagen.png'),
+(6, 4, 'Cureta Universal 13-14', 206, 55, 6, 1, '../../images/sim_imagen.png'),
+(7, 4, 'Pinza Adams', 207, 40, 7, 1, '../../images/sim_imagen.png'),
+(8, 4, 'Pinza Weingart', 208, 35, 8, 1, '../../images/sim_imagen.png'),
+(9, 4, 'Elevador Straight', 209, 30, 9, 1, '../../images/sim_imagen.png'),
+(10, 4, 'Elevador Crane', 210, 25, 10, 1, '../../images/sim_imagen.png'),
+(11, 4, 'Porta Aguja Mayo-Hegar', 211, 70, 11, 1, '../../images/sim_imagen.png'),
+(12, 4, 'Tijera Metzenbaum', 212, 65, 12, 1, '../../images/sim_imagen.png'),
+(13, 1, 'Speculum Pediátrico', 213, 20, 13, 1, '../../images/sim_imagen.png'),
+(14, 1, 'Cepillo Prophylaxis', 214, 150, 14, 1, '../../images/sim_imagen.png'),
+(15, 1, 'Micropincel Estética', 215, 80, 15, 2, '../../images/sim_imagen.png'),
+(16, 1, 'Espátula de Composite', 216, 90, 16, 1, '../../images/sim_imagen.png'),
+(17, 4, 'Motor de Implantes', 217, 15, 17, 2, '../../images/sim_imagen.png'),
+(18, 4, 'Fresa de Osteotomía', 218, 200, 18, 1, '../../images/sim_imagen.png'),
+(19, 1, 'Posicionador Radiográfico', 219, 25, 19, 2, '../../images/sim_imagen.png'),
+(20, 2, 'Pinza de Esterilización', 220, 40, 20, 1, '../../images/sim_imagen.png'),
+(21, 2, 'Caja de Esterilización', 221, 15, 21, 1, '../../images/sim_imagen.png'),
+(22, 2, 'Rollo de Esterilización', 222, 100, 22, 2, '../../images/sim_imagen.png'),
+(23, 3, 'Lima H #30', 223, 85, 23, 1, '../../images/sim_imagen.png')
+ON CONFLICT (id_instrumento) DO NOTHING;
+
+-- Kits de prueba
+INSERT INTO tab_kits (id_kit, id_especializacion, nom_kit, cant_disp, tipo_mat, img_url) VALUES
+(1, 1, 'Kit Operatoria Dental Básico', 25, 1, '../../images/sim_imagen.png'),
+(2, 1, 'Kit Operatoria Dental Avanzado', 15, 1, '../../images/sim_imagen.png'),
+(3, 3, 'Kit Endodoncia Inicial', 20, 1, '../../images/sim_imagen.png'),
+(4, 3, 'Kit Endodoncia Profesional', 12, 1, '../../images/sim_imagen.png'),
+(5, 4, 'Kit Periodoncia Básico', 18, 1, '../../images/sim_imagen.png'),
+(6, 4, 'Kit Periodoncia Quirúrgico', 10, 1, '../../images/sim_imagen.png'),
+(7, 4, 'Kit Ortodoncia Inicial', 22, 1, '../../images/sim_imagen.png'),
+(8, 4, 'Kit Ortodoncia Avanzado', 14, 1, '../../images/sim_imagen.png'),
+(9, 4, 'Kit Cirugía Oral Básica', 16, 1, '../../images/sim_imagen.png'),
+(10, 4, 'Kit Cirugía Oral Avanzada', 8, 1, '../../images/sim_imagen.png'),
+(11, 4, 'Kit Prótesis Dental', 20, 1, '../../images/sim_imagen.png'),
+(12, 1, 'Kit Odontopediatría', 18, 1, '../../images/sim_imagen.png'),
+(13, 1, 'Kit Estética Dental Premium', 12, 2, '../../images/sim_imagen.png'),
+(14, 4, 'Kit Implantología Básico', 10, 1, '../../images/sim_imagen.png'),
+(15, 1, 'Kit Radiología Dental', 15, 1, '../../images/sim_imagen.png'),
+(16, 2, 'Kit Emergencias Dentales', 25, 1, '../../images/sim_imagen.png'),
+(17, 2, 'Kit Esterilización Completo', 30, 1, '../../images/sim_imagen.png'),
+(18, 1, 'Kit Diagnóstico Dental', 28, 1, '../../images/sim_imagen.png'),
+(19, 4, 'Kit Laboratorio Dental', 12, 2, '../../images/sim_imagen.png'),
+(20, 1, 'Kit Blanqueamiento Dental', 20, 2, '../../images/sim_imagen.png')
+ON CONFLICT (id_kit) DO NOTHING;
+
+-- Productos catálogo de prueba
+INSERT INTO tab_productos (id_producto, id_instrumento, id_kit, nombre_producto, precio_producto, img_url) VALUES
+(1, 1, NULL, 'Explorador Dental N°5', 45000, '../../images/sim_imagen.png'),
+(2, 2, NULL, 'Explorador Dental N°23', 48000, '../../images/sim_imagen.png'),
+(3, 3, NULL, 'Lima K #15', 25000, '../../images/sim_imagen.png'),
+(4, 4, NULL, 'Lima K #25', 28000, '../../images/sim_imagen.png'),
+(5, 5, NULL, 'Cureta Gracey 1-2', 65000, '../../images/sim_imagen.png'),
+(6, 6, NULL, 'Cureta Universal', 62000, '../../images/sim_imagen.png'),
+(7, 7, NULL, 'Pinza Adams', 55000, '../../images/sim_imagen.png'),
+(8, 8, NULL, 'Pinza Weingart', 58000, '../../images/sim_imagen.png'),
+(9, 9, NULL, 'Elevador Straight', 75000, '../../images/sim_imagen.png'),
+(10, 10, NULL, 'Elevador Crane', 78000, '../../images/sim_imagen.png'),
+(11, NULL, 1, 'Kit Operatoria Básico', 250000, '../../images/sim_imagen.png'),
+(12, NULL, 2, 'Kit Operatoria Avanzado', 450000, '../../images/sim_imagen.png'),
+(13, NULL, 3, 'Kit Endodoncia Inicial', 380000, '../../images/sim_imagen.png'),
+(14, NULL, 4, 'Kit Endodoncia Profesional', 680000, '../../images/sim_imagen.png'),
+(15, NULL, 5, 'Kit Periodoncia Básico', 420000, '../../images/sim_imagen.png'),
+(16, NULL, 6, 'Kit Periodoncia Quirúrgico', 720000, '../../images/sim_imagen.png'),
+(17, NULL, 7, 'Kit Ortodoncia Inicial', 350000, '../../images/sim_imagen.png'),
+(18, NULL, 8, 'Kit Ortodoncia Avanzado', 550000, '../../images/sim_imagen.png'),
+(19, NULL, 9, 'Kit Cirugía Básica', 480000, '../../images/sim_imagen.png'),
+(20, NULL, 10, 'Kit Cirugía Avanzada', 850000, '../../images/sim_imagen.png')
+ON CONFLICT (id_producto) DO NOTHING;

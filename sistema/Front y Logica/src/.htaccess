@@ -1,0 +1,15 @@
+# ==============================================================================
+# PROTECCIÓN DIRECTA - CARPETA /SRC/
+# ==============================================================================
+
+Options -Indexes
+
+<FilesMatch "^\.|\.(env|env\..*|json|lock|log|ini|bak)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order deny,allow
+        Deny from all
+    </IfModule>
+</FilesMatch>
