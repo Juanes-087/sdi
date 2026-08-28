@@ -1,9 +1,9 @@
 services:
   # ============================================================================
-  # 1. BASE DE DATOS: PostgreSQL 18
+  # 1. BASE DE DATOS: PostgreSQL 16
   # ============================================================================
   db:
-    image: postgres:18-alpine
+    image: postgres:16-alpine
     container_name: sdi-postgres
     restart: unless-stopped
     environment:
@@ -20,7 +20,7 @@ services:
       - "./sistema/Front y Logica/sql:/docker-entrypoint-initdb.d/functions_source:ro"
     ports:
       # Enlazado únicamente a localhost/127.0.0.1 para pgAdmin / Mantenimiento seguro
-      - "127.0.0.1:5432:5432"
+      - "54320:5432"
     networks:
       - sdi-internal-net
     command: >
@@ -72,7 +72,7 @@ services:
       - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
     ports:
       # Puerto Público: Catálogo y Consulta de Instrumentos
-      - "80:80"
+      - "8085:80"
       # Puerto Privado: Panel Administrativo / Login
       - "8443:8443"
     networks:
