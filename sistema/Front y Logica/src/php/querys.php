@@ -103,6 +103,16 @@ class CQuerys
         return $res ? $res[$colId] : null;
     }
 
+    // Lista de especializaciones odontológicas activas
+    public function getEspecializaciones()
+    {
+        $sql = "SELECT id_especializacion, nom_espec 
+                FROM tab_tipo_especializacion 
+                WHERE COALESCE(ind_vivo, true) = true 
+                ORDER BY id_especializacion ASC";
+        return $this->conn->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     // ══════════════════════════════════════════════════════════
     // SECCIÓN 2: CONSULTAS DE TABLAS PRINCIPALES
     // ══════════════════════════════════════════════════════════
@@ -283,10 +293,13 @@ class CQuerys
                         GROUP BY p.id_producto
                     )
                     SELECT p.id_producto, p.nombre_producto as titulo, p.precio_producto as precio, p.img_url, 
+                           COALESCE(c.nombre_categoria, 'General') as categoria,
                            SUM(s.total) as total_vendido
                     FROM sales s
                     JOIN tab_productos p ON s.id_producto = p.id_producto
-                    GROUP BY p.id_producto, p.nombre_producto, p.precio_producto, p.img_url
+                    LEFT JOIN tab_instrumentos i ON p.id_instrumento = i.id_instrumento
+                    LEFT JOIN tab_categoria c ON i.id_categoria = c.id_categoria
+                    GROUP BY p.id_producto, p.nombre_producto, p.precio_producto, p.img_url, c.nombre_categoria
                     ORDER BY total_vendido DESC
                     LIMIT :limit";
             

@@ -5,15 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Specialized</title>
-    <link rel="icon" type="image/svg+xml" href="./favicon.svg">
-    <link rel="stylesheet" href="./styles/index.css?v=3">
+    <link rel="icon" type="image/png" href="./images/logo central solo.png">
+    <link rel="stylesheet" href="./styles/index.css?v=4">
     <!-- Swiper CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <!-- AOS CSS -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="./src/JavaScript/security.js?v=1"></script>
-    <script src="https://kit.fontawesome.com/a2e0e6ad5a.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -26,66 +25,29 @@
             <input type="text" class="barra_busqueda" placeholder="Buscar Instrumental...">
         </div>
     </header>
-    <div class="contenedores-container">
-        <div class="contenedores-bar">
-            <div class="contenedor-item">
-                <button class="contenedor-tab" data-contenedor="estetica">
-                    Estética
-                </button>
-                <div class="contenedor-content" id="contenedor-estetica">
-                    <div class="content-header">
-                        <h3>Instrumental de Estética Dental</h3>
-                        <p>Herramientas especializadas para procedimientos estéticos y restauradores</p>
-                    </div>
-                    <div class="images-grid">
-                        <!-- Items cargados dinámicamente -->
-                    </div>
-                </div>
+    <div class="contenedores-wrapper">
+        <div class="contenedores-container">
+            <button class="tab-nav-btn tab-nav-prev" id="tab-nav-prev" aria-label="Anterior">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <div class="contenedores-bar" id="contenedores-tabs-bar">
+                <!-- Pestañas cargadas dinámicamente -->
+                <div style="padding:15px; color:white; font-size:14px;">Cargando especialidades...</div>
             </div>
+            <button class="tab-nav-btn tab-nav-next" id="tab-nav-next" aria-label="Siguiente">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
 
-            <div class="contenedor-item">
-                <button class="contenedor-tab" data-contenedor="esterilizacion">
-                    Esterilización
-                </button>
-                <div class="contenedor-content" id="contenedor-esterilizacion">
-                    <div class="content-header">
-                        <h3>Equipos de Esterilización</h3>
-                        <p>Sistemas de esterilización y control de infecciones</p>
-                    </div>
-                    <div class="images-grid">
-                        <!-- Items cargados dinámicamente -->
-                    </div>
-                </div>
+        <!-- Panel Desplegable: Superpuesto flotando directamente debajo de las pestañas -->
+        <div class="contenedor-content" id="categoria-modal-view">
+            <div class="content-header">
+                <button class="btn-close-category" id="btn-close-category" aria-label="Cerrar panel">&times;</button>
+                <h3 id="category-modal-title">Especialidad</h3>
+                <p id="category-modal-desc">Instrumental y equipos especializados de alta calidad</p>
             </div>
-
-            <div class="contenedor-item">
-                <button class="contenedor-tab" data-contenedor="endodoncia">
-                    Endodoncia
-                </button>
-                <div class="contenedor-content" id="contenedor-endodoncia">
-                    <div class="content-header">
-                        <h3>Instrumental de Endodoncia</h3>
-                        <p>Herramientas para tratamientos de conducto radicular</p>
-                    </div>
-                    <div class="images-grid">
-                        <!-- Items cargados dinámicamente -->
-                    </div>
-                </div>
-            </div>
-
-            <div class="contenedor-item">
-                <button class="contenedor-tab" data-contenedor="periodoncia">
-                    Periodoncia
-                </button>
-                <div class="contenedor-content" id="contenedor-periodoncia">
-                    <div class="content-header">
-                        <h3>Instrumental de Periodoncia</h3>
-                        <p>Herramientas para tratamiento de encías y tejidos periodontales</p>
-                    </div>
-                    <div class="images-grid">
-                        <!-- Items cargados dinámicamente -->
-                    </div>
-                </div>
+            <div class="images-grid" id="category-modal-grid">
+                <!-- Items cargados dinámicamente -->
             </div>
         </div>
     </div>
@@ -97,33 +59,10 @@
                 para todas las especialidades odontológicas con productos certificados y garantía internacional.</p>
         </div>
 
-        <div class="products-grid">
-            <div class="product-card" data-aos="fade-up" data-aos-duration="1500" data-aos-easing="ease-out-back" data-aos-delay="100">
-                <h3>Estética Dental</h3>
-                <p>Todo lo necesario para procedimientos estéticos: blanqueamiento, carillas, resinas y sistemas de
-                    fotocurado de última generación.</p>
-            </div>
-            <div class="product-card" data-aos="fade-up" data-aos-duration="1500" data-aos-easing="ease-out-back" data-aos-delay="300">
-                <h3>Esterilización</h3>
-                <p>Equipos y suministros para esterilización: autoclaves, cubas ultrasónicas, indicadores y sistemas de
-                    control de infecciones.</p>
-            </div>
-            <div class="product-card" data-aos="fade-up" data-aos-duration="1500" data-aos-easing="ease-out-back" data-aos-delay="500">
-                <h3>Endodoncia</h3>
-                <p>Instrumental especializado para tratamientos de conducto: limas, motores, localizadores de ápice y
-                    materiales de obturación.</p>
-            </div>
-            <div class="product-card" data-aos="fade-up" data-aos-duration="1500" data-aos-easing="ease-out-back" data-aos-delay="700">
-                <h3>Periodoncia</h3>
-                <p>Herramientas para el tratamiento periodontal: curetas, sondas, scalers ultrasónicos y material
-                    quirúrgico especializado.</p>
-            </div>
-        </div>
-
         <section class="best-sellers-section" data-aos="zoom-in" data-aos-duration="1000">
             <h2 class="section-title">Productos Más Vendidos</h2>
             <p class="section-subtitle">Nuestra selección de instrumentos y kits preferida por profesionales</p>
-            
+
             <div class="carousel-container swiper mySwiper">
                 <div class="swiper-wrapper" id="best-sellers-track">
                     <!-- Cargado dinámicamente -->
@@ -131,7 +70,7 @@
                         <div class="loading-spinner"></div>
                     </div>
                 </div>
-                
+
                 <!-- Swiper Pagination -->
                 <div class="swiper-pagination"></div>
             </div>
@@ -153,14 +92,16 @@
             <div class="footer-col footer-redes">
                 <h4 class="footer-title">NUESTRAS REDES</h4>
                 <div class="footer-social-icons">
-                    <a href="https://wa.me/" target="_blank" class="social-icon whatsapp" aria-label="WhatsApp">
+                    <a href="https://wa.me/573012765289?text=Hola, quiero más información sobre sus productos"
+                        target="_blank" class="social-icon whatsapp" aria-label="WhatsApp">
                         <i class="fab fa-whatsapp"></i>
                     </a>
-                    <a href="https://instagram.com/" target="_blank" class="social-icon instagram"
+                    <a href="https://www.instagram.com/specializedinst/" target="_blank" class="social-icon instagram"
                         aria-label="Instagram">
                         <i class="fab fa-instagram"></i>
                     </a>
-                    <a href="https://facebook.com/" target="_blank" class="social-icon facebook" aria-label="Facebook">
+                    <a href="https://www.facebook.com/specializedinst" target="_blank" class="social-icon facebook"
+                        aria-label="Facebook">
                         <i class="fab fa-facebook-f"></i>
                     </a>
                 </div>
@@ -183,12 +124,13 @@
 
             <!-- Columna 4: Logo INVIMA -->
             <div class="footer-col footer-invima">
-                <img src="./images/footer_invima_placeholder.svg" alt="INVIMA Registro Sanitario" class="footer-invima-img" onerror="this.style.display='none'">
+                <img src="./images/footer_invima_placeholder.svg" alt="INVIMA Registro Sanitario"
+                    class="footer-invima-img" onerror="this.style.display='none'">
                 <p class="invima-text">Registro Sanitario</p>
                 <p class="invima-numero">No. 2015DM-0014009</p>
             </div>
         </div>
-        
+
         <!-- Sección de Derechos de Autor -->
         <div class="footer-copyright">
             <div class="copyright-content">
@@ -198,51 +140,52 @@
         </div>
     </footer>
 
-<!-- Swiper JS -->
-<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-<!-- AOS JS -->
-<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <!-- AOS JS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
-<script src="./src/JavaScript/cookies.js?v=99"></script>
-<script src="./src/JavaScript/index.js?v=99"></script>
-<script>
-    // ============================================
-    // SEGURIDAD: Limpiar sesión y bloquear historial
-    // ============================================
-    (function () {
-        try {
-            // Limpiar token local si existe
-            if (localStorage.getItem('token')) {
-                localStorage.removeItem('token');
-            }
-        } catch (e) { }
+    <script src="./src/JavaScript/cookies.js?v=99"></script>
+    <script src="./src/JavaScript/index.js?v=99"></script>
+    <script>
+        // ============================================
+        // SEGURIDAD: Limpiar sesión y bloquear historial
+        // ============================================
+        (function () {
+            try {
+                // Limpiar token local si existe
+                if (localStorage.getItem('token')) {
+                    localStorage.removeItem('token');
+                }
+            } catch (e) { }
 
-        // Bloquear navegación hacia atrás (Historial infinito)
-        window.history.pushState(null, null, window.location.href);
-        window.onpopstate = function () {
+            // Bloquear navegación hacia atrás (Historial infinito)
             window.history.pushState(null, null, window.location.href);
-        };
+            window.onpopstate = function () {
+                window.history.pushState(null, null, window.location.href);
+            };
 
-        // Prevenir restauración desde caché (botón atrás)
-        window.addEventListener('pageshow', function (event) {
-            if (event.persisted) {
-                window.location.reload();
-            }
-        });
-    })();
-
-    // Scroll reveal para el footer
-    const footer = document.querySelector('.site-footer');
-    if (footer) {
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    footer.classList.add('visible');
+            // Prevenir restauración desde caché (botón atrás)
+            window.addEventListener('pageshow', function (event) {
+                if (event.persisted) {
+                    window.location.reload();
                 }
             });
-        }, { threshold: 0.1 });
-        observer.observe(footer);
-    }
-</script>
+        })();
+
+        // Scroll reveal para el footer
+        const footer = document.querySelector('.site-footer');
+        if (footer) {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        footer.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+            observer.observe(footer);
+        }
+    </script>
 </body>
+
 </html>

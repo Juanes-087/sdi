@@ -518,7 +518,7 @@ Create table tab_historico_mat_prima
 -- Tabla de especializaciones de los instrumentos
 Create table tab_tipo_especializacion 
 (
-        id_especializacion INT NOT NULL, -- Identificador de especializacion del odontologo e instrumental (Si es de endodoncia, periodoncia, esterilizacion o es de estetica)
+        id_especializacion INT NOT NULL, -- Identificador de especializacion (Estética, Endodoncia, Periodoncia, Pediátrico, Rehabilitación, Laboratorio, Cirugía Oral, Operatoria, Ortodoncia, Examen)
         nom_espec VARCHAR NOT NULL, -- Nombre de la especializacion
         -- Audit Trail
         user_insert VARCHAR NULL,
@@ -562,7 +562,7 @@ Create table tab_instrumentos
 Create table tab_kits 
 (
         id_kit INT NOT NULL, -- Identificador único del kit
-        id_especializacion INT NOT NULL, -- Identificador de especializacion del odontologo e instrumental (Si es de endodoncia, periodoncia, esterilizacion o es de estetica)
+        id_especializacion INT NOT NULL, -- FK a la especialización odontológica del kit
         nom_kit VARCHAR NOT NULL, -- Nombre del kit
         cant_disp DECIMAL(3, 0) NOT NULL CHECK (cant_disp >= 0), -- Atributo para ver cuantos kits hay disponibles.
         tipo_mat INT NOT NULL CHECK (tipo_mat IN (1, 2)), -- 1 = Specialized (Acero), 2 = Special (Aluminio)

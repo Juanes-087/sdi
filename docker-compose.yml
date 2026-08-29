@@ -19,7 +19,12 @@ services:
       # Carpeta fuente de funciones SQL completas
       - "./sistema/Front y Logica/sql:/docker-entrypoint-initdb.d/functions_source:ro"
     ports:
-      # Enlazado únicamente a localhost/127.0.0.1 para pgAdmin / Mantenimiento seguro
+      # Enlazado únicamente a localhost/127.0.0.1 para pgAdmin / Mantenimiento seguro / DEJAR SOLO EN LOCAL QUITAR EN PRODUCCION
+      # ports:
+      #- "127.0.0.1:5432:5432" 
+      # PARA PRODUCCION: Solo se puede acceder al puerto 5432 si estás conectado por SSH al servidor.
+      # Esto hace que la base de datos sea inaccesible directamente desde internet, lo cual es una práctica de seguridad recomendada.
+      
       - "54320:5432"
     networks:
       - sdi-internal-net
@@ -71,6 +76,7 @@ services:
     volumes:
       - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
     ports:
+        # PUERTO PUBLICO 80:80 PRODUCCION
       # Puerto Público: Catálogo y Consulta de Instrumentos
       - "8085:80"
       # Puerto Privado: Panel Administrativo / Login

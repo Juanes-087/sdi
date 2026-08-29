@@ -2,244 +2,367 @@
 
 (function () {
     document.addEventListener('DOMContentLoaded', function () {
-        const contenedorTabs = document.querySelectorAll('.contenedor-tab');
-        const contenedorContents = document.querySelectorAll('.contenedor-content');
-        let activeContenedor = null;
-
-        // Función para cerrar todas las pestañas
-        function closeAllContenedores() {
-            contenedorTabs.forEach(tab => tab.classList.remove('active'));
-            contenedorContents.forEach(content => content.classList.remove('active'));
-            activeContenedor = null;
-        }
-
-        // Manejo de clicks en pestañas
-        contenedorTabs.forEach(tab => {
-            tab.addEventListener('click', function (e) {
-                e.preventDefault();
-                const contenedorName = this.getAttribute('data-contenedor');
-                if (!contenedorName) return;
-
-                const contenedorContent = document.getElementById(`contenedor-${contenedorName}`);
-                if (!contenedorContent) return;
-
-                if (activeContenedor === contenedorContent && contenedorContent.classList.contains('active')) {
-                    closeAllContenedores();
-                    return;
-                }
-
-                closeAllContenedores();
-                this.classList.add('active');
-                contenedorContent.classList.add('active');
-                activeContenedor = contenedorContent;
-            });
-        });
-
-        // Cerrar al hacer click fuera
-        document.addEventListener('click', function (e) {
-            if (!e.target.closest('.contenedores-container')) {
-                closeAllContenedores();
-            }
-        });
-
-        // --- LÓGICA DE PRODUCTOS DINÁMICOS ---
-
+        const tabsBar = document.getElementById('contenedores-tabs-bar');
+        const modalView = document.getElementById('categoria-modal-view');
+        const modalTitle = document.getElementById('category-modal-title');
+        const modalDesc = document.getElementById('category-modal-desc');
+        const modalGrid = document.getElementById('category-modal-grid');
+        const btnClose = document.getElementById('btn-close-category');
+        const specialtiesGrid = document.getElementById('specialties-grid');
         const searchInput = document.querySelector('.barra_busqueda');
 
-        // Función para renderizar productos
-        function renderProductos(productos, isSearch = false) {
-            // Limpiar contenedores
-            document.querySelectorAll('.images-grid').forEach(grid => grid.innerHTML = '');
+        let categoriasList = [];
+        let productosList = [];
+        let activeCategoriaKey = null;
 
-            const normalize = (str) => {
-                if (!str) return 'estetica';
-                const s = str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-                // Mapeo específico para Estética Dental -> estetica
-                // Y mapeo de fallback para 'General'
-                if (s === 'estetica dental' || s === 'general') return 'estetica';
-                return s;
+        // Mapeo de iconos y descripciones profesionales para cada especialidad
+        const categoryMeta = {
+            'estetica': {
+                icon: 'fa-wand-magic-sparkles',
+                desc: 'Todo lo necesario para procedimientos estéticos: blanqueamiento, carillas, resinas y sistemas de fotocurado.'
+            },
+            'endodoncia': {
+                icon: 'fa-tooth',
+                desc: 'Instrumental especializado para tratamientos de conducto: limas, motores, localizadores de ápice y obturación.'
+            },
+            'periodoncia': {
+                icon: 'fa-heart-pulse',
+                desc: 'Herramientas para el tratamiento periodontal: curetas, sondas, scalers ultrasónicos y microcirugía.'
+            },
+            'pediatrico': {
+                icon: 'fa-child',
+                desc: 'Instrumental ergonómico y diseñado especialmente para la atención dental infantil y odontopediatría.'
+            },
+            'rehabilitacion': {
+                icon: 'fa-arrows-rotate',
+                desc: 'Equipos y componentes para prótesis dental, implantes, rehabilitación oral fija y removible.'
+            },
+            'laboratorio': {
+                icon: 'fa-flask-vial',
+                desc: 'Materiales y herramientas para confección, pulido, articulación y modelado de piezas dentales.'
+            },
+            'cirugia oral': {
+                icon: 'fa-syringe',
+                desc: 'Instrumental quirúrgico de máxima precisión: fórceps, elevadores, porta agujas y kits de osteotomía.'
+            },
+            'operatoria': {
+                icon: 'fa-screwdriver-wrench',
+                desc: 'Instrumental restaurador de vanguardia: espátulas, bruñidores, condensadores y matrices.'
+            },
+            'ortodoncia': {
+                icon: 'fa-bezier-curve',
+                desc: 'Pinzas de corte y conformado, arcos, bandas, brackets y accesorios para ortodoncia de precisión.'
+            },
+            'examen': {
+                icon: 'fa-magnifying-glass',
+                desc: 'Herramientas esenciales de diagnóstico: espejos, exploradores, sondas milimetradas y posicionadores.'
+            }
+        };
+
+        const normalize = (str) => {
+            if (!str) return '';
+            return str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+        };
+
+        // Función para cerrar el panel desplegable
+        function closeCategoriaModal() {
+            if (modalView) modalView.classList.remove('active');
+            document.querySelectorAll('.contenedor-tab').forEach(t => t.classList.remove('active'));
+            activeCategoriaKey = null;
+        }
+
+        if (btnClose) {
+            btnClose.addEventListener('click', closeCategoriaModal);
+        }
+
+        // Cerrar al hacer clic fuera del panel y de la barra de pestañas
+        document.addEventListener('click', function (e) {
+            if (modalView && modalView.classList.contains('active')) {
+                if (!e.target.closest('.contenedor-content') && !e.target.closest('.contenedores-container') && !e.target.closest('.product-card')) {
+                    closeCategoriaModal();
+                }
+            }
+        });
+
+        // Abrir panel desplegable para una categoría
+        function openCategoria(catKey, catNombre) {
+            if (!modalView || !modalGrid) return;
+
+            const normKey = normalize(catKey);
+            const meta = categoryMeta[normKey] || {
+                icon: 'fa-tooth',
+                desc: 'Instrumental y suministros odontológicos de alta calidad certificada.'
             };
 
-            const resultadosPorCategoria = {};
+            // Si ya está abierta la misma categoría, cerrarla
+            if (activeCategoriaKey === normKey && modalView.classList.contains('active')) {
+                closeCategoriaModal();
+                return;
+            }
 
-            productos.forEach(prod => {
-                const categoriaKey = normalize(prod.categoria);
-                const contenedor = document.getElementById(`contenedor-${categoriaKey}`);
+            activeCategoriaKey = normKey;
 
-                if (contenedor) {
-                    if (!resultadosPorCategoria[categoriaKey]) {
-                        resultadosPorCategoria[categoriaKey] = 0;
-                    }
-                    resultadosPorCategoria[categoriaKey]++;
+            // Actualizar textos del header
+            if (modalTitle) modalTitle.textContent = `Instrumental de ${catNombre}`;
+            if (modalDesc) modalDesc.textContent = meta.desc;
 
-                    const grid = contenedor.querySelector('.images-grid');
-                    if (grid) {
-                        const card = document.createElement('div');
-                        card.className = 'image-item';
-
-                        // Contenedor de imagen
-                        const imgContainer = document.createElement('div');
-                        imgContainer.style.width = '100%';
-                        imgContainer.style.height = '200px';
-                        imgContainer.style.overflow = 'hidden';
-                        imgContainer.style.backgroundColor = '#f0f0f0'; // Fondo gris suave por defecto
-                        imgContainer.style.display = 'flex';
-                        imgContainer.style.alignItems = 'center';
-                        imgContainer.style.justifyContent = 'center';
-
-                        if (prod.img_url) {
-                            const img = document.createElement('img');
-                            // Fix path for index.html (which is in /specialized/)
-                            // DB stores '../images/...', but index.html needs './images/...'
-                            let imgSrc = prod.img_url;
-                            if (imgSrc && imgSrc.startsWith('../../')) {
-                                imgSrc = imgSrc.substring(6); // Remove '../../' -> 'images/...'
-                            } else if (imgSrc && imgSrc.startsWith('../')) {
-                                imgSrc = imgSrc.substring(3); // Remove '../' -> 'images/...'
-                            }
-                            img.src = imgSrc;
-                            img.alt = prod.nombre;
-                            img.style.width = '100%';
-                            img.style.height = '100%';
-                            img.style.objectFit = 'cover';
-
-                            // Manejo robusto de errores de imagen
-                            img.onerror = function () {
-                                // Si falla, reemplazar por placeholder
-                                const placeholder = document.createElement('div');
-                                placeholder.className = 'image-placeholder';
-                                placeholder.style.width = '100%';
-                                placeholder.style.height = '100%';
-                                placeholder.style.display = 'flex';
-                                placeholder.style.alignItems = 'center';
-                                placeholder.style.justifyContent = 'center';
-                                placeholder.style.backgroundColor = '#e9ecef';
-                                placeholder.style.color = '#6c757d';
-                                placeholder.style.fontWeight = 'bold';
-                                placeholder.textContent = prod.nombre.substring(0, 3).toUpperCase();
-
-                                // Reemplazar la imagen fallida en el DOM
-                                if (this.parentNode) {
-                                    this.parentNode.replaceChild(placeholder, this);
-                                }
-                            };
-
-                            imgContainer.appendChild(img);
-                        } else {
-                            const placeholder = document.createElement('div');
-                            placeholder.className = 'image-placeholder';
-                            placeholder.style.width = '100%';
-                            placeholder.style.height = '100%';
-                            placeholder.textContent = prod.nombre.substring(0, 3).toUpperCase();
-                            imgContainer.appendChild(placeholder);
-                        }
-
-                        const titleDiv = document.createElement('div');
-                        titleDiv.className = 'image-title';
-                        titleDiv.textContent = prod.nombre;
-
-                        const descDiv = document.createElement('div');
-                        descDiv.className = 'image-description';
-                        descDiv.textContent = prod.descripcion || 'Producto de alta calidad';
-
-                        // Añadir badge "Nuevo" si fue creado en las últimas 2 semanas
-                        if (prod.fec_insert) {
-                            const createdDate = new Date(prod.fec_insert + 'T00:00:00');
-                            const twoWeeksAgo = new Date();
-                            twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
-                            if (createdDate >= twoWeeksAgo) {
-                                imgContainer.style.position = 'relative';
-                                const badgeNew = document.createElement('span');
-                                badgeNew.innerHTML = '✦ Nuevo';
-                                badgeNew.style.cssText = 'position:absolute; top:10px; right:10px; background:linear-gradient(135deg,#087d4e,#00d2ff); color:white; padding:4px 12px; border-radius:12px; font-size:0.7rem; font-weight:bold; z-index:2; letter-spacing:0.5px; box-shadow:0 2px 8px rgba(8,125,78,0.4);';
-                                imgContainer.appendChild(badgeNew);
-                            }
-                        }
-
-                        card.appendChild(imgContainer);
-                        card.appendChild(titleDiv);
-                        card.appendChild(descDiv);
-
-                        card.addEventListener('click', function () {
-                            this.style.transform = 'scale(0.95)';
-                            this.style.boxShadow = '0 2px 10px rgba(8, 125, 78, 0.3)';
-                            setTimeout(() => {
-                                this.style.transform = '';
-                                this.style.boxShadow = '';
-                            }, 150);
-                            console.log('Producto seleccionado:', prod.nombre);
-                        });
-
-                        grid.appendChild(card);
-                    }
+            // Marcar pestaña activa
+            document.querySelectorAll('.contenedor-tab').forEach(tab => {
+                if (tab.getAttribute('data-contenedor') === normKey) {
+                    tab.classList.add('active');
                 } else {
-                    console.warn(`Advertencia: No existe contenedor para la categoría normalizada: "${categoriaKey}" (Original: "${prod.categoria}")`);
+                    tab.classList.remove('active');
                 }
             });
 
-            // Si es una búsqueda activa, abrir la primera pestaña con resultados
-            if (isSearch && productos.length > 0) {
-                const categoriasConResultados = Object.keys(resultadosPorCategoria);
-                if (categoriasConResultados.length > 0) {
-                    const firstCategory = categoriasConResultados[0];
-                    const tabToOpen = document.querySelector(`.contenedor-tab[data-contenedor="${firstCategory}"]`);
-                    const contentToOpen = document.getElementById(`contenedor-${firstCategory}`);
+            // Filtrar productos de esta categoría
+            const productosFiltrados = productosList.filter(prod => {
+                const pCat = normalize(prod.categoria);
+                const pEspec = normalize(prod.especializacion);
+                return pCat.includes(normKey) || pEspec.includes(normKey) || (normKey === 'estetica' && pCat.includes('general'));
+            });
 
-                    if (tabToOpen && contentToOpen) {
-                        closeAllContenedores(); // Cerrar otros
-                        tabToOpen.classList.add('active');
-                        contentToOpen.classList.add('active');
-                        activeContenedor = contentToOpen;
+            // Renderizar productos o Empty State
+            modalGrid.innerHTML = '';
+            if (productosFiltrados.length > 0) {
+                productosFiltrados.forEach(prod => {
+                    modalGrid.appendChild(crearTarjetaProducto(prod));
+                });
+            } else {
+                modalGrid.innerHTML = `
+                    <div class="empty-category-state">
+                        <div class="empty-category-icon">
+                            <i class="fas fa-box-open"></i>
+                        </div>
+                        <p class="empty-category-text">No existen productos asociados a esta categoría aún</p>
+                    </div>
+                `;
+            }
 
-                        // Scroll suave hacia los resultados si es necesario
-                        contentToOpen.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            modalView.classList.add('active');
+            modalView.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // Construir elemento visual de producto
+        function crearTarjetaProducto(prod) {
+            const card = document.createElement('div');
+            card.className = 'image-item';
+
+            const imgContainer = document.createElement('div');
+            imgContainer.style.width = '100%';
+            imgContainer.style.height = '190px';
+            imgContainer.style.overflow = 'hidden';
+            imgContainer.style.backgroundColor = '#f8fafc';
+            imgContainer.style.display = 'flex';
+            imgContainer.style.alignItems = 'center';
+            imgContainer.style.justifyContent = 'center';
+            imgContainer.style.position = 'relative';
+
+            let imgSrc = prod.img_url;
+            if (imgSrc && imgSrc.startsWith('../../')) {
+                imgSrc = imgSrc.substring(6);
+            } else if (imgSrc && imgSrc.startsWith('../')) {
+                imgSrc = imgSrc.substring(3);
+            }
+
+            if (imgSrc) {
+                const img = document.createElement('img');
+                img.src = imgSrc;
+                img.alt = prod.nombre;
+                img.style.width = '100%';
+                img.style.height = '100%';
+                img.style.objectFit = 'contain';
+                img.style.padding = '10px';
+
+                img.onerror = function () {
+                    const placeholder = document.createElement('div');
+                    placeholder.className = 'image-placeholder';
+                    placeholder.textContent = prod.nombre.substring(0, 3).toUpperCase();
+                    if (this.parentNode) {
+                        this.parentNode.replaceChild(placeholder, this);
                     }
+                };
+                imgContainer.appendChild(img);
+            } else {
+                const placeholder = document.createElement('div');
+                placeholder.className = 'image-placeholder';
+                placeholder.textContent = prod.nombre.substring(0, 3).toUpperCase();
+                imgContainer.appendChild(placeholder);
+            }
+
+            // Badge "Nuevo" si corresponde
+            if (prod.fec_insert) {
+                const createdDate = new Date(prod.fec_insert + 'T00:00:00');
+                const twoWeeksAgo = new Date();
+                twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
+                if (createdDate >= twoWeeksAgo) {
+                    const badgeNew = document.createElement('span');
+                    badgeNew.innerHTML = '✦ Nuevo';
+                    badgeNew.style.cssText = 'position:absolute; top:10px; right:10px; background:linear-gradient(135deg,#087d4e,#00d2ff); color:white; padding:4px 10px; border-radius:12px; font-size:0.7rem; font-weight:bold; z-index:2; box-shadow:0 2px 8px rgba(8,125,78,0.3);';
+                    imgContainer.appendChild(badgeNew);
                 }
-            } else if (isSearch && productos.length === 0) {
-                console.log('No se encontraron productos.');
+            }
+
+            const titleDiv = document.createElement('div');
+            titleDiv.className = 'image-title';
+            titleDiv.textContent = prod.nombre;
+
+            const descDiv = document.createElement('div');
+            descDiv.className = 'image-description';
+            descDiv.textContent = prod.descripcion || 'Instrumental odontológico de alta calidad.';
+
+            card.appendChild(imgContainer);
+            card.appendChild(titleDiv);
+            card.appendChild(descDiv);
+
+            card.addEventListener('click', function () {
+                this.style.transform = 'scale(0.97)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 150);
+            });
+
+            return card;
+        }
+
+        // Renderizar Pestañas Superiores en la barra de scroll
+        function renderCategorias(categorias) {
+            categoriasList = categorias;
+
+            if (tabsBar) {
+                tabsBar.innerHTML = '';
+                categorias.forEach(cat => {
+                    const normKey = normalize(cat.nom_espec);
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'contenedor-item';
+
+                    const tabBtn = document.createElement('button');
+                    tabBtn.className = 'contenedor-tab';
+                    tabBtn.setAttribute('data-contenedor', normKey);
+                    tabBtn.textContent = cat.nom_espec;
+
+                    tabBtn.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        openCategoria(normKey, cat.nom_espec);
+                    });
+
+                    itemDiv.appendChild(tabBtn);
+                    tabsBar.appendChild(itemDiv);
+                });
             }
         }
 
-        // Función para cargar datos
+        // Navegación con flechas del carrusel de pestañas (Scroll fluido con animación e infinito)
+        const navPrev = document.getElementById('tab-nav-prev');
+        const navNext = document.getElementById('tab-nav-next');
+        const stepScroll = 202; // Ancho pestaña (194px) + gap (8px)
+
+        function smoothScroll(element, target, duration = 350) {
+            const start = element.scrollLeft;
+            const change = target - start;
+            const startTime = performance.now();
+
+            function animateScroll(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                // Función de aceleración suave (easeOutCubic)
+                const ease = 1 - Math.pow(1 - progress, 3);
+                element.scrollLeft = start + change * ease;
+
+                if (progress < 1) {
+                    requestAnimationFrame(animateScroll);
+                }
+            }
+            requestAnimationFrame(animateScroll);
+        }
+
+        if (navPrev && tabsBar) {
+            navPrev.addEventListener('click', () => {
+                const maxScrollLeft = tabsBar.scrollWidth - tabsBar.clientWidth;
+                if (tabsBar.scrollLeft <= 10) {
+                    smoothScroll(tabsBar, maxScrollLeft, 400);
+                } else {
+                    smoothScroll(tabsBar, Math.max(0, tabsBar.scrollLeft - stepScroll), 300);
+                }
+            });
+        }
+
+        if (navNext && tabsBar) {
+            navNext.addEventListener('click', () => {
+                const maxScrollLeft = tabsBar.scrollWidth - tabsBar.clientWidth;
+                if (tabsBar.scrollLeft >= maxScrollLeft - 10) {
+                    smoothScroll(tabsBar, 0, 400);
+                } else {
+                    smoothScroll(tabsBar, Math.min(maxScrollLeft, tabsBar.scrollLeft + stepScroll), 300);
+                }
+            });
+        }
+
+        // Cargar Categorías desde API
+        async function cargarCategorias() {
+            try {
+                const response = await fetch('./src/php/api_categorias.php');
+                const result = await response.json();
+                if (result.success && Array.isArray(result.data)) {
+                    renderCategorias(result.data);
+                } else {
+                    console.error('Error en formato de categorías:', result);
+                }
+            } catch (err) {
+                console.error('Error cargando categorías:', err);
+            }
+        }
+
+        // Cargar Productos desde API
         async function cargarProductos(busqueda = '') {
             try {
                 const url = `./src/php/api_productos.php?q=${encodeURIComponent(busqueda)}`;
                 const response = await fetch(url);
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    console.error(`Error API (${response.status}): ${errorText}`);
-                    throw new Error(`Error HTTP ${response.status}: ${errorText}`);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+                productosList = await response.json();
+
+                // Si hay una búsqueda activa, abrir el modal con los resultados
+                if (busqueda.trim().length > 0) {
+                    if (modalView && modalGrid) {
+                        modalGrid.innerHTML = '';
+                        if (modalTitle) modalTitle.textContent = `Resultados para "${busqueda}"`;
+                        if (modalDesc) modalDesc.textContent = `${productosList.length} producto(s) encontrado(s)`;
+
+                        if (productosList.length > 0) {
+                            productosList.forEach(prod => {
+                                modalGrid.appendChild(crearTarjetaProducto(prod));
+                            });
+                        } else {
+                            modalGrid.innerHTML = `
+                                <div class="empty-category-state">
+                                    <div class="empty-category-icon"><i class="fas fa-search"></i></div>
+                                    <p class="empty-category-text">No se encontraron productos para "${busqueda}"</p>
+                                </div>
+                            `;
+                        }
+                        modalView.classList.add('active');
+                        modalView.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }
                 }
-
-                const productos = await response.json();
-                // console.log('Productos recibidos:', productos); // DEBUG
-
-                renderProductos(productos, busqueda.length > 0);
             } catch (error) {
                 console.error('Error cargando productos:', error);
             }
         }
 
-        // --- EVENT LISTENERS BÚSQUEDA ---
-
-        const searchBtn = document.querySelector('.search-btn');
-
+        // Búsqueda
         if (searchInput) {
-            // Evento al presionar Enter
             searchInput.addEventListener('keypress', function (e) {
                 if (e.key === 'Enter') {
                     cargarProductos(this.value);
                 }
             });
 
-            // Evento debounce al escribir (opcional)
             let debounceTimer;
             searchInput.addEventListener('input', function (e) {
-                // Si el input está vacío, cerrar pestañas inmediatamente
                 if (e.target.value.trim() === '') {
-                    closeAllContenedores();
+                    closeCategoriaModal();
                 }
-
                 clearTimeout(debounceTimer);
                 debounceTimer = setTimeout(() => {
                     cargarProductos(e.target.value);
@@ -254,18 +377,18 @@
             });
         }
 
-
-
         // Inicializar animaciones AOS
         if (typeof AOS !== 'undefined') {
             AOS.init({
-                once: true, // Animar solo la primera vez que se hace scroll
-                offset: 50, // Píxeles de margen antes de activar la animación
+                once: true,
+                offset: 50,
             });
         }
 
-        // Carga inicial
-        cargarProductos();
+        // Carga inicial de datos
+        cargarCategorias().then(() => {
+            cargarProductos();
+        });
         initBestSellersCarousel();
 
     });
@@ -286,13 +409,14 @@ async function initBestSellersCarousel() {
         if (result.success && result.data.length > 0) {
             renderBestSellers(result.data, track);
             
-            // Inicializar Swiper
+            // Inicializar Swiper: solo activar loop si hay más elementos que slides visibles
+            const totalSlides = result.data.length;
             new Swiper('.mySwiper', {
                 slidesPerView: 1,
                 spaceBetween: 20,
-                loop: true,
+                loop: totalSlides > 3,
                 autoplay: {
-                    delay: 2500, // Un poco más rápido para que se sienta dinámico
+                    delay: 2500,
                     disableOnInteraction: false,
                 },
                 pagination: {
@@ -301,16 +425,16 @@ async function initBestSellersCarousel() {
                 },
                 breakpoints: {
                     600: {
-                        slidesPerView: 2,
+                        slidesPerView: Math.min(2, totalSlides),
                         spaceBetween: 20,
                     },
                     800: {
-                        slidesPerView: 3,
+                        slidesPerView: Math.min(3, totalSlides),
                         spaceBetween: 20,
                     },
                     1024: {
-                        slidesPerView: 3,
-                        spaceBetween: 30, // 3 por fila como estaba antes
+                        slidesPerView: Math.min(3, totalSlides),
+                        spaceBetween: 30,
                     },
                 }
             });
@@ -339,16 +463,18 @@ function renderBestSellers(products, track) {
         }
         if (!imgSrc) imgSrc = './images/placeholder.png';
 
+        const categoriaText = product.categoria || 'Instrumental';
+
         // Crear Slide de Swiper
         const slide = document.createElement('div');
         slide.className = 'swiper-slide';
         
-        // Envolvemos el contenido original en un div para mantener los estilos
         slide.innerHTML = `
             <div class="carousel-slide-content">
                 <div class="slide-img-container">
                     <img src="${imgSrc}" alt="${product.titulo}" onerror="this.src='./images/placeholder.png'">
                 </div>
+                <span class="slide-category">${categoriaText}</span>
                 <h3 class="slide-title">${product.titulo}</h3>
             </div>
         `;

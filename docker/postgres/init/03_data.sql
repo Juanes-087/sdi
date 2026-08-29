@@ -97,10 +97,16 @@ ON CONFLICT (id_unidad_medida) DO NOTHING;
 
 -- 7. Especializaciones Odontológicas
 INSERT INTO tab_tipo_especializacion (id_especializacion, nom_espec) VALUES
-(1, 'Estética Dental'),
-(2, 'Esterilización'),
-(3, 'Endodoncia'),
-(4, 'Periodoncia')
+(1, 'Estética'),
+(2, 'Endodoncia'),
+(3, 'Periodoncia'),
+(4, 'Pediátrico'),
+(5, 'Rehabilitación'),
+(6, 'Laboratorio'),
+(7, 'Cirugía Oral'),
+(8, 'Operatoria'),
+(9, 'Ortodoncia'),
+(10, 'Examen')
 ON CONFLICT (id_especializacion) DO NOTHING;
 
 -- 8. Estados de Factura
