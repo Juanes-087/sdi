@@ -4,9 +4,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Specialized</title>
+    <title>Specialized - Instrumental Dental de Alta Calidad</title>
+    <meta name="description" content="Especialistas en instrumental y equipos dentales de la más alta calidad en Colombia. Soluciones certificadas para todas las especialidades odontológicas con garantía internacional.">
     <link rel="icon" type="image/png" href="./images/logo central solo.png">
-    <link rel="stylesheet" href="./styles/index.css?v=4">
+    
+    <!-- Preconnect para CDNs externos -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="preconnect" href="https://unpkg.com" crossorigin>
+
+    <link rel="stylesheet" href="./styles/index.css?v=13">
     <!-- Swiper CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <!-- AOS CSS -->
@@ -18,11 +25,14 @@
 <body>
     <header>
         <div class="contenedor_logo">
-            <img class="logo_header" src="./images/logo central solo.png" alt="">
-            <img class="texto_logo" src="./images/texto logo.png" alt="">
+            <img class="logo_header" src="./images/logo central solo.png" alt="Logo de Specialized" width="90" height="85">
+            <img class="texto_logo" src="./images/texto logo.png" alt="Specialized Instrumental Dental" width="180" height="50">
         </div>
         <div class="search-container">
-            <input type="text" class="barra_busqueda" placeholder="Buscar Instrumental...">
+            <input type="text" class="barra_busqueda" placeholder="Buscar Instrumental..." aria-label="Buscar Instrumental Dental">
+            <button type="button" class="btn-clear-search" id="btn-clear-search" aria-label="Limpiar búsqueda" title="Borrar texto">
+                <i class="fas fa-times"></i>
+            </button>
         </div>
     </header>
     <div class="contenedores-wrapper">
@@ -52,7 +62,7 @@
         </div>
     </div>
 
-    <div class="main-content">
+    <main class="main-content">
         <div class="welcome-section" data-aos="fade-up" data-aos-duration="1000">
             <h2>Specialized - Instrumental Dental</h2>
             <p>Especialistas en instrumental y equipos dentales de la más alta calidad. Ofrecemos soluciones completas
@@ -75,7 +85,7 @@
                 <div class="swiper-pagination"></div>
             </div>
         </section>
-    </div>
+    </main>
 
     <!-- Footer -->
     <footer class="site-footer">
@@ -83,8 +93,8 @@
             <!-- Columna 1: Logo Specialized -->
             <div class="footer-col footer-logo-col">
                 <div class="footer-logo-container">
-                    <img class="footer-logo-icon" src="./images/logo central solo.png" alt="">
-                    <img class="footer-logo-text" src="./images/texto logo.png" alt="Specialized Instrumental Dental">
+                    <img class="footer-logo-icon" src="./images/logo central solo.png" alt="Logo Specialized Footer" width="70" height="70">
+                    <img class="footer-logo-text" src="./images/texto logo.png" alt="Specialized Instrumental Dental" width="160" height="40">
                 </div>
             </div>
 
@@ -125,7 +135,7 @@
             <!-- Columna 4: Logo INVIMA -->
             <div class="footer-col footer-invima">
                 <img src="./images/footer_invima_placeholder.svg" alt="INVIMA Registro Sanitario"
-                    class="footer-invima-img" onerror="this.style.display='none'">
+                    class="footer-invima-img" width="120" height="60" onerror="this.style.display='none'">
                 <p class="invima-text">Registro Sanitario</p>
                 <p class="invima-numero">No. 2015DM-0014009</p>
             </div>
@@ -146,7 +156,7 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
     <script src="./src/JavaScript/cookies.js?v=99"></script>
-    <script src="./src/JavaScript/index.js?v=99"></script>
+    <script src="./src/JavaScript/index.js?v=104"></script>
     <script>
         // ============================================
         // SEGURIDAD: Limpiar sesión y bloquear historial

@@ -64,27 +64,79 @@
             return str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
         };
 
-        // Función para cerrar el panel desplegable
-        function closeCategoriaModal() {
-            if (modalView) modalView.classList.remove('active');
-            document.querySelectorAll('.contenedor-tab').forEach(t => t.classList.remove('active'));
+        let isClosingModal = false;
+
+        let activeCategoriaIndex = -1;
+
+        // Función para cerrar el panel desplegable con animación de salida suave
+        function closeCategoriaModal(callback) {
+            if (!modalView || !modalView.classList.contains('active') || isClosingModal) {
+                document.querySelectorAll('.contenedor-tab').forEach(t => {
+                    t.classList.remove('active', 'deactivating', 'from-left', 'from-right', 'to-right', 'to-left');
+                });
+                activeCategoriaKey = null;
+                activeCategoriaIndex = -1;
+                if (callback) callback();
+                return;
+            }
+
+            isClosingModal = true;
+            
+            // Animación de descarga hacia la derecha por defecto
+            document.querySelectorAll('.contenedor-tab.active').forEach(t => {
+                t.classList.remove('active', 'from-left', 'from-right');
+                t.classList.add('deactivating', 'to-right');
+                setTimeout(() => t.classList.remove('deactivating', 'to-right', 'to-left'), 450);
+            });
             activeCategoriaKey = null;
+            activeCategoriaIndex = -1;
+
+            modalView.classList.remove('active');
+            modalView.classList.add('closing');
+
+            setTimeout(() => {
+                modalView.classList.remove('closing');
+                isClosingModal = false;
+                if (callback) callback();
+            }, 280); // Duración de la animación de salida modalSlideUp
         }
 
         if (btnClose) {
-            btnClose.addEventListener('click', closeCategoriaModal);
+            btnClose.addEventListener('click', () => closeCategoriaModal());
         }
 
         // Cerrar al hacer clic fuera del panel y de la barra de pestañas
         document.addEventListener('click', function (e) {
-            if (modalView && modalView.classList.contains('active')) {
+            if (modalView && modalView.classList.contains('active') && !isClosingModal) {
                 if (!e.target.closest('.contenedor-content') && !e.target.closest('.contenedores-container') && !e.target.closest('.product-card')) {
                     closeCategoriaModal();
                 }
             }
         });
 
-        // Abrir panel desplegable para una categoría
+        // Navegación y animación suave para el carrusel de pestañas
+        function smoothScroll(element, target, duration = 350) {
+            if (!element) return;
+            const start = element.scrollLeft;
+            const change = target - start;
+            if (Math.abs(change) < 2) return;
+            const startTime = performance.now();
+
+            function animateScroll(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                // Función de aceleración suave (easeOutCubic)
+                const ease = 1 - Math.pow(1 - progress, 3);
+                element.scrollLeft = start + change * ease;
+
+                if (progress < 1) {
+                    requestAnimationFrame(animateScroll);
+                }
+            }
+            requestAnimationFrame(animateScroll);
+        }
+
+        // Abrir panel desplegable para una categoría con dirección inteligente
         function openCategoria(catKey, catNombre) {
             if (!modalView || !modalGrid) return;
 
@@ -94,29 +146,58 @@
                 desc: 'Instrumental y suministros odontológicos de alta calidad certificada.'
             };
 
-            // Si ya está abierta la misma categoría, cerrarla
+            // Si ya está abierta la misma categoría, cerrarla y apagar el botón
             if (activeCategoriaKey === normKey && modalView.classList.contains('active')) {
                 closeCategoriaModal();
                 return;
             }
 
+            const allTabs = Array.from(document.querySelectorAll('.contenedor-tab'));
+            const newIndex = allTabs.findIndex(tab => tab.getAttribute('data-contenedor') === normKey);
+            const prevIndex = activeCategoriaIndex;
+
+            // Determinar si nos movemos hacia la derecha o hacia la izquierda
+            const goingRight = prevIndex === -1 || newIndex >= prevIndex;
+
             activeCategoriaKey = normKey;
+            activeCategoriaIndex = newIndex;
 
             // Actualizar textos del header
             if (modalTitle) modalTitle.textContent = `Instrumental de ${catNombre}`;
             if (modalDesc) modalDesc.textContent = meta.desc;
 
-            // Marcar pestaña activa
-            document.querySelectorAll('.contenedor-tab').forEach(tab => {
-                if (tab.getAttribute('data-contenedor') === normKey) {
-                    tab.classList.add('active');
+            // Marcar pestaña activa y desplazar con animación ultra suave
+            allTabs.forEach(tab => {
+                const tabKey = tab.getAttribute('data-contenedor');
+                if (tabKey === normKey) {
+                    tab.classList.remove('deactivating', 'to-right', 'to-left', 'from-left', 'from-right');
+                    // Si nos movemos hacia la derecha -> carga de izquierda a derecha (from-left)
+                    // Si nos movemos hacia la izquierda -> carga de derecha a izquierda (from-right)
+                    tab.classList.add('active', goingRight ? 'from-left' : 'from-right');
+
+                    // Centrar suavemente la pestaña seleccionada en el contenedor de scroll
+                    if (tabsBar) {
+                        const itemWrapper = tab.closest('.contenedor-item') || tab;
+                        const itemOffset = itemWrapper.offsetLeft;
+                        const itemWidth = itemWrapper.offsetWidth;
+                        const barWidth = tabsBar.clientWidth;
+                        const targetScroll = Math.max(0, itemOffset - (barWidth / 2) + (itemWidth / 2));
+                        smoothScroll(tabsBar, targetScroll, 350);
+                    }
                 } else {
-                    tab.classList.remove('active');
+                    if (tab.classList.contains('active')) {
+                        tab.classList.remove('active', 'from-left', 'from-right');
+                        // La saliente se descarga hacia donde va el flujo (to-right si avanzamos, to-left si retrocedemos)
+                        const exitClass = goingRight ? 'to-right' : 'to-left';
+                        tab.classList.add('deactivating', exitClass);
+                        setTimeout(() => tab.classList.remove('deactivating', 'to-right', 'to-left'), 450);
+                    }
                 }
             });
 
-            // Filtrar productos de esta categoría
-            const productosFiltrados = productosList.filter(prod => {
+            // Filtrar productos de esta categoría usando el catálogo maestro
+            const fuenteProductos = catalogoCompleto.length > 0 ? catalogoCompleto : productosList;
+            const productosFiltrados = fuenteProductos.filter(prod => {
                 const pCat = normalize(prod.categoria);
                 const pEspec = normalize(prod.especializacion);
                 return pCat.includes(normKey) || pEspec.includes(normKey) || (normKey === 'estetica' && pCat.includes('general'));
@@ -140,7 +221,6 @@
             }
 
             modalView.classList.add('active');
-            modalView.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
 
         // Construir elemento visual de producto
@@ -257,25 +337,6 @@
         const navNext = document.getElementById('tab-nav-next');
         const stepScroll = 202; // Ancho pestaña (194px) + gap (8px)
 
-        function smoothScroll(element, target, duration = 350) {
-            const start = element.scrollLeft;
-            const change = target - start;
-            const startTime = performance.now();
-
-            function animateScroll(currentTime) {
-                const elapsed = currentTime - startTime;
-                const progress = Math.min(elapsed / duration, 1);
-                // Función de aceleración suave (easeOutCubic)
-                const ease = 1 - Math.pow(1 - progress, 3);
-                element.scrollLeft = start + change * ease;
-
-                if (progress < 1) {
-                    requestAnimationFrame(animateScroll);
-                }
-            }
-            requestAnimationFrame(animateScroll);
-        }
-
         if (navPrev && tabsBar) {
             navPrev.addEventListener('click', () => {
                 const maxScrollLeft = tabsBar.scrollWidth - tabsBar.clientWidth;
@@ -313,20 +374,50 @@
             }
         }
 
-        // Cargar Productos desde API
+        let catalogoCompleto = [];
+
+        // Función para filtrar productos por texto de forma 100% insensible a tildes y mayúsculas
+        function filtrarProductosPorTexto(texto, lista) {
+            const tNorm = normalize(texto);
+            if (!tNorm) return lista;
+            
+            // Separar por palabras clave si el usuario escribe "kit cirugia"
+            const terminos = tNorm.split(/\s+/).filter(Boolean);
+
+            return lista.filter(prod => {
+                const nombre = normalize(prod.nombre);
+                const origen = normalize(prod.nombre_origen);
+                const cat = normalize(prod.categoria);
+                const espec = normalize(prod.especializacion);
+                const tipo = normalize(prod.tipo);
+                const textoTotal = `${nombre} ${origen} ${cat} ${espec} ${tipo}`;
+
+                // Todas las palabras deben coincidir
+                return terminos.every(term => textoTotal.includes(term));
+            });
+        }
+
+        // Cargar Productos desde API y manejar búsqueda
         async function cargarProductos(busqueda = '') {
             try {
-                const url = `./src/php/api_productos.php?q=${encodeURIComponent(busqueda)}`;
-                const response = await fetch(url);
-                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                // Si el catálogo maestro aún no está cargado, lo traemos
+                if (catalogoCompleto.length === 0) {
+                    const url = `./src/php/api_productos.php?q=`;
+                    const response = await fetch(url);
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                    const data = await response.json();
+                    catalogoCompleto = Array.isArray(data) ? data : [];
+                }
 
-                productosList = await response.json();
+                const busqTrim = busqueda.trim();
 
-                // Si hay una búsqueda activa, abrir el modal con los resultados
-                if (busqueda.trim().length > 0) {
+                // Filtrar con normalización inteligente (tildes, mayúsculas, múltiples palabras)
+                if (busqTrim.length > 0) {
+                    productosList = filtrarProductosPorTexto(busqTrim, catalogoCompleto);
+
                     if (modalView && modalGrid) {
                         modalGrid.innerHTML = '';
-                        if (modalTitle) modalTitle.textContent = `Resultados para "${busqueda}"`;
+                        if (modalTitle) modalTitle.textContent = `Resultados para "${busqTrim}"`;
                         if (modalDesc) modalDesc.textContent = `${productosList.length} producto(s) encontrado(s)`;
 
                         if (productosList.length > 0) {
@@ -337,40 +428,71 @@
                             modalGrid.innerHTML = `
                                 <div class="empty-category-state">
                                     <div class="empty-category-icon"><i class="fas fa-search"></i></div>
-                                    <p class="empty-category-text">No se encontraron productos para "${busqueda}"</p>
+                                    <p class="empty-category-text">No se encontraron productos para "${busqTrim}"</p>
                                 </div>
                             `;
                         }
                         modalView.classList.add('active');
-                        modalView.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                     }
+                } else {
+                    productosList = [...catalogoCompleto];
                 }
             } catch (error) {
                 console.error('Error cargando productos:', error);
             }
         }
 
-        // Búsqueda
+        // Búsqueda y Botón de Limpiar
+        const btnClearSearch = document.getElementById('btn-clear-search');
+
+        function toggleClearButton() {
+            if (btnClearSearch && searchInput) {
+                if (searchInput.value.trim().length > 0) {
+                    btnClearSearch.classList.add('visible');
+                } else {
+                    btnClearSearch.classList.remove('visible');
+                }
+            }
+        }
+
+        if (btnClearSearch && searchInput) {
+            btnClearSearch.addEventListener('click', function () {
+                searchInput.value = '';
+                toggleClearButton();
+                closeCategoriaModal();
+                // Restaurar catálogo maestro
+                productosList = [...catalogoCompleto];
+                searchInput.focus();
+            });
+        }
+
         if (searchInput) {
             searchInput.addEventListener('keypress', function (e) {
                 if (e.key === 'Enter') {
+                    e.preventDefault();
                     cargarProductos(this.value);
                 }
             });
 
             let debounceTimer;
             searchInput.addEventListener('input', function (e) {
-                if (e.target.value.trim() === '') {
-                    closeCategoriaModal();
-                }
+                toggleClearButton();
+                const valor = e.target.value.trim();
                 clearTimeout(debounceTimer);
-                debounceTimer = setTimeout(() => {
-                    cargarProductos(e.target.value);
-                }, 400);
+
+                if (valor === '') {
+                    closeCategoriaModal();
+                    // Restaurar el catálogo completo de inmediato
+                    productosList = [...catalogoCompleto];
+                } else {
+                    debounceTimer = setTimeout(() => {
+                        cargarProductos(valor);
+                    }, 300);
+                }
             });
 
             searchInput.addEventListener('focus', function () {
-                this.style.transform = 'scale(1.02)';
+                this.style.transform = 'scale(1.01)';
             });
             searchInput.addEventListener('blur', function () {
                 this.style.transform = 'scale(1)';
