@@ -61,6 +61,8 @@ services:
       SMTP_USER: ${SMTP_USER:-}
       SMTP_PASS: ${SMTP_PASS:-}
       SMTP_FROM_NAME: ${SMTP_FROM_NAME:-SPECIALIZED}
+    volumes:
+      - "./sistema/Front y Logica/images:/var/www/html/images"
     networks:
       - sdi-internal-net
 
@@ -75,12 +77,21 @@ services:
       - app
     volumes:
       - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      # EN PRODUCCIÓN EN LIGHTSAIL DESCOMENTA ESTA LÍNEA PARA QUE NGINX LEA LOS CERTIFICADOS:
+      # - /etc/letsencrypt:/etc/letsencrypt:ro
     ports:
-        # PUERTO PUBLICO 80:80 PRODUCCION
-      # Puerto Público: Catálogo y Consulta de Instrumentos
-      - "8085:80"
-      # Puerto Privado: Panel Administrativo / Login
-      - "8443:8443"
+      # ========================================================================
+      # CONFIGURACIÓN LOCAL (ACTIVA)
+      # ========================================================================
+      - "8085:80"     # Catálogo público
+      - "8443:8443"   # Panel privado
+      
+      # ========================================================================
+      # PARA PRODUCCIÓN EN LIGHTSAIL (USA ESTOS 3 PUERTOS):
+      # ========================================================================
+      # - "80:80"       # Redirige a HTTPS
+      # - "443:443"     # HTTPS Candadito
+      # - "8443:8443"   # Panel Privado
     networks:
       - sdi-internal-net
 
