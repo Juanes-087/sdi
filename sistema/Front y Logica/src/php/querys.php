@@ -1691,5 +1691,19 @@ class CQuerys
         $stmt->execute($params);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    // Obtener información pública de la empresa (contacto y registro sanitario INVIMA)
+    public function getInfoEmpresaPublica()
+    {
+        $sql = "SELECT p.nom_empresa, p.dir_empresa, p.tel_empresa, p.reg_invima,
+                       c.nom_ciudad, d.nom_depart
+                FROM tab_parametros p
+                LEFT JOIN tab_ciudades c ON p.id_ciudad = c.id_ciudad
+                LEFT JOIN tab_departamentos d ON c.id_depart = d.id_depart
+                WHERE p.id_empresa = 1
+                LIMIT 1";
+        $stmt = $this->conn->query($sql);
+        return $stmt ? $stmt->fetch(PDO::FETCH_ASSOC) : false;
+    }
 }
 ?>

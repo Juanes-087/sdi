@@ -499,6 +499,38 @@
             });
         }
 
+        /* 
+        // =========================================================================
+        // [OPCIONAL / A FUTURO]: Cargar Parámetros de la Empresa (Registro INVIMA y contacto)
+        // Descomentar si se desea que el registro INVIMA y contactos se lean dinámicamente de tab_parametros
+        // =========================================================================
+        async function cargarParametrosEmpresa() {
+            try {
+                const response = await fetch('./src/php/api_parametros.php');
+                if (!response.ok) return;
+                const res = await response.json();
+                if (res.success && res.data) {
+                    const data = res.data;
+                    const elInvima = document.getElementById('footer-reg-invima');
+                    if (elInvima && data.reg_invima) {
+                        elInvima.textContent = data.reg_invima;
+                    }
+                    const elDir = document.getElementById('footer-direccion');
+                    if (elDir && data.dir_empresa) {
+                        const ciudadDep = (data.nom_ciudad ? `, ${data.nom_ciudad}` : '') + (data.nom_depart ? `, ${data.nom_depart}` : '');
+                        elDir.textContent = `${data.dir_empresa}${ciudadDep}, Colombia`;
+                    }
+                    const elTel = document.getElementById('footer-telefono');
+                    if (elTel && data.tel_empresa) {
+                        elTel.textContent = `+57 ${data.tel_empresa}`;
+                    }
+                }
+            } catch (err) {
+                console.warn('No se pudieron cargar los parámetros dinámicos de la empresa:', err);
+            }
+        }
+        */
+
         // Inicializar animaciones AOS
         if (typeof AOS !== 'undefined') {
             AOS.init({
@@ -508,6 +540,7 @@
         }
 
         // Carga inicial de datos
+        // cargarParametrosEmpresa(); // Activar a futuro si se usa tab_parametros dinámico
         cargarCategorias().then(() => {
             cargarProductos();
         });

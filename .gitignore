@@ -57,3 +57,10 @@ Thumbs.db
 *.njsproj
 *.sln
 *.sw?
+
+# ===========================================
+# Configuración local / Despliegues específicos
+# ===========================================
+docker-compose.yml
+docker/nginx/nginx.conf
+

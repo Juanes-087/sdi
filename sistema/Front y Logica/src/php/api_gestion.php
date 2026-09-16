@@ -167,8 +167,10 @@ elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $subFolder = 'mat_prima';
 
                 $uploadDir = __DIR__ . '/../../images/' . $subFolder . '/';
-                if (!file_exists($uploadDir))
-                    @mkdir($uploadDir, 0755, true);
+                if (!file_exists($uploadDir)) {
+                    @mkdir($uploadDir, 0775, true);
+                    @chmod($uploadDir, 0775);
+                }
 
                 $fileTmpPath = $_FILES[$fileKey]['tmp_name'];
                 $fileName    = $_FILES[$fileKey]['name'];

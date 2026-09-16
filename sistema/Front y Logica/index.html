@@ -5,9 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Specialized - Instrumental Dental de Alta Calidad</title>
-    <meta name="description" content="Especialistas en instrumental y equipos dentales de la más alta calidad en Colombia. Soluciones certificadas para todas las especialidades odontológicas con garantía internacional.">
+    <meta name="description"
+        content="Especialistas en instrumental y equipos dentales de la más alta calidad en Colombia. Soluciones certificadas para todas las especialidades odontológicas con garantía internacional.">
     <link rel="icon" type="image/png" href="./images/logo central solo.png">
-    
+
     <!-- Preconnect para CDNs externos -->
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
@@ -25,12 +26,16 @@
 <body>
     <header>
         <div class="contenedor_logo">
-            <img class="logo_header" src="./images/logo central solo.png" alt="Logo de Specialized" width="90" height="85">
-            <img class="texto_logo" src="./images/texto logo.png" alt="Specialized Instrumental Dental" width="180" height="50">
+            <img class="logo_header" src="./images/logo central solo.png" alt="Logo de Specialized" width="90"
+                height="85">
+            <img class="texto_logo" src="./images/texto logo.png" alt="Specialized Instrumental Dental" width="180"
+                height="50">
         </div>
         <div class="search-container">
-            <input type="text" class="barra_busqueda" placeholder="Buscar Instrumental..." aria-label="Buscar Instrumental Dental">
-            <button type="button" class="btn-clear-search" id="btn-clear-search" aria-label="Limpiar búsqueda" title="Borrar texto">
+            <input type="text" class="barra_busqueda" placeholder="Buscar Instrumental..."
+                aria-label="Buscar Instrumental Dental">
+            <button type="button" class="btn-clear-search" id="btn-clear-search" aria-label="Limpiar búsqueda"
+                title="Borrar texto">
                 <i class="fas fa-times"></i>
             </button>
         </div>
@@ -93,8 +98,10 @@
             <!-- Columna 1: Logo Specialized -->
             <div class="footer-col footer-logo-col">
                 <div class="footer-logo-container">
-                    <img class="footer-logo-icon" src="./images/logo central solo.png" alt="Logo Specialized Footer" width="70" height="70">
-                    <img class="footer-logo-text" src="./images/texto logo.png" alt="Specialized Instrumental Dental" width="160" height="40">
+                    <img class="footer-logo-icon" src="./images/logo central solo.png" alt="Logo Specialized Footer"
+                        width="70" height="70">
+                    <img class="footer-logo-text" src="./images/texto logo.png" alt="Specialized Instrumental Dental"
+                        width="160" height="40">
                 </div>
             </div>
 
@@ -121,11 +128,12 @@
             <div class="footer-col footer-contacto">
                 <h4 class="footer-title">CONTÁCTANOS:</h4>
                 <div class="footer-contact-info">
-                    <p><i class="fas fa-map-marker-alt"></i> Calle 41 #6-68, Lagos 2, Floridablanca, Santander, Colombia
-                    </p>
-                    <p><i class="fas fa-envelope"></i> <strong>Email:</strong> <a
+                    <p><i class="fas fa-map-marker-alt"></i> <span id="footer-direccion">Calle 41 #6-68, Lagos 2,
+                            Floridablanca, Santander, Colombia</span></p>
+                    <p><i class="fas fa-envelope"></i> <strong>Email:</strong> <a id="footer-email"
                             href="mailto:specializedinst@yahoo.es">specializedinst@yahoo.es</a></p>
-                    <p><i class="fas fa-phone"></i> <strong>Tel:</strong> +57 (607) 649 6730</p>
+                    <p><i class="fas fa-phone"></i> <strong>Tel:</strong> <span id="footer-telefono">+57 (607) 649
+                            6730</span></p>
                     <p><i class="fas fa-clock"></i> <strong>Horarios de atención:</strong></p>
                     <p class="horario-detalle">Lun - Vie: 7AM a 12PM - 2PM a 6PM</p>
                     <p class="horario-detalle">Sab: 7AM a 12PM</p>
@@ -137,7 +145,7 @@
                 <img src="./images/footer_invima_placeholder.svg" alt="INVIMA Registro Sanitario"
                     class="footer-invima-img" width="120" height="60" onerror="this.style.display='none'">
                 <p class="invima-text">Registro Sanitario</p>
-                <p class="invima-numero">No. 2015DM-0014009</p>
+                <p class="invima-numero" id="footer-reg-invima">INVIMA No. 2025DM-0014009-R1</p>
             </div>
         </div>
 
@@ -156,7 +164,7 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
     <script src="./src/JavaScript/cookies.js?v=99"></script>
-    <script src="./src/JavaScript/index.js?v=104"></script>
+    <script src="./src/JavaScript/index.js?v=105"></script>
     <script>
         // ============================================
         // SEGURIDAD: Limpiar sesión y bloquear historial

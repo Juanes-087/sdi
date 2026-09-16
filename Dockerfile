@@ -25,9 +25,14 @@ WORKDIR /var/www/html
 # Copiar el código del sistema
 COPY ["./sistema/Front y Logica/", "/var/www/html/"]
 
-# Asegurar permisos correctos
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html
+# Asegurar carpetas de imágenes y permisos correctos para www-data
+RUN mkdir -p /var/www/html/images/instrum \
+             /var/www/html/images/kit \
+             /var/www/html/images/prod \
+             /var/www/html/images/mat_prima \
+    && chown -R www-data:www-data /var/www/html \
+    && chmod -R 775 /var/www/html/images
 
 EXPOSE 80
 CMD ["apache2-foreground"]
+
